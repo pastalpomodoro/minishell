@@ -4,7 +4,8 @@ CC = cc
 FLAG = -Wall -Werror -Wextra -g3
 
 SRC =	src/main.c\
-		# src/parsing/parsing.c\
+		src/parsing/parsing.c\
+		src/utils/utils.c\
 
 OBJ_PATH = Bin/
 OBJ = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))

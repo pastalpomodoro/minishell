@@ -21,7 +21,7 @@ int main()
         input = readline("Minishell> ");
         if (input) 
         {
-            // printf("You entered: %s\n", input);
+            picking(input);
             add_history(input);
         }
         if (if_exit(input) == 1)
@@ -30,5 +30,5 @@ int main()
         free(input);
     }
     free(input);
-    // rl_clear_history();
+    rl_clear_history();
 }
