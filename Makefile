@@ -1,47 +1,43 @@
 NAME = minishell
 CC = cc
 
-FLAG = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra
 
-SRC =	src/main.c\
-		src/parsing/parsing.c\
-		src/utils/utils.c\
-
-OBJ_PATH = Bin/
-OBJ = $(addprefix $(OBJ_PATH), $(SRC:.c=.o))
-
-
-
-PRINTF_DIR = printf
-PRINTF_LIB = printf/libftprintf.a
+SRCS_DIR = ./srcs/
+SRCS_NAMES = main.c \
+			 parsing/parsing.c \
+			 utils/utils.c
+SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
+OBJS = $(SRCS:.c=.o)
 
 LIBFT_DIR = libft
 LIBFT_LIB = libft/libft.a
 
+INCLUDES = ./includes/
+HEADER_FILES = functions.h macros.h minishell.h structs.h
+HEADERS = $(addprefix $(INCLUDES), $(HEADER_FILES))
+
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT_LIB) $(PRINTF_LIB)
-	$(CC) $(FLAG) -o $(NAME) $(OBJ) -lreadline $(LIBFT_LIB) $(PRINTF_LIB)
-
-$(OBJ_PATH)%.o: %.c
-	mkdir -p $(dir $@)
-	$(CC) $(FLAG) -c $< -o $@
+$(NAME): $(OBJS) $(LIBFT_LIB) $(HEADERS)
+	$(CC) $(CFLAGS) $(OBJS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 $(LIBFT_LIB):
-	$(MAKE) -C $(LIBFT_DIR)
+	@make printf -C $(LIBFT_DIR)
 
-$(PRINTF_LIB):
-	$(MAKE) -C $(PRINTF_DIR)
+fsanitize: $(LIBFT_LIB) $(HEADERS)
+	$(CC) $(CFLAGS) -g3 -fsanitize=addresss $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
+
+debug:$(LIBFT_LIB) $(HEADERS)
+	$(CC) $(CFLAGS) -g3 $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 clean:
-	rm -rf $(OBJ_PATH)
-	$(MAKE) -C $(LIBFT_DIR) clean
-	$(MAKE) -C $(PRINTF_DIR) clean
+	rm -rf $(OBJS)
+	@make -C $(LIBFT_DIR) clean
 
 fclean: clean
 	rm -rf $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
-	$(MAKE) -C $(PRINTF_DIR) fclean
+	@make -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
