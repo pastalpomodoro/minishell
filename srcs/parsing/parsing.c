@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:24:32 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/10 19:25:16 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:07:12 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,19 +17,29 @@
 // exemple:  grep je > outfile.txt
 //          [[grep], [je], [>], [outfile.txt], NULL]
 
-int	picking(char *input)
+t_node	*parse(char **split)
 {
-	char	**all;
+	t_node	arbre;
 	int		i;
 
 	i = 0;
-	all = ft_split(input, ' ');
-	if (!all)
-		exit(0);
-	while (all[i])
+	while (split[i])
 	{
-		i++;
+		if (!ft_strcmp(split[i], "export"))
+			arbre = create_node(split[i]);
 	}
-	free_double_tab(all);
-	return (1);
+}
+
+int	picking(char *input)
+{
+	char	**split;
+	int		i;
+
+	i = 0;
+	split = ft_split2(input, " \t\n\v\f\r");
+	if (!split)
+		return (1);
+	parse(split);
+	free_double_tab(split);
+	return (0);
 }

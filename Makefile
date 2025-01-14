@@ -6,7 +6,8 @@ CFLAGS = -Wall -Werror -Wextra
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
 			 parsing/parsing.c \
-			 utils/utils.c
+			 utils/utils.c \
+			 utils/ft_split2.c
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 OBJS = $(SRCS:.c=.o)
 
@@ -23,9 +24,9 @@ $(NAME): $(OBJS) $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) $(OBJS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 $(LIBFT_LIB):
-	@make printf -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
 
-fsanitize: $(LIBFT_LIB) $(HEADERS)
+fsan: $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 -fsanitize=addresss $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 debug:$(LIBFT_LIB) $(HEADERS)

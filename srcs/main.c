@@ -6,27 +6,11 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/10 19:24:12 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:16:23 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-int	if_exit(char *input)
-{
-	char	*exit;
-	int		i;
-
-	exit = "exit";
-	i = 0;
-	while (input[i])
-	{
-		if (exit[i] != input[i])
-			return (0);
-		i++;
-	}
-	return (1);
-}
 
 int	main(void)
 {
@@ -37,10 +21,11 @@ int	main(void)
 		input = readline("Minishell> ");
 		if (input)
 		{
-			picking(input);
+			if (picking(input))
+				ft_putstr_fd("Error\n", STDERR_FILENO);
 			add_history(input);
 		}
-		if (if_exit(input) == 1)
+		if (!ft_strcmp(input, "exit"))
 			break ;
 		free(input);
 	}
