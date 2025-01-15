@@ -1,12 +1,17 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g3
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
 			 parsing/parsing.c \
-			 utils/utils.c
+			 parsing/parsing_redir.c \
+			 parsing/parsing_cmd.c \
+			 utils/utils.c\
+			 utils/ft_split2.c\
+			 utils/utils_node.c
+
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 OBJS = $(SRCS:.c=.o)
 

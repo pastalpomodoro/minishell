@@ -28,20 +28,24 @@ int	if_exit(char *input)
 	return (1);
 }
 
-int	main(void)
+int	main(int ac, char **av, char **env)
 {
 	char	*input;
 
+	if (ac != 1)
+		return (0);
+	(void)av;
 	while (1)
 	{
 		input = readline("Minishell> ");
-		if (input)
-		{
-			picking(input);
-			add_history(input);
-		}
 		if (if_exit(input) == 1)
 			break ;
+		if (input)
+		{
+			// input = "<salut";
+			parsing(input, env);
+			add_history(input);
+		}
 		free(input);
 	}
 	free(input);

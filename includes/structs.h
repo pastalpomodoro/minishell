@@ -16,20 +16,10 @@
 
 typedef struct s_commande
 {
-	char	*infile;
-	char	*outfile;
-	char	*cmd;
-	char	*util;
+	char	*path;
+	char	**cmd;
 
 }	t_commande;
-
-typedef struct s_node
-{
-	struct s_node	*left;
-	struct s_node	*right;
-	char			*val;
-	t_token			type;
-}	t_node;
 
 typedef struct s_tkn_lst
 {
@@ -38,5 +28,16 @@ typedef struct s_tkn_lst
 	struct s_tkn_lst	*next;
 	struct s_tkn_lst	*prev;
 }	t_tkn_lst;
+
+typedef struct s_node
+{
+	struct s_node	*next;
+	t_tkn_lst	*right;
+	t_tkn_lst	*left;
+	t_token			type;
+	char			*path;
+	char			**cmd;
+}	t_node;
+
 
 #endif

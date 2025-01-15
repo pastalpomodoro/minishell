@@ -17,19 +17,37 @@
 // exemple:  grep je > outfile.txt
 //          [[grep], [je], [>], [outfile.txt], NULL]
 
-int	picking(char *input)
-{
-	char	**all;
-	int		i;
 
-	i = 0;
-	all = ft_split(input, ' ');
-	if (!all)
-		exit(0);
-	while (all[i])
-	{
-		i++;
-	}
-	free_double_tab(all);
-	return (1);
+int fill_branches(t_tkn_lst **lst_in, char *input)
+{
+    lst_in[0] = fill_branche(input, '<');
+}
+
+int parsing(char *input, char **env)
+{
+    t_node *prince;
+    t_tkn_lst *lst_in;
+    t_tkn_lst *temp;
+
+    
+    prince = init_prince();
+    if (!prince)
+        return (free_branche(lst_in), 0);
+    if (add_last_redir(input, '<') == 0)
+        return (free_branche(lst_in), free(prince), 0);
+    if (fill_cmd(prince, env, input) == 0)
+        return (free_branche(lst_in), 0);
+    int i =-1;
+    while (i++, prince->cmd[i])
+        ft_printf("CMD: %s\n", prince->cmd[i]);
+    ft_printf("PATH: %s\n\n", prince->path);
+    temp = lst_in;
+    while (temp)
+    {
+        ft_printf("<<: %s\n", temp->value);
+        temp = temp->next;
+    }
+    free_branche(lst_in);
+    free_prince(prince);
+    return (1);
 }
