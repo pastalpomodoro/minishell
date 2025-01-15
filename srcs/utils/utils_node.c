@@ -13,14 +13,18 @@ t_tkn_lst  *my_new_node(char *val)
     return (new);
 }
 
-void my_node_addfront(t_tkn_lst **node, t_tkn_lst *new)
+void my_node_addfront_branche(t_tkn_lst **node, t_tkn_lst *new)
 {
+    t_tkn_lst *temp;
+
     if (*node == NULL)
         *node = new;
     else
     {
+        temp = *node;
         new->next = *node;
         *node = new;
+        temp->prev = *node;
     }
 }
 void free_branche(t_tkn_lst *node)
@@ -29,7 +33,7 @@ void free_branche(t_tkn_lst *node)
 
     while (node)
     {
-        temp = node->next;
+        temp = node->prev;
         if (node->value)
             free(node->value);
         free(node);
@@ -49,4 +53,20 @@ t_node *init_prince(void)
     prince->path = NULL;
     prince->right = NULL;
     return (prince);
+}
+t_tkn_lst *my_node_addback_branche(t_tkn_lst *lst, t_tkn_lst *new)
+{
+    t_tkn_lst *temp;
+    
+    if (lst)
+    {
+        while (lst->prev != NULL)
+            lst = lst->prev;
+        temp = lst;
+        lst->prev = new;
+        new->next = temp;
+    }
+    else
+        lst = new;
+    return (lst);
 }

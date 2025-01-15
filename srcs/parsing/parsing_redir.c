@@ -8,8 +8,6 @@ int adding(t_tkn_lst **lst, char *input, int i, char c)
     i+=2;
     while (is_space(input[i], "\t\n\v\f\r ") == 0 && input[i])
         i++;
-    if (input[i] == c)
-        return (free_branche(*lst), 0);
     start = i;
     while (is_space(input[i], "\t\n\v\f\r ") && input[i] != c && input[i])
         i++;
@@ -17,7 +15,7 @@ int adding(t_tkn_lst **lst, char *input, int i, char c)
     if (!node)
         return (free_branche(*lst), 0);
     node->token = T_DLESS;
-    my_node_addfront(lst, node);
+    my_node_addfront_branche(lst, node);
     return (i);
 }
 //me rappeler que quand il y a << il faut l executer dans tout les cas meme sy il y a une commande 
@@ -43,8 +41,13 @@ t_tkn_lst *fill_branche(char *input, char c)
         else
             i++;
     }
+    if (!lst)
+        return (lst);
+    while (lst->next)
+        lst = lst->next;
     return (lst);
 }
+
 char *find_last_redir(char *input, char c)
 {
     int i;
@@ -54,31 +57,19 @@ char *find_last_redir(char *input, char c)
     save = ft_strlen(input);
     while (input[i])
     {
-        if (input[i] == c && input[i + 1] == c)
-            save = i + 2;
-        else if (input[i] == c)
-            save = i + 1;
+        if (input[i] == c)
+        {
+            i++;
+            save = i;
+        }
         i++;
     }
     i = save;
-    while (input[i] && is_space(input[i], "\t\n\v\f\r ") == 0)
+    while (input[i] && is_space(input[i], "<\t\n\v\f\r ") == 0)
         i++;
-    if (!input[i] || input[i] == '>' || input[i] == '<')
-        return (NULL);
     save = i;
     while (is_space(input[i], "\t\n\v\f\r ") && input[i])
         i++;
+    ft_printf("save: %d, i: %d\n", save, i);
     return(ft_substr(input, save, i - save));
-}
-//t_node *node, t_tkn_lst *lst, 
-int add_last_redir(char *input, char c)
-{
-    char *file;
-    t_tkn_lst *new;
-
-    file = find_last_redir(input, c);
-    if (!file)
-        return (0);
-    ft_printf("LLLL: %s\n", file);
-    return (1);
 }

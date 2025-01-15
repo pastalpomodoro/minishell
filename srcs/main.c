@@ -42,7 +42,7 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (input)
 		{
-			// input = "<salut";
+			// input = "<<infile<<gg";
 			parsing(input, env);
 			add_history(input);
 		}
