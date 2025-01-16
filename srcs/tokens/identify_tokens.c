@@ -1,42 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   structs.h                                          :+:      :+:    :+:   */
+/*   identify_tokens.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/14 17:34:22 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/01/16 13:29:03 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/01/16 13:30:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRUCTS_H
-# define STRUCTS_H
-# include "enums.h"
+#include "../../includes/minishell.h"
 
-typedef struct s_commande
+t_token	identify_type(char *line)
 {
-	char	*infile;
-	char	*outfile;
-	char	*cmd;
-	char	*util;
+	t_token	type;
 
-}	t_commande;
-
-typedef struct s_node
-{
-	struct s_node	*left;
-	struct s_node	*right;
-	char			*val;
-	t_token			type;
-}	t_node;
-
-typedef struct s_tkn_lst
-{
-	t_token				token;
-	char				*value;
-	struct s_tkn_lst	*next;
-	struct s_tkn_lst	*prev;
-}	t_tkn_lst;
-
-#endif
+	type = ERROR;
+	return (type);
+}

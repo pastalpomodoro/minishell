@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/14 15:28:09 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:01:31 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,16 @@
 /********   UTILS   ********/
 /***************************/
 void	free_double_tab(char **tab);
-char	**ft_split2(char const *s, char *c);
 
 /*****************************/
 /********   PARSING   ********/
 /*****************************/
 int		picking(char *input);
+
+/*****************************/
+/********   TOKENS    ********/
+/*****************************/
+t_token	identify_type(char *line);
+int		get_cmd_size(char *line, t_token type);
 
 #endif
