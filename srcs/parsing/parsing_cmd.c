@@ -42,12 +42,8 @@ void    free_prince(t_node *prince)
 {
     if (prince->cmd != NULL)
         free_double_tab(prince->cmd);
-    if (prince->left != NULL)
-        free(prince->left);
     if (prince->path != NULL)
         free(prince->path);
-    if (prince->right != NULL)
-        free(prince->right);
     free(prince);
 }
 

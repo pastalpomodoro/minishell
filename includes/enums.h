@@ -15,6 +15,7 @@
 
 typedef enum e_token
 {
+	T_NULL,
 	T_AND,
 	T_OR,
 	T_PIPE,

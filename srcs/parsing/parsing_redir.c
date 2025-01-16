@@ -3,9 +3,16 @@
 int adding(t_tkn_lst **lst, char *input, int i, char c)
 {
     int start;
+    int token;
     t_tkn_lst *node;
 
-    i+=2;
+    token = 0;
+    if (input[i] == c && input[i + 1] == c)
+    {
+        i++;
+        token = 1;
+    }
+    i++;
     while (is_space(input[i], "\t\n\v\f\r ") == 0 && input[i])
         i++;
     start = i;
@@ -14,7 +21,10 @@ int adding(t_tkn_lst **lst, char *input, int i, char c)
     node = my_new_node(ft_substr(input, start, i - start));
     if (!node)
         return (free_branche(*lst), 0);
-    node->token = T_DLESS;
+    if (token == 1)
+        node->token = T_DLESS;
+    else
+        node->token = T_LESS;
     my_node_addfront_branche(lst, node);
     return (i);
 }
@@ -29,12 +39,12 @@ t_tkn_lst *fill_branche(char *input, char c)
     i = 0;
     while (input[i])
     {
-        if (input[i] == c && input[i + 1] == c)
+        if (input[i] == c)
         {
             i = adding(&lst, input, i, c);
             if (i == 0)
             {
-                lst = my_new_node(NULL);
+                free_branche(lst);
                 break;
             }
         }
@@ -48,28 +58,3 @@ t_tkn_lst *fill_branche(char *input, char c)
     return (lst);
 }
 
-char *find_last_redir(char *input, char c)
-{
-    int i;
-    int save;
-
-    i = 0;
-    save = ft_strlen(input);
-    while (input[i])
-    {
-        if (input[i] == c)
-        {
-            i++;
-            save = i;
-        }
-        i++;
-    }
-    i = save;
-    while (input[i] && is_space(input[i], "<\t\n\v\f\r ") == 0)
-        i++;
-    save = i;
-    while (is_space(input[i], "\t\n\v\f\r ") && input[i])
-        i++;
-    ft_printf("save: %d, i: %d\n", save, i);
-    return(ft_substr(input, save, i - save));
-}

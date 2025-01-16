@@ -42,7 +42,7 @@ int	main(int ac, char **av, char **env)
 			break ;
 		if (input)
 		{
-			// input = "<<infile<<gg";
+			// input = "<<infile grep je >outfile";
 			parsing(input, env);
 			add_history(input);
 		}
