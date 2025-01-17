@@ -23,18 +23,18 @@ void		free_prince(t_node *prince);
 t_node		*init_prince(void);
 t_tkn_lst	*my_new_node(char *val);
 void		free_branche(t_tkn_lst *node);
-t_tkn_lst	*find_last_branche(t_tkn_lst *lst);
 void		my_node_addfront_branche(t_tkn_lst **node, t_tkn_lst *new);
 char		**ft_split2(char const *s, char *c);
 
 /*****************************/
-/********   PARSING   ********/
+/*******  LST_CREATOR  *******/
 /*****************************/
 int			is_space(char c, char *space);
 char		*get_path(char *c, char **env);
 t_tkn_lst	*fill_branche(char *input, char c);
+int         find_outfile(t_tkn_lst **node_out, char *input);
 int			fill_cmd(t_node *prince, char **env, char *input);
-char		*find_last_redir(char *input, char c);
-int			parsing(char *input, char **env);
+t_node		*lst_creator(char *input, char **env);
+void pipe_split(char *input, char **env);
 
 #endif

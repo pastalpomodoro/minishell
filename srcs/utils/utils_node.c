@@ -46,7 +46,7 @@ void	free_branche(t_tkn_lst *node)
 
 	while (node)
 	{
-		temp = node->prev;
+		temp = node->next;
 		if (node->value)
 			free(node->value);
 		free(node);

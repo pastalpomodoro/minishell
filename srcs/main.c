@@ -31,6 +31,7 @@ int	if_exit(char *input)
 int	main(int ac, char **av, char **env)
 {
 	char	*input;
+	// t_node	**cmds;
 
 	if (ac != 1)
 		return (0);
@@ -43,7 +44,8 @@ int	main(int ac, char **av, char **env)
 		if (input)
 		{
 			// input = "<<infile grep je >outfile";
-			parsing(input, env);
+			pipe_split(input, env);
+			// lst_creator(input, env);
 			add_history(input);
 		}
 		free(input);
