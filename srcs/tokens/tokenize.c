@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/16 15:23:59 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/17 12:06:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static t_tkn_lst	*create_token(char **line, t_token type, t_tkn_lst *list)
 	if (list->value == NULL)
 	{
 		// TODO: free list + all heap before
-		exit(0);
+		exit(1);
 	}
 	return (list);
 }
