@@ -6,22 +6,23 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/10 19:36:14 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:09:41 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"../../includes/minishell.h"
 
-int is_space(char c, char *space)
+int	is_space(char c, char *space)
 {
-    while (*space)
-    {
-        if (c == *space)
-            return (0);
-        space++;
-    }
-    return (1);
+	while (*space)
+	{
+		if (c == *space)
+			return (0);
+		space++;
+	}
+	return (1);
 }
+
 //fonction qui free un double tableau attentio le double tableau doit
 // toutjours finire par NULL
 void	free_double_tab(char **tab)
@@ -35,6 +36,7 @@ void	free_double_tab(char **tab)
 		free(tab[size--]);
 	free(tab);
 }
+
 char	*return_path(char *cmd, char **allpath)
 {
 	int		i;
@@ -58,6 +60,7 @@ char	*return_path(char *cmd, char **allpath)
 	free_double_tab(allpath);
 	return (NULL);
 }
+
 //fonction pour trouver le chemin d une commande grace au env
 char	*get_path(char *c, char **env)
 {
