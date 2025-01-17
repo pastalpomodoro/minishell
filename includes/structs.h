@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/14 17:34:22 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:14:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,11 @@ typedef struct s_tkn_lst
 typedef struct s_node
 {
 	struct s_node	*next;
-	t_tkn_lst	*right;
-	t_tkn_lst	*left;
+	t_tkn_lst		*right;
+	t_tkn_lst		*left;
 	t_token			type;
 	char			*path;
 	char			**cmd;
 }	t_node;
-
 
 #endif
