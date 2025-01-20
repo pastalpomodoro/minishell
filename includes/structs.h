@@ -34,6 +34,8 @@ typedef struct s_node
 	struct s_node	*next;
 	t_tkn_lst		*right;
 	t_tkn_lst		*left;
+	int 			infile;
+	int 			outfile;
 	t_token			type;
 	char			*path;
 	char			**cmd;

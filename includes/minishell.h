@@ -19,7 +19,11 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <fcntl.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+
+# define COTE '\''
+# define D_COTE '"'
 
 #endif

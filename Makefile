@@ -6,13 +6,14 @@ CFLAGS = -Wall -Werror -Wextra -g3
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
-			 test.c\
-             lst_creator/lst_creator.c\
-             lst_creator/lst_creator_cmd.c\
-             lst_creator/lst_creator_redir.c\
-             utils/utils.c\
-             utils/ft_split2.c\
-             utils/utils_node.c
+			lst_creator/find_infile.c\
+            utils/utils.c\
+			#  test.c\
+            #  lst_creator/lst_creator.c\
+            #  lst_creator/lst_creator_cmd.c\
+            #  lst_creator/lst_creator_redir.c\
+            #  utils/ft_split2.c\
+            #  utils/utils_node.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 

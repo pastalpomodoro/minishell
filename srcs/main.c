@@ -44,12 +44,12 @@ int	main(int ac, char **av, char **env)
 		if (input)
 		{
 			// input = "<<infile grep je >outfile";
-			pipe_split(input, env);
-			// lst_creator(input, env);
+			chepas(input);
 			add_history(input);
 		}
 		free(input);
 	}
 	free(input);
 	rl_clear_history();
+	ft_printf("%s", env[0]);
 }
