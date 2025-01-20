@@ -1,25 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   enums.h                                            :+:      :+:    :+:   */
+/*   split_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/14 17:19:14 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/20 22:41:40 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/01/20 21:56:01 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/01/20 22:40:27 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ENUMS_H
-# define ENUMS_H
+#include "../../includes/minishell.h"
 
-//	TOKENS
-typedef enum e_token
+t_tkn_lst	*split_token(char **line)
 {
-	T_REDIRECT,
-	T_CMD,
-	T_FILE,
-	T_LITERAL,
-}	t_token;
+	t_tkn_lst	*lst;
 
-#endif
+	while (**line == ' ' || **line == '\t')
+		(*line)++;
+	if (!**line)
+		return (NULL);
+}

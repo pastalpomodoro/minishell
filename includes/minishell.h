@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:18:11 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/10 19:23:14 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:51:33 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <curses.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 

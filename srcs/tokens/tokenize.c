@@ -6,66 +6,63 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/17 12:06:50 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:38:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static t_tkn_lst	*get_first(t_tkn_lst *list)
+static bool	is_eof(char *line)
 {
-	while (list->prev)
-		list = list->prev;
-	return (list);
+	if (line)
+		return (FALSE);
+	return (TRUE);
 }
 
-static char	*get_value(t_token type, char **line)
+static bool	is_single_dollar_sign(char *line)
 {
-	char	*val;
-
-	if (type == T_O_PAR || type == T_C_PAR || type == T_PIPE || type == T_LESS
-		|| type == T_GREAT)
-		val = malloc(2);
-	else if (type == T_AND || type == T_OR || type == T_DLESS
-		|| type == T_DGREAT)
-		val = malloc(3);
-	else
-		val = malloc(get_cmd_size(*line, type) + 1);
-	if (val == NULL)
-		return (NULL);
-	return (val);
+	while (*line == ' ' || *line == '\t')
+		line++;
+	if (!(*line))
+		return (FALSE);
+	if (*line == '$')
+		line++;
+	while (*line == ' ' || *line == '\t')
+		line++;
+	if (*line)
+		return (FALSE);
+	// TODO: add error message $ not foud
+	return (TRUE);
 }
 
-static t_tkn_lst	*create_token(char **line, t_token type, t_tkn_lst *list)
+static bool	no_need_token(char *line)
 {
-	t_tkn_lst	*e;
-
-	e = malloc(sizeof(t_tkn_lst));
-	if (!e)
-		return (NULL);
-	e->prev = list;
-	list = e;
-	list->token = type;
-	list->value = get_value(type, line);
-	if (list->value == NULL)
-	{
-		// TODO: free list + all heap before
-		exit(1);
-	}
-	return (list);
+	if (is_eof(line))
+		return (TRUE);
+	if (*line == '\0')
+		return (TRUE);
+	if (is_single_dollar_sign(line))
+		return (TRUE);
+	return (FALSE);
 }
 
 t_tkn_lst	*get_tokens(char *line)
 {
-	t_tkn_lst	*list;
-	t_token		type;
+	t_tkn_lst	*lst;
+	t_tkn_lst	*tmp;
 
-	if (!line)
+	if (no_need_token(line))
 		return (NULL);
+	check_insert_spaces(line);
 	while (*line)
 	{
-		type = identify_type(line);
-		list = create_token(&line, type, list);
+		tmp = split_token(&line);
+		if (tmp == NULL)
+		{
+			tkn_lst_clear(&lst);
+			return (NULL);
+		}
+		tkn_add_back(&lst, tmp);
 	}
-	return (get_first(list));
+	return (lst);
 }
