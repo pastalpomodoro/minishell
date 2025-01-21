@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/20 22:38:58 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/21 15:58:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,10 @@ void		check_insert_spaces(char *line);
 bool		inside_quotes(char **line);
 //			insert_spaces.c
 char		*insert_spaces(char *line, char *op, char *line_init);
-//			split_token
-t_tkn_lst	*split_token(char **line);
+//			split_token.c
+int			split_token(char **line, t_tkn_lst **lst);
+//			add_token.c
+int			add_token(char **line, int size, t_tkn_lst **lst);
 //			tkn_lst.c
 t_tkn_lst	*new_token(char *val, t_token type);
 t_tkn_lst	*get_first_tkn(t_tkn_lst *lst);

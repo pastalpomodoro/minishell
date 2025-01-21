@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 16:18:56 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/20 22:02:32 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:35:07 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	check_insert_spaces(char *line)
 		if (inside_quotes(&current))
 			current++;
 		if (no_spaces_around(current, line_init))
-			current = insert_spaces(&line, current, line_init);
+			current = insert_spaces(line, current, line_init);
 		current++;
 	}
 }

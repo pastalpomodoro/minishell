@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/14 17:34:22 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:35:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@
 
 typedef struct s_commande
 {
-	char	*infile;
-	char	*outfile;
-	char	*cmd;
-	char	*util;
-
+	int		infile;
+	int		outfile;
+	char	**cmd;
+	char	*path;
 }	t_commande;
 
 typedef struct s_node
