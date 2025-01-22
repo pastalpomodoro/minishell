@@ -28,28 +28,48 @@ int	if_exit(char *input)
 	return (1);
 }
 
-int	main(int ac, char **av, char **env)
+int	main(int ac, char **av, char **envi)
 {
-	char	*input;
-	// t_node	**cmds;
+	// char	*input;
+	t_env	*env;
+	char *var;
 
-	if (ac != 1)
+	if (ac < 1)
 		return (0);
 	(void)av;
-	while (1)
-	{
-		input = readline("Minishell> ");
-		if (if_exit(input) == 1)
-			break ;
-		if (input)
-		{
-			// input = "<<infile grep je >outfile";
-			chepas(input);
-			add_history(input);
-		}
-		free(input);
-	}
-	free(input);
-	rl_clear_history();
-	ft_printf("%s", env[0]);
+	env = env_creator(envi);
+	var = replace_var(env, "infile $d$USER$SALUT $GDK_BACKEND salu tu va bien");
+	//salut salut salut salut
+	free_env(env);
+	// while (1)
+	// {
+	// 	input = readline("Minishell> ");
+	// 	if (if_exit(input) == 1)
+	// 		break ;
+	// 	if (input)
+	// 	{
+	// 		// input = "<<infile grep je >outfile";
+	// 		// chepas(input);
+	// 		add_history(input);
+	// 	}
+	// 	free(input);
+	// }
+	// free_env(env);
+	// free(input);
+	// rl_clear_history();
 }
+//redir
+//<<"$FILE"->$FILE
+//<<'$FILE'->$FILE
+
+//<'$FILE'->$FILE
+//<"$FILE"->valeur de FILE
+
+//>'$FILE'->$FILE
+//>"$FILE"->file
+//>>'$FILE'->$FILE
+//>>"$FILE"->file
+
+//comment ca marche?
+//redirection et apres prendre tout les literal comment non du file
+//cmd et apres prendre tout les literal comme utils de la commande

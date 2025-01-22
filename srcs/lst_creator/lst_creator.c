@@ -12,65 +12,127 @@
 
 #include "../../includes/minishell.h"
 
-void	end_struct(t_tkn_lst *lst_in, t_tkn_lst *node_out, t_node *prince)
+
+int hard_in(t_tkn_lst *node)
 {
-	if (lst_in)
-	{
-		while (lst_in->prev)
-			lst_in = lst_in->prev;
-	}
-	prince->left = lst_in;
-	prince->right = node_out;
+    char *line;
+    int *pipe_fd;
+
+    if (ft_strlen(node->value) == 0 && node->next == NULL)
+        return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), -1);
+    pipe_fd = malloc(sizeof(int) * 2);
+    if (pipe(pipe_fd) == -1)
+        return (-2);
+    while (1)
+    {
+        line = readline("> ");
+        if (ft_strcmp(line, node->value) == 0)
+            break;
+        write(pipe_fd[1], line, ft_strlen(line));
+        write(pipe_fd[1], "\n", 1);
+        free(line);
+    }
+    free(line);
+    close(pipe_fd[1]);
+    return (pipe_fd[0]);
 }
 
-void	free_out(t_tkn_lst *node_out)
+int easy_in(t_tkn_lst *node, t_env *env)
 {
-	if (node_out)
-	{
-		if (node_out->value)
-			free(node_out->value);
-		free(node_out);
-	}
+    int fd;
+    char *line;
+    t_tkn_lst *next;
+
+    next = node->next;
+    if (node->token == T_LITERAL)
+    {
+        line = replace_var(env, node->value);
+        if (!line)
+            return (-2);
+    }
+    else
+        line = node->value;
+    fd = open(line, O_RDONLY);
+    if (ft_strlen(node->value) == 0 && node->next == NULL)
+        return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), -1);
+    if (ft_strlen(node->value) == 0)
+        return (ft_printf("minishell: syntax error near unexpected token `%s'", next->value), -1);
+    if (fd < 0)
+        ft_printf("minishell: %s: No such file or directory", line);
+    return (fd);
+}
+int out(t_tkn_lst *node, t_env *env, int type)
+{
+    int fd;
+    char *file;
+    t_tkn_lst *next;
+
+    next = node->next;
+    if (node->token == T_LITERAL)
+    {
+        file = replace_var(env, node->value);
+        if (!file)
+            return (-2);
+    }
+    else if (node->token == T_SIMPLE_QUOTE)
+        file = node->value;
+    if (ft_strlen(node->value) == 0 && node->next == NULL)
+        return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), -1);
+    if (ft_strlen(node->value) == 0)
+        return (ft_printf("minishell: syntax error near unexpected token `%s'", next->value), -1);
+    if (type == 1)//>
+        fd = open(file, O_WRONLY | O_CREAT | O_TRUNC);
+    if (type == 2)//>>
+        fd = open(file, O_WRONLY | O_CREAT | O_APPEND);
+    if (fd < 0)
+        ft_printf("bash: %s: Permission denied", node->value);
+    return (fd);
+}
+void redirect(t_tkn_lst *node, t_env *env)
+{
+    t_tkn_lst *next;
+    int fd;
+
+    next = node->next;
+    if (ft_strcmp(node->value, "<<") == 0)
+        fd = hard_in(next);
+    else if (ft_strcmp(node->value, "<") == 0)
+        fd = easy_in(next, env);
+    else if (ft_strcmp(node->value, ">") == 0)
+        fd = out(next, env, 1);
+    else if (ft_strcmp(node->value, ">>") == 0)
+        fd = out(next, env, 2);
+
 }
 
-t_node	*lst_creator(char *input, char **env)
+void creator(t_tkn_lst *node, t_env *env)
 {
-	t_node		*prince;
-	t_tkn_lst	*lst_in;
-	t_tkn_lst	*node_out;
+    int i;
 
-	lst_in = fill_branche(input, '<');
-	prince = init_prince();
-	if (!prince)
-		return (free_branche(lst_in), NULL);
-	find_outfile(&node_out, input);
-	end_struct(lst_in, node_out, prince);
-	if (fill_cmd(prince, env, input) == 0)
-		return (free_branche(lst_in), free_out(node_out), NULL);
-	return (prince);
+    i = 0;
+    while (node)
+    {
+        if (node->token == T_CMD)
+            ft_printf("FAIRE LA COMMANDE\n");
+        else if (node->token == T_REDIRECT)
+            redirect(node, env);
+            //faire une foction qui check le type de redirection <<, <, >>, >, |, e qui apelle une fonction qui fais que quil faut faire en fonction de la redirection
+        node = node->next;
+    }
 }
-	// free_out(node_out);
-	// free_branche(lst_in);
-	// free_prince(prince);
+// t_node	*lst_creator(char *input, char **env)
+// {
+// 	t_node		*prince;
+// 	t_tkn_lst	*lst_in;
+// 	t_tkn_lst	*node_out;
 
-	// i = -1;
-	// while (i++, prince->cmd[i])
-	// 	ft_printf("CMD: %s TKN: %d\n", prince->cmd[i], prince->type);
-	// ft_printf("PATH: %s\n\n", prince->path);
-	// temp = prince->left;
-	// if (temp)
-	// 	ft_printf("LEFT: %s, tkn: %d\n", temp->value, temp->token);
-	// else
-	// 	ft_printf("LEFT: NULL\n");
-	// temp = prince->right;
-	// if (temp)
-	// 	ft_printf("RIGHT: %s, tkn: %d\n\n", temp->value, temp->token);
-	// else
-	// 	ft_printf("RIGHT: NULL\n\n");
-	// temp = lst_in;
-	// // find_outfile(node_out, input);
-	// while (temp)
-	// {
-	// 	ft_printf("<<: %s,  %d, LEN: %d\n", temp->value, temp->token, ft_strlen(temp->value));
-	// 	temp = temp->prev;
-	// }
+// 	lst_in = fill_branche(input, '<');
+// 	prince = init_prince();
+// 	if (!prince)
+// 		return (free_branche(lst_in), NULL);
+// 	find_outfile(&node_out, input);
+// 	end_struct(lst_in, node_out, prince);
+// 	if (fill_cmd(prince, env, input) == 0)
+// 		return (free_branche(lst_in), free_out(node_out), NULL);
+// 	return (prince);
+// }

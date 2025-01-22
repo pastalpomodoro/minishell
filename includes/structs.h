@@ -14,10 +14,19 @@
 # define STRUCTS_H
 # include "enums.h"
 
+typedef struct s_env
+{
+	char *content;
+	struct s_env *next;
+}				t_env;
+
 typedef struct s_commande
 {
+	int	infile;
+	int	outfile;
 	char	*path;
 	char	**cmd;
+	struct s_commande *next;
 
 }	t_commande;
 

@@ -15,18 +15,11 @@
 
 typedef enum e_token
 {
-	T_NULL,
-	T_AND,
-	T_OR,
-	T_PIPE,
-	T_GREAT,
-	T_LESS,
+	T_REDIRECT,
 	T_CMD,
-	T_O_PAR,
-	T_C_PAR,
-	T_DLESS,
-	T_DGREAT,
-	T_EXPORT
+	T_PIPE,
+	T_LITERAL,
+	T_SIMPLE_QUOTE,
 }	t_token;
 
 #endif

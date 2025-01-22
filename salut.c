@@ -2,8 +2,7 @@
 #include <string.h>
 int main()
 {
-    char *dst;
-
-    dst = strlcat(dst, "salut", 5);
-    printf("%s\n", dst);
+    int fd = open("salut", O_RDONLY);
+    int fd1 = open("ciao", O_RDONLY);
+    printf("%d\n%d", fd, fd1);
 }
