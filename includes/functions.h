@@ -20,6 +20,7 @@
 /***************************/
 int			is_space(char c, char *space);
 void free_env(t_env *env);
+char *get_path(char *c, t_env *env);
 
 // /*****************************/
 // /*******  LST_CREATOR  *******/

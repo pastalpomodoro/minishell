@@ -26,7 +26,7 @@ t_env *init_env(char *value)
         return (NULL);
     return (new);
 }
-
+//return (NULL) sy probleme de malloc
 t_env *env_creator(char **env)
 {
     int i;

@@ -38,9 +38,11 @@ int	main(int ac, char **av, char **envi)
 		return (0);
 	(void)av;
 	env = env_creator(envi);
-	var = replace_var(env, "infile $d$USER$SALUT $GDK_BACKEND salu tu va bien");
+	var = get_path("grep", env);
 	//salut salut salut salut
+	ft_printf("PATH: %s, SIZE: %d\n", var, ft_strlen(var));
 	free_env(env);
+	free(var);
 	// while (1)
 	// {
 	// 	input = readline("Minishell> ");

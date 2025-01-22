@@ -16,11 +16,10 @@
 int hard_in(t_tkn_lst *node)
 {
     char *line;
-    int *pipe_fd;
+    int pipe_fd[2];
 
     if (ft_strlen(node->value) == 0 && node->next == NULL)
         return (ft_printf("minishell: syntax error near unexpected token `newline'\n"), -1);
-    pipe_fd = malloc(sizeof(int) * 2);
     if (pipe(pipe_fd) == -1)
         return (-2);
     while (1)
@@ -88,7 +87,7 @@ int out(t_tkn_lst *node, t_env *env, int type)
         ft_printf("bash: %s: Permission denied", node->value);
     return (fd);
 }
-void redirect(t_tkn_lst *node, t_env *env)
+int redirect(t_tkn_lst *node, t_env *env)
 {
     t_tkn_lst *next;
     int fd;
@@ -102,7 +101,8 @@ void redirect(t_tkn_lst *node, t_env *env)
         fd = out(next, env, 1);
     else if (ft_strcmp(node->value, ">>") == 0)
         fd = out(next, env, 2);
-
+    if (fd == -2)
+        return (-2);
 }
 
 void creator(t_tkn_lst *node, t_env *env)
@@ -117,6 +117,8 @@ void creator(t_tkn_lst *node, t_env *env)
         else if (node->token == T_REDIRECT)
             redirect(node, env);
             //faire une foction qui check le type de redirection <<, <, >>, >, |, e qui apelle une fonction qui fais que quil faut faire en fonction de la redirection
+        else if (node->token == T_PIPE)
+            ft_printf("malloc(sizeof(t_cmd))");
         node = node->next;
     }
 }
