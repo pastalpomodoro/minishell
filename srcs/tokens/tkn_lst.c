@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:35:59 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/20 22:28:20 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:51:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,26 +28,20 @@ t_tkn_lst	*new_token(char *val, t_token type)
 
 t_tkn_lst	*get_first_tkn(t_tkn_lst *lst)
 {
-	t_tkn_lst	*tmp;
-
 	if (lst == NULL)
 		return (lst);
-	tmp = lst;
-	while (tmp->prev != NULL)
-		tmp = tmp->prev;
-	return (tmp);
+	while (lst->prev != NULL)
+		lst = lst->prev;
+	return (lst);
 }
 
 t_tkn_lst	*get_last_tkn(t_tkn_lst *lst)
 {
-	t_tkn_lst	*tmp;
-
 	if (lst == NULL)
 		return (lst);
-	tmp = lst;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	return (tmp);
+	while (lst->next != NULL)
+		lst = lst->next;
+	return (lst);
 }
 
 void	tkn_add_back(t_tkn_lst **lst, t_tkn_lst *token)

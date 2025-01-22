@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/21 13:42:41 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:48:46 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,6 @@ static bool	is_eof(char *line)
 
 static bool	is_single_dollar_sign(char *line)
 {
-	char	*tmp;
-
-	tmp = ft_strtrim(line, "\'\"");
 	while (*line == ' ' || *line == '\t')
 		line++;
 	if (!(*line))
@@ -52,16 +49,20 @@ static bool	no_need_token(char *line)
 t_tkn_lst	*get_tokens(char *line)
 {
 	t_tkn_lst	*lst;
+	int			i;
 
 	if (no_need_token(line))
 		return (NULL);
-	check_insert_spaces(line);
-	while (*line)
+	line = check_insert_spaces(line);
+	if (line == NULL)
+		return (new_token("MALLOC ERROR", ERROR));
+	i = 0;
+	while (line[i])
 	{
-		if (split_token(&line, &lst))
+		if (split_token(&line[i], &lst, &i))
 		{
 			tkn_lst_clear(&lst);
-			return (NULL);
+			return (new_token("MALLOC ERROR", ERROR));
 		}
 	}
 	return (lst);

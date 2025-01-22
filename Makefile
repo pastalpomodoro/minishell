@@ -7,7 +7,14 @@ SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
 			 parsing/parsing.c \
 			 utils/utils.c \
-			 utils/ft_split2.c
+			 utils/ft_split2.c \
+			 utils/variadic_strjoin.c \
+			 tokens/tokenize.c \
+			 tokens/split_token.c \
+			 tokens/check_spaces.c \
+			 tokens/insert_spaces.c \
+			 tokens/add_token.c \
+			 tokens/tkn_lst.c
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 OBJS = $(SRCS:.c=.o)
 
@@ -27,7 +34,7 @@ $(LIBFT_LIB):
 	@make -C $(LIBFT_DIR)
 
 fsan: $(LIBFT_LIB) $(HEADERS)
-	$(CC) $(CFLAGS) -g3 -fsanitize=addresss $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
+	$(CC) $(CFLAGS) -g3 -fsanitize=address $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 debug:$(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)

@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/14 14:16:23 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:43:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,27 @@
 
 int	main(void)
 {
-	char	*input;
+	char		*input;
+	t_tkn_lst	*lst;
+	t_tkn_lst	*tmp;
 
 	while (1)
 	{
 		input = readline("Minishell> ");
 		if (input)
 		{
-			if (picking(input))
-				ft_putstr_fd("Error\n", STDERR_FILENO);
+			lst = get_tokens(input);
+			if (lst == NULL)
+				exit(1);
+			tmp = lst;
+			while (lst)
+			{
+				printf("TOKEN:\nTYPE: %d\nVALUE: %s\n\n", lst->token,
+					lst->value);
+				lst = lst->next;
+			}
 			add_history(input);
+			tkn_lst_clear(&tmp);
 		}
 		if (!ft_strcmp(input, "exit"))
 			break ;

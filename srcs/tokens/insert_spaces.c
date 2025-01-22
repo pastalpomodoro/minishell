@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 20:35:59 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/20 21:54:04 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 21:41:53 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,43 +14,42 @@
 
 static int	get_operator_size(char *op)
 {
-	if (*op == *(op + 1))
+	if (op[0] == op[1])
 		return (2);
 	return (1);
 }
 
-static char	*create_new_line(char *line, char *op, int op_size,
-							int offset)
+static char	*create_new_line(char *op, char *line_init, int op_size)
 {
 	char	*new;
 	char	*left;
-	char	*op_dup;
 	char	*right;
+	char	*op_dup;
 
-	left = ft_substr(line, 0, offset);
-	op_dup = ft_substr(op, 0, op_size);
-	right = ft_strdup(op + op_size);
-	new = variadic_strjoin(5, left, " ", op, " ", right);
+	left = ft_substr(line_init, 0, ft_strlen(line_init) - ft_strlen(op));
+	if (left == NULL)
+		return (NULL);
+	right = ft_substr(op, op_size, ft_strlen(op));
+	if (right == NULL)
+		return (free(left), NULL);
+	op_dup = ft_strndup(op, op_size);
+	if (op_dup == NULL)
+		return (free(left), free(right), NULL);
+	new = variadic_strjoin(5, left, " ", op_dup, " ", right);
 	free(left);
-	free(op_dup);
 	free(right);
+	free(op_dup);
 	return (new);
 }
 
-char	*insert_spaces(char *line, char *op, char *line_init)
+char	*insert_spaces(char *op, char *line_init, int *i)
 {
-	char	*new;
 	int		op_size;
-	int		offset;
+	char	*new_line;
 
-	if (op != line_init)
-	{
-		if (*(op - 1) == '>' || *(op - 1) == '<')
-			return (op++);
-	}
 	op_size = get_operator_size(op);
-	offset = op - line;
-	new = create_new_line(line, op, op_size, offset);
-	free(line);
-	return (new + offset + op_size + 1);
+	new_line = create_new_line(op, line_init, op_size);
+	free(line_init);
+	*i += op_size + 1;
+	return (new_line);
 }

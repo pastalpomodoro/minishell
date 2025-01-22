@@ -6,34 +6,32 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 16:18:56 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/21 16:35:07 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 22:50:23 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static bool	has_a_match(char **line, char c)
+static bool	has_a_match(char *line, char c, int *i)
 {
-	char	*tmp;
+	int	cpi;
 
-	tmp = *line;
-	tmp++;
-	while (*tmp)
+	cpi = *i;
+	while (*line)
 	{
-		if (*tmp == c)
-		{
-			*line = tmp;
+		if (*line == c)
 			return (TRUE);
-		}
-		tmp++;
+		line++;
+		(*i)++;
 	}
+	*i = cpi;
 	return (FALSE);
 }
 
-bool	inside_quotes(char **line)
+bool	inside_quotes(char *line, int *i)
 {
-	if ((**line == '\'' || **line == '\"')
-		&& has_a_match(line, **line))
+	if ((*line == '\'' || *line == '\"')
+		&& has_a_match(line, *line, i))
 		return (TRUE);
 	return (FALSE);
 }
@@ -58,19 +56,23 @@ static bool	no_spaces_around(char *line, char *line_init)
 	return (FALSE);
 }
 
-void	check_insert_spaces(char *line)
+char	*check_insert_spaces(char *line)
 {
-	char	*current;
-	char	*line_init;
+	int	i;
 
-	current = line;
-	line_init = line;
-	while (current && *current)
+	i = 0;
+	while (line[i])
 	{
-		if (inside_quotes(&current))
-			current++;
-		if (no_spaces_around(current, line_init))
-			current = insert_spaces(line, current, line_init);
-		current++;
+		if (inside_quotes(&line[i], &i))
+			i++;
+		if (no_spaces_around(&line[i], line))
+		{
+			line = insert_spaces(&line[i], line, &i);
+			if (line == NULL)
+				return (NULL);
+		}
+		else
+			i++;
 	}
+	return (line);
 }
