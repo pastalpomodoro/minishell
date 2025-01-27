@@ -73,5 +73,5 @@ int	main(int ac, char **av, char **envi)
 //>>"$FILE"->file
 
 //comment ca marche?
-//redirection et apres prendre tout les literal comment non du file
-//cmd et apres prendre tout les literal comme utils de la commande
+//redirection et apres prendre tout les literal ou double cote comment non du file
+//cmd et apres prendre tout les literal ou double cote comme utils de la commande

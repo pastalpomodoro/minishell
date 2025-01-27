@@ -67,6 +67,7 @@ int out(t_tkn_lst *node, t_env *env, int type)
     t_tkn_lst *next;
 
     next = node->next;
+    //il faut while jusqua la ligne 78 et apres dans le while faire un strjoin ou j ajoute tout les T_literal et T_SIMPLE_QUOTE
     if (node->token == T_LITERAL)
     {
         file = replace_var(env, node->value);
@@ -87,40 +88,107 @@ int out(t_tkn_lst *node, t_env *env, int type)
         ft_printf("bash: %s: Permission denied", node->value);
     return (fd);
 }
-int redirect(t_tkn_lst *node, t_env *env)
+int redirect(t_tkn_lst *node, t_env *env, t_commande **cmd)
 {
     t_tkn_lst *next;
+    int i;
     int fd;
 
+    i = 0;
     next = node->next;
-    if (ft_strcmp(node->value, "<<") == 0)
+    if (i++, ft_strcmp(node->value, "<<") == 0)
         fd = hard_in(next);
-    else if (ft_strcmp(node->value, "<") == 0)
+    else if (i++, ft_strcmp(node->value, "<") == 0)
         fd = easy_in(next, env);
-    else if (ft_strcmp(node->value, ">") == 0)
+    else if (i++, ft_strcmp(node->value, ">") == 0)
         fd = out(next, env, 1);
-    else if (ft_strcmp(node->value, ">>") == 0)
+    else if (i++, ft_strcmp(node->value, ">>") == 0)
         fd = out(next, env, 2);
-    if (fd == -2)
-        return (-2);
+    if (fd < 0)
+        return (fd);
+    if (i > 3)
+        (*cmd)->infile = fd;
+    else if (i > 2)
+        (*cmd)->outfile = fd;    
+    return (fd);
 }
-
-void creator(t_tkn_lst *node, t_env *env)
+t_commande *cmd_init()
 {
+    t_commande *cmd;
+
+    cmd = malloc(sizeof(cmd));
+    if (!cmd)
+        return (NULL);
+    cmd->cmd = NULL;
+    cmd->path = NULL;
+    cmd->next = NULL;
+    cmd->infile = -3;
+    cmd->outfile = -3;
+}
+int cmd_creator(t_commande **cmd, t_tkn_lst *node, t_env *env)
+{
+    int size;
+    int i;
+    t_tkn_lst *temp;
+
+    size = -1;
+    cmd[0]->path = get_path(node->value, env);
+    if (!cmd[0]->path)
+        return (-1);
+    temp = node;
+    while (size++, (temp->token == T_LITERAL || temp->token == T_SIMPLE_QUOTE) && temp)
+        temp = temp->token;
+    cmd[0]->cmd = malloc(sizeof(t_commande *) * size);
+    if (!cmd[0]->cmd)
+        return (-1);
+    i = -1;
+    while (i++, (node->token == T_LITERAL || node->token == T_SIMPLE_QUOTE) && node)
+    {
+        if (node->token == T_LITERAL)
+        {
+            cmd[0]->cmd[i] = replace_var(env, node->value);
+            if (!cmd[0]->cmd[i])
+                return (-1);
+        }
+        else if (node->token == T_SIMPLE_QUOTE)
+            cmd[0]->cmd[i] = node->value;
+        node = node->next;
+    }
+    return (1);
+}
+// fonction qui return -2 sy probleme de malloc et moins 1 sy erreur comme : Erreur de fd, Erreur de path
+int creator(t_tkn_lst *node, t_env *env, t_commande **cmd)
+{
+    t_commande *init;
     int i;
 
-    i = 0;
+    (*cmd) = cmd_init();
+    if (!(*cmd))
+        return (NULL);
     while (node)
     {
         if (node->token == T_CMD)
-            ft_printf("FAIRE LA COMMANDE\n");
+        {
+            i = cmd_creator(&cmd, node, env);
+            if (i <-0)
+                return (i);
+        }
         else if (node->token == T_REDIRECT)
-            redirect(node, env);
-            //faire une foction qui check le type de redirection <<, <, >>, >, |, e qui apelle une fonction qui fais que quil faut faire en fonction de la redirection
+        {
+            i = redirect(node, env, &cmd);
+            if (i < 0)
+                return (i);
+        }  
         else if (node->token == T_PIPE)
-            ft_printf("malloc(sizeof(t_cmd))");
+        {
+            (*cmd)->next = cmd_init();
+            if (!(*cmd)->next)
+                return (-2);
+            cmd = (*cmd)->next; 
+        }
         node = node->next;
     }
+    return (init);
 }
 // t_node	*lst_creator(char *input, char **env)
 // {
@@ -138,3 +206,5 @@ void creator(t_tkn_lst *node, t_env *env)
 // 		return (free_branche(lst_in), free_out(node_out), NULL);
 // 	return (prince);
 // }
+
+//cmd echo salutsalut
