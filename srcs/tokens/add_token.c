@@ -6,12 +6,13 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:57:23 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:58:57 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// TODO: get type for parenthesis + others cmds ???
 static t_token	get_type(char *line, int size)
 {
 	if (!ft_strncmp(line, "echo", size) || !ft_strncmp(line, "pwd", size)
