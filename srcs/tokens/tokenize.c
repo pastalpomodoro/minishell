@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/22 21:48:46 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:29:29 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,13 @@ static bool	is_eof(char *line)
 
 static bool	is_single_dollar_sign(char *line)
 {
-	while (*line == ' ' || *line == '\t')
+	while (ft_isspace(*line))
 		line++;
 	if (!(*line))
 		return (FALSE);
 	if (*line == '$')
 		line++;
-	while (*line == ' ' || *line == '\t')
+	while (ft_isspace(*line))
 		line++;
 	if (*line)
 		return (FALSE);
@@ -46,23 +46,29 @@ static bool	no_need_token(char *line)
 	return (FALSE);
 }
 
-t_tkn_lst	*get_tokens(char *line)
+t_tkn_lst	*get_tokens(t_data *data)
 {
 	t_tkn_lst	*lst;
 	int			i;
 
-	if (no_need_token(line))
+	lst = NULL;
+	if (no_need_token(data->line))
 		return (NULL);
-	line = check_insert_spaces(line);
-	if (line == NULL)
-		return (new_token("MALLOC ERROR", ERROR));
+	data->line = check_insert_spaces(data->line);
+	if (data->line == NULL)
+		return (NULL);
 	i = 0;
-	while (line[i])
+	while (data->line[i])
 	{
-		if (split_token(&line[i], &lst, &i))
+		while (ft_isspace(data->line[i]))
+			i++;
+		if (data->line[i])
 		{
-			tkn_lst_clear(&lst);
-			return (new_token("MALLOC ERROR", ERROR));
+			if (split_token(data, &i))
+			{
+				tkn_lst_clear(&lst);
+				return (NULL);
+			}
 		}
 	}
 	return (lst);

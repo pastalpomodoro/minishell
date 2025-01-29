@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:56:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/22 21:53:00 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:30:16 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,38 +36,39 @@ static int	get_end_quotes(char *line)
 
 static int	get_end(char *line)
 {
-	int		count;
-	char	**split;
+	int	count;
+	int	tmp;
 
 	count = 0;
-	if (*line == '\'' || *line == '\"')
+	while (*line)
 	{
-		count = get_end_quotes(line);
-	}
-	else
-	{
-		split = ft_split(line, ' ');
-		if (split == NULL)
-			return (-1);
-		count = ft_strlen(split[0]);
-		free_double_tab(split);
+		if (*line == '\'' || *line == '\"')
+		{
+			tmp = get_end_quotes(line) + 1;
+			count += tmp;
+			line += tmp;
+		}
+		else if (ft_isspace(*line))
+			return (count);
+		else
+		{
+			count++;
+			line++;
+		}
 	}
 	return (count);
 }
 
-int	split_token(char *line, t_tkn_lst **lst, int *i)
+int	split_token(t_data *data, int *i)
 {
 	int	end;
 
-	while (*line == ' ' || *line == '\t')
-	{
-		line++;
+	while (ft_isspace(data->line[*i]))
 		(*i)++;
-	}
-	if (!*line)
+	if (!data->line[*i])
 		return (1);
-	end = get_end(line);
+	end = get_end(&data->line[*i]);
 	if (end == -1)
 		return (1);
-	return (add_token(line, end, lst, i));
+	return (add_token(data, end, i));
 }

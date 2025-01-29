@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   init_data.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/28 22:26:19 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/01/29 14:20:54 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/01/29 14:24:16 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../includes/minishell.h"
+#include "../includes/minishell.h"
 
-//fonction qui free un double tableau attention le double tableau doit
-// toujours finire par NULL
-void	free_double_tab(char **tab)
+t_data	init_data(char *line, char **env)
 {
-	int	size;
+	t_data	data;
 
-	size = 0;
-	while (tab[size])
-		size++;
-	while (size >= 0)
-		free(tab[size--]);
-	free(tab);
-}
-
-bool	ft_isspace(char c)
-{
-	return ((c == ' ') || (c >= 9 && c <= 13));
+	data.line = line;
+	data.lst = NULL;
+	data.env = env_creator(env);
+	return (data);
 }

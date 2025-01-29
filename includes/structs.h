@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/21 13:35:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:15:20 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,19 @@
 # define STRUCTS_H
 # include "enums.h"
 
+typedef struct s_env
+{
+	char			*content;
+	struct s_env	*next;
+}	t_env;
+
 typedef struct s_commande
 {
-	int		infile;
-	int		outfile;
-	char	**cmd;
-	char	*path;
+	int					infile;
+	int					outfile;
+	char				**cmd;
+	char				*path;
+	struct s_commande	*next;
 }	t_commande;
 
 typedef struct s_node
@@ -37,5 +44,12 @@ typedef struct s_tkn_lst
 	struct s_tkn_lst	*next;
 	struct s_tkn_lst	*prev;
 }	t_tkn_lst;
+
+typedef struct s_data
+{
+	char		*line;
+	t_tkn_lst	*lst;
+	t_env		*env;
+}	t_data;
 
 #endif

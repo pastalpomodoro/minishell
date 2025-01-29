@@ -14,7 +14,9 @@ SRCS_NAMES = main.c \
 			 tokens/check_spaces.c \
 			 tokens/insert_spaces.c \
 			 tokens/add_token.c \
-			 tokens/tkn_lst.c
+			 tokens/tkn_lst.c \
+			 env/env_creator.c \
+			 env/replace_var.c
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 OBJS = $(SRCS:.c=.o)
 
@@ -31,7 +33,7 @@ $(NAME): $(OBJS) $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) $(OBJS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 $(LIBFT_LIB):
-	@make -C $(LIBFT_DIR)
+	@make printf -C $(LIBFT_DIR)
 
 fsan: $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 -fsanitize=address $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
