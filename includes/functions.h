@@ -18,15 +18,22 @@
 /***************************/
 /********   UTILS   ********/
 /***************************/
-int			is_space(char c, char *space);
-void free_env(t_env *env);
-char *get_path(char *c, t_env *env);
+int	        is_space(char c, char *space);
+void    free_env(t_env *env);
+char    *get_path(char *c, t_env *env);
+t_env   *init_env(char *value);
 
-// /*****************************/
-// /*******  LST_CREATOR  *******/
-// /*****************************/
-t_env *env_creator(char **env);
+/*****************************/
+/*******  LST_CREATOR  *******/
+/*****************************/
+t_env   *env_creator(char **env);
+char    *replace_var(t_env *env, char *str);
 
-char *replace_var(t_env *env, char *str);
+/*****************************/
+/*********   CMDS   **********/
+/*****************************/
+int ft_echo(char **cmd, int outfile);
+int ft_export(char *cmd, t_env *env);
+
 
 #endif

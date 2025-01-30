@@ -49,7 +49,7 @@ int easy_in(t_tkn_lst *node, t_env *env)
         if (!line)
             return (-2);
     }
-    else
+    else if (node->token == T_SIMPLE_QUOTE)
         line = node->value;
     fd = open(line, O_RDONLY);
     if (ft_strlen(node->value) == 0 && node->next == NULL)
@@ -122,8 +122,8 @@ t_commande *cmd_init()
     cmd->cmd = NULL;
     cmd->path = NULL;
     cmd->next = NULL;
-    cmd->infile = -3;
-    cmd->outfile = -3;
+    cmd->infile = 0;
+    cmd->outfile = 1;
 }
 int cmd_creator(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
@@ -134,13 +134,13 @@ int cmd_creator(t_commande **cmd, t_tkn_lst *node, t_env *env)
     size = -1;
     cmd[0]->path = get_path(node->value, env);
     if (!cmd[0]->path)
-        return (-1);
+        return (-2);
     temp = node;
     while (size++, (temp->token == T_LITERAL || temp->token == T_SIMPLE_QUOTE) && temp)
         temp = temp->token;
     cmd[0]->cmd = malloc(sizeof(t_commande *) * size);
     if (!cmd[0]->cmd)
-        return (-1);
+        return (-2);
     i = -1;
     while (i++, (node->token == T_LITERAL || node->token == T_SIMPLE_QUOTE) && node)
     {
@@ -170,7 +170,7 @@ int creator(t_tkn_lst *node, t_env *env, t_commande **cmd)
         if (node->token == T_CMD)
         {
             i = cmd_creator(&cmd, node, env);
-            if (i <-0)
+            if (i < 0)
                 return (i);
         }
         else if (node->token == T_REDIRECT)

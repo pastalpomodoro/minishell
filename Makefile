@@ -8,8 +8,10 @@ SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c\
 			lst_creator/env_creator.c\
 			lst_creator/replace_var.c\
-			test.c\
             utils/utils.c\
+			cmds/export.c\
+			cmds/echo.c\
+			cmds/env.c\
 			# lst_creator/find_infile.c\
 			#  test.c\
             #  lst_creator/lst_creator.c\

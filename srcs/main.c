@@ -32,17 +32,20 @@ int	main(int ac, char **av, char **envi)
 {
 	// char	*input;
 	t_env	*env;
-	char *var;
+	// char *var;
 
 	if (ac < 1)
 		return (0);
 	(void)av;
 	env = env_creator(envi);
-	var = get_path("grep", env);
-	//salut salut salut salut
-	ft_printf("PATH: %s, SIZE: %d\n", var, ft_strlen(var));
+	ft_export("CC=fuck", env);
+	// while (env)
+	// {
+	// 	ft_printf("%s\n", env->content);
+	// 	env = env->next;
+	// }
 	free_env(env);
-	free(var);
+	// free(var);
 	// while (1)
 	// {
 	// 	input = readline("Minishell> ");

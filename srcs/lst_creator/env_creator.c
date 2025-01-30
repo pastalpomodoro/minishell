@@ -33,6 +33,13 @@ t_env *env_creator(char **env)
     t_env *init;
     t_env *node;
 
+    if (!env)
+    {
+        init = init_env(NULL);
+        if (!init)
+            return (NULL);
+        return (init);
+    }
     node = init_env(env[0]);
     if (!node)
         return (NULL);
