@@ -34,6 +34,7 @@ char    *replace_var(t_env *env, char *str);
 /*****************************/
 int ft_echo(char **cmd, int outfile);
 int ft_export(char *cmd, t_env *env);
+int ft_unset(char *cmd, t_env *env);
 
 
 #endif

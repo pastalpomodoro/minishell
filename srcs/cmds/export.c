@@ -2,6 +2,7 @@
 
 int ft_export(char *cmd, t_env *env)
 {
+    t_env *temp;
     char *name;
     int i;
 
@@ -11,8 +12,9 @@ int ft_export(char *cmd, t_env *env)
     name = ft_substr(cmd, 0, i);
     if (!name)
         return (-2);
-    while (env->next)
+    while (env)
     {
+        temp = env;
         if (ft_strncmp(name, env->content, i) == 0 && env->content[i] == '=')
         {
             free(env->content);
@@ -23,21 +25,37 @@ int ft_export(char *cmd, t_env *env)
         }
         env = env->next;
     }
-    if (i ==-1)
-        ft_printf(env->content);
-    return (1);
+    temp->next = init_env(cmd);
+    if (!temp->next)
+        return (free(name), -2);
+    return (free(name), 1);
 }
 void del_node_env(t_env *node)
 {
     free(node->content);
     free(node);
 }
-// int ft_unset(char *cmd, t_env *env)
-// {
-//     t_env *temp;
+int ft_unset(char *cmd, t_env *env)
+{
+    t_env *temp;
 
-//     while (env)
-//     {
-
-//     }
-// }
+    if (ft_strncmp(cmd, env->content, ft_strlen(cmd)) == 0 && env->content[ft_strlen(cmd)] == '=')
+    {
+        temp = env->next;
+        del_node_env(env);
+        env = temp;
+        return (1);
+    }
+    while (env)
+    {
+        if (ft_strncmp(cmd, env->content, ft_strlen(cmd)) == 0 && env->content[ft_strlen(cmd)] == '=')
+        {
+            temp->next = env->next;
+            del_node_env(env);
+            return (1);
+        }
+        temp = env;
+        env = env->next;
+    }
+    return (1);
+}
