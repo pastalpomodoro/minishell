@@ -35,27 +35,29 @@ void del_node_env(t_env *node)
     free(node->content);
     free(node);
 }
-int ft_unset(char *cmd, t_env *env)
+int ft_unset(char *cmd, t_env **env)
 {
     t_env *temp;
+    t_env *temp1;
 
-    if (ft_strncmp(cmd, env->content, ft_strlen(cmd)) == 0 && env->content[ft_strlen(cmd)] == '=')
+    if (ft_strncmp(cmd, env[0]->content, ft_strlen(cmd)) == 0 && env[0]->content[ft_strlen(cmd)] == '=')
     {
-        temp = env->next;
-        del_node_env(env);
-        env = temp;
+        temp = env[0]->next;
+        del_node_env(env[0]);
+        env[0] = temp;
         return (1);
     }
-    while (env)
+    temp1 = env[0];
+    while (temp1)
     {
-        if (ft_strncmp(cmd, env->content, ft_strlen(cmd)) == 0 && env->content[ft_strlen(cmd)] == '=')
+        if (ft_strncmp(cmd, temp1->content, ft_strlen(cmd)) == 0 && temp1->content[ft_strlen(cmd)] == '=')
         {
-            temp->next = env->next;
-            del_node_env(env);
+            temp->next = temp1->next;
+            del_node_env(temp1);
             return (1);
         }
-        temp = env;
-        env = env->next;
+        temp = temp1;
+        temp1 = temp1->next;
     }
     return (1);
 }

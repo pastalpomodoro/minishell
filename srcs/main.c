@@ -39,7 +39,7 @@ int	main(int ac, char **av, char **envi)
 		return (0);
 	(void)av;
 	env = env_creator(envi);
-	ft_unset("USER", env);
+	ft_unset("CIAO", &env);
 	temp = env;
 	while (temp)
 	{
