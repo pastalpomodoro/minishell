@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:27:36 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/30 12:13:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int	main(int argc, char **argv, char **env)
 	if (input)
 	{
 		data.line = input;
-		data.lst = get_tokens(&data);
+		get_tokens(&data);
 		if (data.lst == NULL)
 			exit(1);
 		tmp = data.lst;
 		while (data.lst)
 		{
-			printf("TOKEN:\nTYPE: %d\nVALUE: %s\n\n", data.lst->token,
+			printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", data.lst->token,
 				data.lst->value);
 			data.lst = data.lst->next;
 		}
@@ -47,6 +47,7 @@ int	main(int argc, char **argv, char **env)
 			add_history(input);
 		if (tmp)
 			tkn_lst_clear(&tmp);
+		free_env(data.env);
 	}
 	if (input)
 		free(input);

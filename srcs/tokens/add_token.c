@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:58:57 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:00:29 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,18 @@ static t_token	get_type(char *line, int size)
 static char	*get_value(char *line, int size, int *cur, t_env *env)
 {
 	char	*value;
-	/*int		i;*/
-	/*char	*tmp;*/
-	(void) cur;
-	(void) env;
+	char	*tmp;
 
+	(void) cur;
 	value = ft_strndup(line, size);
 	*cur += size;
 	if (value == NULL)
 		return (NULL);
-	/*if (ft_strchr(line, '$'))*/
-	/*	value = replace_vars(env, line);*/
+	tmp = replace_vars(env, value);
+	free(value);
+	if (tmp == NULL)
+		return (NULL);
+	value = tmp;
 	return (value);
 }
 
@@ -54,7 +55,8 @@ int	add_token(t_data *data, int size, int *i)
 	t_tkn_lst	*e;
 
 	type = get_type(&data->line[*i], size);
-	if (data->lst && type == T_LITERAL && data->lst->prev && data->lst->prev->prev)
+	if (data->lst && type == T_LITERAL && data->lst->prev
+		&& data->lst->prev->prev)
 	{
 		if (data->lst->prev->prev->token == T_REDIRECT)
 			type = ERROR;
