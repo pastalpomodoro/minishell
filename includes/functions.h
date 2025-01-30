@@ -22,6 +22,7 @@ int	        is_space(char c, char *space);
 void    free_env(t_env *env);
 char    *get_path(char *c, t_env *env);
 t_env   *init_env(char *value);
+char	*variadic_strjoin(unsigned int argc, ...);
 
 /*****************************/
 /*******  LST_CREATOR  *******/
