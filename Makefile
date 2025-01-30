@@ -12,13 +12,6 @@ SRCS_NAMES = main.c\
 			cmds/export.c\
 			cmds/echo.c\
 			cmds/env.c\
-			# lst_creator/find_infile.c\
-			#  test.c\
-            #  lst_creator/lst_creator.c\
-            #  lst_creator/lst_creator_cmd.c\
-            #  lst_creator/lst_creator_redir.c\
-            #  utils/ft_split2.c\
-            #  utils/utils_node.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
