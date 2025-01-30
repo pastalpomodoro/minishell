@@ -6,55 +6,112 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:56:33 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 20:39:25 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*ft_strjoin_char(char *s1, char ch)
+static char	*get_var(t_env *env, char **line, bool inside_quote)
 {
-	char	*str;
-	size_t	i;
-	size_t	c;
+	char	*tmp;
 
-	if (ch)
-		str = malloc(ft_strlen(s1) + 2);
-	else
-		str = malloc(ft_strlen(s1) + 1);
-	if (!str)
-		return (0);
-	c = 0;
-	i = 0;
-	if (s1)
+	tmp = NULL;
+	(*line)++;
+	if (!inside_quote && (**line == '\'') || **line == '\"')
 	{
-		while (s1[i])
-			str[c++] = s1[i++];
+		return (ft_strdup("$"));
 	}
-	i = 0;
-	if (ch)
-		str[c++] = ch;
-	str[c] = '\0';
-	free(s1);
-	return (str);
+	while (**line && (!ft_isspace(**line) || **line != '\''
+			|| **line != '\"'))
+	{
+		tmp = ft_strjoin_char(tmp, **line);
+		if (tmp == NULL)
+			return (NULL);
+		(*line)++;
+	}
+	return (search_env(env, tmp));
 }
 
-// TODO: replace env var with " && '
+static int	join_var_res(t_env *env, char **line, char **res)
+{
+	char	*tmp;
+	char	*dup;
+
+	(*line)++;
+	tmp = get_var(env, line, TRUE);
+	if (tmp == NULL)
+		return (1);
+	dup = ft_strdup(*res);
+	if (dup == NULL)
+		return (free(tmp), 1);
+	*res = ft_strjoin(*res, tmp);
+	free(tmp);
+	free(dup);
+	if (*res == NULL)
+		return (1);
+	return (0);
+}
+
+static void	replace_inside_dquote(t_env *env, char **line, char **res)
+{
+	char	*tmp;
+	char	*dup;
+
+	(*line)++;
+	while (**line != '\"')
+	{
+		if (**line == '$')
+		{
+			if (join_var_res(env, line, res))
+				return ;
+		}
+		else
+		{
+			*res = ft_strjoin_char(*res, **line);
+			if (*res == NULL)
+				return ;
+			(*line)++;
+		}
+	}
+}
+
+static void	replace_inside_quote(t_env *env, char **line, char **res)
+{
+	if (**line == '\'')
+	{
+		(*line)++;
+		while (**line != '\'')
+		{
+			*res = ft_strjoin_char(*res, **line);
+			if (*res == NULL)
+				return ;
+			(*line)++;
+		}
+		(*line)++;
+	}
+	else if (**line == '\"')
+		replace_inside_dquote(env, line, res);
+}
+
 char	*replace_vars(t_env *env, char *line)
 {
 	char	*res;
-	bool	use_env;
 
 	res = NULL;
-	use_env = TRUE;
 	while (*line)
 	{
-		if (use_env && *line == '$')
-			continue ;
-		else if (*line == '\'')
-			continue ;
-		else if (*line == '\"')
-			continue ;
+		if (*line == '$')
+		{
+			if (join_var_res(env, &line, &res))
+				return (NULL);
+		}
+		else if (*line == '\'' || *line == '\"')
+		{
+			replace_inside_quote(env, &line, &res);
+			if (res == NULL)
+				return (NULL);
+		}
 		else
 		{
 			res = ft_strjoin_char(res, *line);

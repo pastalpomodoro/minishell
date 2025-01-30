@@ -16,7 +16,8 @@ SRCS_NAMES = main.c \
 			 tokens/add_token.c \
 			 tokens/tkn_lst.c \
 			 env/env_creator.c \
-			 env/replace_var.c
+			 env/replace_var.c \
+			 env/search_env.c
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 OBJS = $(SRCS:.c=.o)
 

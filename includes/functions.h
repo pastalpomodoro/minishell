@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:32:38 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/29 20:30:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 //			utils.c
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
+char		*ft_strjoin_char(char *s1, char ch);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
 
@@ -34,6 +35,8 @@ void		free_env(t_env *env);
 t_env		*env_creator(char **env);
 //			replace_var.c
 char		*replace_vars(t_env *env, char *str);
+//			search_env.c
+char		*search_env(t_env *env, char *str);
 
 /*****************************/
 /********   PARSING   ********/
