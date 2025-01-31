@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/30 13:00:29 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/31 15:04:15 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ static t_token	get_type(char *line, int size)
 		return (T_PIPE);
 	if (!ft_strncmp(line, "||", size) || !ft_strncmp(line, "&&", size))
 		return (T_AND_OR);
+	if (!ft_strncmp(line, "(", size))
+		return (T_OPAR);
+	if (!ft_strncmp(line, ")", size))
+		return (T_CPAR);
 	return (T_LITERAL);
 }
 
