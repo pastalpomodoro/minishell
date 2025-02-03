@@ -6,44 +6,74 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/10 19:24:12 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:39:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	if_exit(char *input)
+t_data	init_data(char *line, char **env)
 {
-	char	*exit;
-	int		i;
+	t_data	data;
 
-	exit = "exit";
-	i = 0;
-	while (input[i])
+	data.line = line;
+	data.lst = NULL;
+	data.env = env_creator(env);
+	return (data);
+}
+
+int show_tocken(t_tkn_lst *tmp)
+{
+	while (tmp)
 	{
-		if (exit[i] != input[i])
-			return (0);
-		i++;
+		printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", tmp->token,
+			tmp->value);
+		tmp = tmp->next;
 	}
 	return (1);
 }
-
-int	main(void)
+int	main(int argc, char **argv, char **env)
 {
-	char	*input;
+	char		*input;
+	t_data		data;
+	t_commande *cmd;
 
+	(void) argv;
+	if (argc > 1)
+		return (1);
+	data = init_data(NULL, env);
 	while (1)
 	{
+		// input = ft_strdup(">>infile");
 		input = readline("Minishell> ");
 		if (input)
 		{
-			picking(input);
-			add_history(input);
+			data.line = input;
+			if (!ft_strcmp(input, "exit"))
+				break ;
+			get_tokens(&data);
+			if (data.lst == NULL)
+				exit(1);
+			cmd = creator(data.lst, data.env);
+			if (cmd)
+			{
+				// ft_printf("INFILE: %d, \n", cmd->infile);
+				if (cmd->infile >= 0)
+					close(cmd->infile);
+				if (cmd->outfile >= 0)
+					close(cmd->outfile);
+				free(cmd);
+			}
+			printf("------------------------------------------\n");
+			if (input)
+				add_history(data.line);
+			if (data.lst)
+				tkn_lst_clear(&data.lst);
+			free(data.line);
 		}
-		if (if_exit(input) == 1)
-			break ;
-		free(input);
 	}
-	free(input);
+	free_env(data.env);
+	if (data.line)
+		free(data.line);
 	rl_clear_history();
 }

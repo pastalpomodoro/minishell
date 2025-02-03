@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 14:54:13 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/04 20:18:19 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:47:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,5 +91,9 @@ int		ftf_putstr_fd(char *s, int fd);
 int		ftf_putnbr_fd(long n, int fd);
 int		ftf_putchar_fd(char c, int fd);
 int		ft_printf(const char *str, ...);
+
+// Added
+int		ft_strcmp(const char *s1, const char *s2);
+char	*ft_strndup(const char *s, size_t n);
 
 #endif
