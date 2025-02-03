@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 20:30:00 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:44:49 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
+char		*get_path(char *c, t_env *env);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
 

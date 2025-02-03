@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/31 15:35:17 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:39:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int	main(int argc, char **argv, char **env)
 				data.lst = data.lst->next;
 			}
 			if (input)
-				add_history(input);
+				add_history(data.line);
 			if (tmp)
 				tkn_lst_clear(&tmp);
+			free(data.line);
 		}
 	}
 	free_env(data.env);
-	if (input)
-		free(input);
+	if (data.line)
+		free(data.line);
 	rl_clear_history();
 }

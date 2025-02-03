@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 20:35:59 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/22 21:41:53 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:39:45 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ char	*insert_spaces(char *op, char *line_init, int *i)
 
 	op_size = get_operator_size(op);
 	new_line = create_new_line(op, line_init, op_size);
-	free(line_init);
-	*i += op_size + 1;
+	if (new_line)
+		*i += op_size + 1;
 	return (new_line);
 }

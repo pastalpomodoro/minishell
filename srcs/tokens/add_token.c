@@ -6,19 +6,14 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/31 15:04:15 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 12:38:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// TODO: get type for parenthesis + others cmds ???
 static t_token	get_type(char *line, int size)
 {
-	if (!ft_strncmp(line, "echo", size) || !ft_strncmp(line, "pwd", size)
-		|| !ft_strncmp(line, "cd", size) || !ft_strncmp(line, "export", size)
-		|| !ft_strncmp(line, "unset", size) || !ft_strncmp(line, "env", size))
-		return (T_CMD);
 	if (!ft_strncmp(line, ">", size) || !ft_strncmp(line, "<", size)
 		|| !ft_strncmp(line, ">>", size) || !ft_strncmp(line, "<<", size))
 		return (T_REDIRECT);
@@ -33,7 +28,6 @@ static t_token	get_type(char *line, int size)
 	return (T_LITERAL);
 }
 
-// TODO: replace env (check for malloc err) + delete ' && "
 static char	*get_value(char *line, int size, int *cur, t_env *env)
 {
 	char	*value;
@@ -59,12 +53,6 @@ int	add_token(t_data *data, int size, int *i)
 	t_tkn_lst	*e;
 
 	type = get_type(&data->line[*i], size);
-	if (data->lst && type == T_LITERAL && data->lst->prev
-		&& data->lst->prev->prev)
-	{
-		if (data->lst->prev->prev->token == T_REDIRECT)
-			type = ERROR;
-	}
 	value = get_value(&data->line[*i], size, i, data->env);
 	if (value == NULL)
 		return (1);

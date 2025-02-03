@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 16:18:56 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/28 22:27:49 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 11:31:18 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ static bool	no_spaces_around(char *line, char *line_init)
 
 char	*check_insert_spaces(char *line)
 {
-	int	i;
+	int		i;
+	char	*new_line;
 
 	i = 0;
 	while (line[i])
@@ -67,9 +68,11 @@ char	*check_insert_spaces(char *line)
 			i++;
 		if (line[i] && no_spaces_around(&line[i], line))
 		{
-			line = insert_spaces(&line[i], line, &i);
-			if (line == NULL)
+			new_line = insert_spaces(&line[i], line, &i);
+			free(line);
+			if (new_line == NULL)
 				return (NULL);
+			line = new_line;
 		}
 		else
 		{
