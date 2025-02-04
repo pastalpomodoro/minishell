@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:00:26 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 15:23:03 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:25:28 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int	cd_friend(char *val, t_env *env)
 	if (tmp == NULL)
 		return (free(pwd), 1);
 	if (chdir(tmp))
-		return (ft_printf("minishell: cd: %s: No such file or directory",
-				tmp), free(tmp), free(pwd), 1);
+		return (ft_printf("minishell: cd: %s: No such file or directory\n",
+				val), free(tmp), free(pwd), 1);
 	free(tmp);
 	free(pwd);
 	if (change_env(env))
@@ -55,7 +55,7 @@ int	ft_cd(char *val, t_env *env)
 	if (!ft_strncmp(val, "/", 1))
 	{
 		if (chdir(val))
-			return (ft_printf("minishell: cd: %s: No such file or directory",
+			return (ft_printf("minishell: cd: %s: No such file or directory\n",
 					val), 1);
 		if (change_env(env))
 			return (1);
