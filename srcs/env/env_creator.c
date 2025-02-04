@@ -6,11 +6,36 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:58:10 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:16:32 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:52:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+static t_env	*get_last_env(t_env *env)
+{
+	if (env == NULL)
+		return (env);
+	while (env->next != NULL)
+		env = env->next;
+	return (env);
+}
+
+int	env_add_last(t_env **env, t_env *to_add)
+{
+	t_env	*tmp;
+
+	if (to_add == NULL)
+		return (1);
+	if (*env == NULL)
+	{
+		*env = to_add;
+		return (0);
+	}
+	tmp = get_last_env(*env);
+	tmp->next = to_add;
+	return (0);
+}
 
 void	free_env(t_env *env)
 {

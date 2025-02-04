@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 14:29:09 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:53:16 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	main(int argc, char **argv, char **env)
 		input = readline("Minishell> ");
 		if (input)
 		{
+			add_history(input);
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
@@ -56,6 +57,10 @@ int	main(int argc, char **argv, char **env)
 				ft_cd(ft_split(input, ' ')[1], data.env);
 			if (!ft_strcmp(input, "pwd"))
 				ft_pwd();
+			if (!ft_strcmp(input, "env"))
+				ft_env(data.env);
+			if (!ft_strncmp(input, "export", 6))
+				ft_export(ft_split(input, ' ')[1], &data.env);
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
@@ -72,8 +77,12 @@ int	main(int argc, char **argv, char **env)
 				free(cmd);
 			}
 			printf("------------------------------------------\n");
-			if (input)
-				add_history(data.line);
+			while (data.lst)
+			{
+				printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", data.lst->token,
+					data.lst->value);
+				data.lst = data.lst->next;
+			}
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
 			free(data.line);

@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:37:48 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:37:56 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:51:54 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 
 int	ft_env(t_env *node)
 {
-	while (node)
+	if (node)
 	{
-		ft_printf("%s\n", node->content);
-		node = node->next;
+		while (node)
+		{
+			ft_printf("%s\n", node->content);
+			node = node->next;
+		}
 	}
-	return (1);
+	return (0);
 }

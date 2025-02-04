@@ -6,41 +6,49 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:37:25 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:54:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_export(char *cmd, t_env *env)
+// 0 -> remplace 1 -> erreur de malloc 2 -> pas de cas trouve
+static int	search_replace_env(char *name, char *cmd, t_env *env)
 {
-	t_env	*temp;
+	while (env)
+	{
+		if (!ft_strncmp(name, env->content, ft_strlen(name)))
+		{
+			free(env->content);
+			env->content = ft_strdup(cmd);
+			if (env->content == NULL)
+				return (1);
+			return (0);
+		}
+		env = env->next;
+	}
+	return (2);
+}
+
+int	ft_export(char *cmd, t_env **env)
+{
 	char	*name;
 	int		i;
 
 	i = 0;
+	if (env == NULL)
+		return (env_add_last(env, init_env(cmd)));
 	while (cmd[i] != '=')
 		i++;
 	name = ft_substr(cmd, 0, i);
-	if (!name)
-		return (-2);
-	while (env)
-	{
-		temp = env;
-		if (ft_strncmp(name, env->content, i) == 0 && env->content[i] == '=')
-		{
-			free(env->content);
-			env->content = ft_strdup(cmd);
-			if (!env->content)
-				return (free(name), -2);
-			return (free(name), 1);
-		}
-		env = env->next;
-	}
-	temp->next = init_env(cmd);
-	if (!temp->next)
-		return (free(name), -2);
-	return (free(name), 1);
+	if (name == NULL)
+		return (1);
+	i = search_replace_env(name, cmd, *env);
+	free(name);
+	if (i == 0 || i == 1)
+		return (i);
+	else
+		return (env_add_last(env, init_env(cmd)));
 }
 
 void	del_node_env(t_env *node)

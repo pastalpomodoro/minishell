@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:35:52 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 14:49:08 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:59:52 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,5 @@ int	ft_pwd(void)
 		return (1);
 	ft_printf("%s\n", pwd);
 	free(pwd);
-	return (1);
+	return (0);
 }
