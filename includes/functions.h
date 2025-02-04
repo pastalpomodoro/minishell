@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 14:24:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:53:10 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 /*****************************/
 int			ft_echo(char **cmd, int outfile);
 int			ft_env(t_env *node);
-int			ft_export(char *cmd, t_env *env);
+int			ft_export(char *cmd, t_env **env);
 int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
 int			ft_cd(char *val, t_env *env);
@@ -44,6 +44,7 @@ char		*variadic_strjoin(unsigned int argc, ...);
 /*****************************/
 //			env_creator.c
 void		free_env(t_env *env);
+int			env_add_last(t_env **env, t_env *to_add);
 t_env		*env_creator(char **env);
 t_env		*init_env(char *value);
 //			replace_var.c

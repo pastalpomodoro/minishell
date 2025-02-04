@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:00:26 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 15:25:28 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:54:41 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	change_env(t_env *env)
 	free(tmp);
 	if (val == NULL)
 		return (1);
-	ft_export(val, env);
+	ft_export(val, &env);
 	free(val);
 	return (0);
 }
