@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:58:10 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:57:44 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:16:32 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,11 @@ t_env	*init_env(char *value)
 	if (!new)
 		return (NULL);
 	new->next = NULL;
+	if (value == NULL)
+		return (free(new), NULL);
 	new->content = ft_strdup(value);
 	if (!new->content)
-		return (NULL);
+		return (free(new), NULL);
 	return (new);
 }
 
@@ -54,6 +56,8 @@ t_env	*env_creator(char **env)
 	while (i++, env[i])
 	{
 		node->next = init_env(env[i]);
+		if (node->next == NULL)
+			return (free_env(init), NULL);
 		node = node->next;
 	}
 	return (init);
