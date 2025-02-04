@@ -70,7 +70,9 @@ char	*get_path(char *c, t_env *env)
 	int		i;
 
 	i = -1;
-	while (ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '=')
+	if (!env)
+		return (ft_strdup(""));
+	while ((ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '=') && env)
 		env = env->next;
 	all_path = ft_split(&env->content[5], ':');
 	if (!all_path)

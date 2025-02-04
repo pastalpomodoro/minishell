@@ -45,35 +45,30 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("> >>");
+		// input = ft_strdup("grep je fais caca");
 		input = readline("Minishell> ");
 		if (input)
 		{
+			add_history(input);
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
-			if (!ft_strncmp(input, "cd", 2))
-				ft_cd(ft_split(input, ' ')[1], data.env);
-			if (!ft_strcmp(input, "pwd"))
-				ft_pwd();
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				// ft_printf("INFILE: %d, \n", cmd->infile);
-				// write(cmd->infile, "Succhiamelo", 10);
-				write(cmd->outfile, "Vaffanculo", 10);
-				if (cmd->infile > 2)
-					close(cmd->infile);
-				if (cmd->outfile > 2)
-					close(cmd->outfile);
-				free(cmd);
+				int i = 0;
+				while (cmd->cmd[i])
+				{
+					ft_printf("CMD: %s\n", cmd->cmd[i]);
+					i++;
+				}
+				ft_printf("PATH: %s, INFILE: %d, OUTFILE: %d\n", cmd->path, cmd->infile, cmd->outfile);
+				free_cmd_node(&cmd);
 			}
 			printf("------------------------------------------\n");
-			if (input)
-				add_history(data.line);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
 			free(data.line);
@@ -84,3 +79,4 @@ int	main(int argc, char **argv, char **env)
 		free(data.line);
 	rl_clear_history();
 }
+//bash --posix

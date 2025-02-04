@@ -19,5 +19,5 @@ int	ft_env(t_env *node)
 		ft_printf("%s\n", node->content);
 		node = node->next;
 	}
-	return (1);
+	return (0);
 }

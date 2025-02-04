@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g3
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
@@ -20,6 +20,7 @@ SRCS_NAMES = main.c \
 			 env/search_env.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \
+			 lst_creator/lst_cmd.c \
 			 cmds/echo.c \
 			 cmds/env.c \
 			 cmds/export.c \

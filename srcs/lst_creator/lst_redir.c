@@ -72,9 +72,9 @@ unexpected token `newline'\n"), -1);
 		return (ft_printf("minishell: syntax error near \
 unexpected token `%s'\n", next->value), -1);
 	if (type == 1)//>
-		fd = open(next->value, O_WRONLY | O_CREAT | O_TRUNC);
+		fd = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	if (type == 2)//>>
-		fd = open(next->value, O_WRONLY | O_CREAT | O_APPEND);
+		fd = open(next->value, O_RDWR | O_CREAT | O_APPEND, 0777);
 	if (fd < 0)
 		ft_printf("bash: %s: Permission denied", next->next);
 	return (fd);

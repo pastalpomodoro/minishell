@@ -23,7 +23,7 @@ int	ft_export(char *cmd, t_env *env)
 		i++;
 	name = ft_substr(cmd, 0, i);
 	if (!name)
-		return (-2);
+		return (1);
 	while (env)
 	{
 		temp = env;
@@ -32,15 +32,15 @@ int	ft_export(char *cmd, t_env *env)
 			free(env->content);
 			env->content = ft_strdup(cmd);
 			if (!env->content)
-				return (free(name), -2);
-			return (free(name), 1);
+				return (free(name), 1);
+			return (free(name), 0);
 		}
 		env = env->next;
 	}
 	temp->next = init_env(cmd);
 	if (!temp->next)
-		return (free(name), -2);
-	return (free(name), 1);
+		return (free(name), 1);
+	return (free(name), 0);
 }
 
 void	del_node_env(t_env *node)
@@ -60,7 +60,7 @@ int	ft_unset(char *cmd, t_env **env)
 		temp = env[0]->next;
 		del_node_env(env[0]);
 		env[0] = temp;
-		return (1);
+		return (0);
 	}
 	temp1 = env[0];
 	while (temp1)
@@ -70,10 +70,10 @@ int	ft_unset(char *cmd, t_env **env)
 		{
 			temp->next = temp1->next;
 			del_node_env(temp1);
-			return (1);
+			return (0);
 		}
 		temp = temp1;
 		temp1 = temp1->next;
 	}
-	return (1);
+	return (0);
 }

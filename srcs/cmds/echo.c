@@ -23,9 +23,9 @@ int	ft_echo(char **cmd, int outfile)
 		type = 1;
 	save = dup(STDOUT_FILENO);
 	if (save < 0)
-		return (-1);
+		return (1);
 	if (dup2(outfile, STDOUT_FILENO) == -1)
-		return (-1);
+		return (1);
 	close(outfile);
 	i = type - 1;
 	while (i++, cmd[i])
@@ -37,6 +37,6 @@ int	ft_echo(char **cmd, int outfile)
 	if (type == 0)
 		ft_printf("\n");
 	if (dup2(save, STDOUT_FILENO) == -1)
-		return (-1);
-	return (close(save), 1);
+		return (1);
+	return (close(save), 0);
 }

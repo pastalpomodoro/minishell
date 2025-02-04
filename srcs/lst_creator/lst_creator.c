@@ -27,45 +27,54 @@ t_commande	*cmd_init(void)
 	return (cmd);
 }
 
-void	free_cmd(t_commande **cmd)
+void	free_cmd_node(t_commande **cmd)
 {
 	if ((*cmd)->infile > 2)
 		close((*cmd)->infile);
 	if ((*cmd)->outfile > 2)
 		close((*cmd)->outfile);
+	if ((*cmd)->path)
+		free((*cmd)->path);
+	if ((*cmd)->cmd)
+		free_double_tab((*cmd)->cmd);
 	free((*cmd));
 }
 
 t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
+	// t_commande	*init;
+	int i;
 
 	cmd = cmd_init();
 	if (!cmd)
 		return (NULL);
+	i = 0;
+	// init = cmd;
 	while (node)
 	{
 		if (node->token == T_REDIRECT)
 		{
 			if (redirect(node, &cmd) < 0)
-				return (free_cmd(&cmd), NULL);
-			// ft_printf("REDIRECT: %s\n", node->value);
+				return (free_cmd_node(&cmd), NULL);
+			node = node->next;
 		}
-		// if (node->token == T_LITERAL)
-		// {
-		//     // i = cmd_creator(&cmd, node, env);
-		//     // if (i < 0)
-		//     //     return (i);
-		// }
-		// if (node->token  == T_PIPE)
-		// {
-		//     (*cmd)->next = cmd_init();
-		//     if (!(*cmd)->next)
-		//         return (-2);
-		//     cmd = (*cmd)->next; 
-		// }
-		node = node->next;
+		else if (node->token == T_LITERAL)
+		{
+			cmd_creator(node, &cmd, env);
+			return (cmd);
+			i = 1;
+		}
+		else if (node->token  == T_PIPE)
+		{
+		    cmd->next = cmd_init();
+		    if (!cmd->next)
+		        return (NULL);
+		    cmd = cmd->next;
+			i = 0; 
+		}
+		if (i == 0)
+			node = node->next;
 	}
 	return (cmd);
-	ft_printf("%s", env->content);
 }
