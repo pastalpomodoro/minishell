@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:00:26 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 15:20:02 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:23:03 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ static int	cd_friend(char *val, t_env *env)
 
 int	ft_cd(char *val, t_env *env)
 {
-	char	*tmp;
-	char	*pwd;
-
 	if (!ft_strncmp(val, "/", 1))
 	{
 		if (chdir(val))
