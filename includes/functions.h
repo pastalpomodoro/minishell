@@ -67,7 +67,9 @@ void		tkn_lst_clear(t_tkn_lst **lst);
 /*****************************/
 /******** LST_CREATOR ********/
 /*****************************/
-
+//          lst_redir.c
+int redirect(t_tkn_lst *node, t_commande **cmd);
+//          lst_creator.c
 t_commande *creator(t_tkn_lst *node, t_env *env);
 
 #endif

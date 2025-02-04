@@ -20,6 +20,7 @@ SRCS_NAMES = main.c \
 			 env/replace_var.c \
 			 env/search_env.c \
 			 lst_creator/lst_creator.c \
+			 lst_creator/lst_redir.c \
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 

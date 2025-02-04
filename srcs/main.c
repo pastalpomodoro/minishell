@@ -44,7 +44,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup(">>infile");
+		// input = ft_strdup("> >>");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -58,9 +58,11 @@ int	main(int argc, char **argv, char **env)
 			if (cmd)
 			{
 				// ft_printf("INFILE: %d, \n", cmd->infile);
-				if (cmd->infile >= 0)
+				// write(cmd->infile, "Succhiamelo", 10);
+				write(cmd->outfile, "Vaffanculo", 10);
+				if (cmd->infile > 2)
 					close(cmd->infile);
-				if (cmd->outfile >= 0)
+				if (cmd->outfile > 2)
 					close(cmd->outfile);
 				free(cmd);
 			}
