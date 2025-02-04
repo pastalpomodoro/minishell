@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:00:26 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 14:50:05 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:20:02 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,27 @@ static int	change_env(t_env *env)
 	return (0);
 }
 
+static int	cd_friend(char *val, t_env *env)
+{
+	char	*pwd;
+	char	*tmp;
+
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (1);
+	tmp = variadic_strjoin(3, pwd, "/", val);
+	if (tmp == NULL)
+		return (free(pwd), 1);
+	if (chdir(tmp))
+		return (ft_printf("minishell: cd: %s: No such file or directory",
+				tmp), free(tmp), free(pwd), 1);
+	free(tmp);
+	free(pwd);
+	if (change_env(env))
+		return (1);
+	return (0);
+}
+
 int	ft_cd(char *val, t_env *env)
 {
 	char	*tmp;
@@ -36,22 +57,15 @@ int	ft_cd(char *val, t_env *env)
 
 	if (!ft_strncmp(val, "/", 1))
 	{
-		chdir(val);
+		if (chdir(val))
+			return (ft_printf("minishell: cd: %s: No such file or directory",
+					val), 1);
 		if (change_env(env))
 			return (1);
 	}
 	else
 	{
-		pwd = getcwd(NULL, 0);
-		if (pwd == NULL)
-			return (1);
-		tmp = variadic_strjoin(3, pwd, "/", val);
-		free(pwd);
-		if (tmp == NULL)
-			return (1);
-		chdir(tmp);
-		free(tmp);
-		if (change_env(env))
+		if (cd_friend(val, env))
 			return (1);
 	}
 	return (0);
