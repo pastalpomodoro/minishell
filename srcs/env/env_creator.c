@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 11:58:10 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/29 14:23:53 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 13:57:44 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	free_env(t_env *env)
 	}
 }
 
-static t_env	*init_env(char *value)
+t_env	*init_env(char *value)
 {
 	t_env	*new;
 
@@ -56,6 +56,5 @@ t_env	*env_creator(char **env)
 		node->next = init_env(env[i]);
 		node = node->next;
 	}
-	node->next = init_env("CIAO=salut");
 	return (init);
 }

@@ -1,8 +1,7 @@
-
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
@@ -21,6 +20,11 @@ SRCS_NAMES = main.c \
 			 env/search_env.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \
+			 cmds/echo.c \
+			 cmds/env.c \
+			 cmds/export.c \
+			 cmds/pwd.c \
+			 cmds/cd.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
@@ -46,7 +50,7 @@ $(OBJ_DIR)%.o: %.c $(HEADERS)
 $(LIBFT_LIB):
 	@make printf -C $(LIBFT_DIR)
 
-fsanitize: $(LIBFT_LIB) $(HEADERS)
+fsan: $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 -fsanitize=address $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 debug: $(LIBFT_LIB) $(HEADERS)

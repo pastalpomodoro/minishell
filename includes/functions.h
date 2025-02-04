@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 11:44:49 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 14:24:35 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@
 # include "structs.h"
 # include <curses.h>
 # include <stdbool.h>
+/*****************************/
+/********   CMDS    **********/
+/*****************************/
+int			ft_echo(char **cmd, int outfile);
+int			ft_env(t_env *node);
+int			ft_export(char *cmd, t_env *env);
+int			ft_unset(char *cmd, t_env **env);
+int			ft_pwd(void);
+int			ft_cd(char *val, t_env *env);
 
 /*****************************/
 /********   UTILS   **********/
@@ -34,6 +43,7 @@ char		*variadic_strjoin(unsigned int argc, ...);
 //			env_creator.c
 void		free_env(t_env *env);
 t_env		*env_creator(char **env);
+t_env		*init_env(char *value);
 //			replace_var.c
 char		*replace_vars(t_env *env, char *str);
 //			search_env.c
@@ -67,9 +77,9 @@ void		tkn_lst_clear(t_tkn_lst **lst);
 /*****************************/
 /******** LST_CREATOR ********/
 /*****************************/
-//          lst_redir.c
-int redirect(t_tkn_lst *node, t_commande **cmd);
-//          lst_creator.c
-t_commande *creator(t_tkn_lst *node, t_env *env);
+//			lst_redir.c
+int			redirect(t_tkn_lst *node, t_commande **cmd);
+//			lst_creator.c
+t_commande	*creator(t_tkn_lst *node, t_env *env);
 
 #endif

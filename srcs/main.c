@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 11:39:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 14:29:09 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_data	init_data(char *line, char **env)
 	return (data);
 }
 
-int show_tocken(t_tkn_lst *tmp)
+int	show_token(t_tkn_lst *tmp)
 {
 	while (tmp)
 	{
@@ -32,11 +32,12 @@ int show_tocken(t_tkn_lst *tmp)
 	}
 	return (1);
 }
+
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	t_commande *cmd;
+	t_commande	*cmd;
 
 	(void) argv;
 	if (argc > 1)
@@ -51,6 +52,10 @@ int	main(int argc, char **argv, char **env)
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
+			if (!ft_strncmp(input, "cd", 2))
+				ft_cd(ft_split(input, ' ')[1], data.env);
+			if (!ft_strcmp(input, "pwd"))
+				ft_pwd();
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
