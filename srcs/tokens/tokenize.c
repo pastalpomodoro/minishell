@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 11:33:43 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:37:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ static bool	is_eof(char *line)
 	return (TRUE);
 }
 
+// TODO: lst with error and $ to display err mesg
 static bool	is_single_dollar_sign(char *line)
 {
 	while (ft_isspace(*line))
@@ -31,7 +32,6 @@ static bool	is_single_dollar_sign(char *line)
 		line++;
 	if (*line)
 		return (FALSE);
-	// TODO: add error message $ not foud
 	return (TRUE);
 }
 
