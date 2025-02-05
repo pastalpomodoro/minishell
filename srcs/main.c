@@ -32,7 +32,28 @@ int	show_token(t_tkn_lst *tmp)
 	}
 	return (1);
 }
+void afficher_cmds(t_commande *cmd)
+{
+	int i;
 
+	while (cmd)
+	{
+		if (cmd->path)
+			ft_printf("PATH: %s\n", cmd->path);
+		if (cmd->cmd)
+		{
+			i = -1;
+			while (i++, cmd->cmd[i])
+				ft_printf("%s\n", cmd->cmd[i]);
+		}
+		ft_printf("INFILE: %d\n", cmd->infile);
+		if (cmd->outfile)
+			ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile, cmd->outfile_type);
+		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
+		cmd = cmd->next;
+		printf("------------------------------------------\n");
+	}
+}
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
@@ -45,11 +66,10 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("grep je fais caca");
+		// input = ft_strdup("<infile grep je >outfile");
 		input = readline("Minishell> ");
 		if (input)
 		{
-			add_history(input);
 			add_history(input);
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
@@ -64,18 +84,11 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				int i = 0;
-				while (cmd->cmd[i])
-				{
-					ft_printf("CMD: %s\n", cmd->cmd[i]);
-					i++;
-				}
-				ft_printf("PATH: %s, INFILE: %d, OUTFILE: %d\n", cmd->path, cmd->infile, cmd->outfile);
-				free_cmd_node(&cmd);
+				afficher_cmds(cmd);
+				gestion(cmd, env);
+				free_cmd(&cmd);
 			}
 			printf("------------------------------------------\n");
-			if (input)
-				add_history(data.line);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
 			free(data.line);

@@ -35,7 +35,8 @@ bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
 char		*get_path(char *c, t_env *env);
 //          lst_creator.c
-void	free_cmd_node(t_commande **cmd);
+void        free_cmd_node(t_commande **cmd);
+void        free_cmd(t_commande **cmd);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
 
@@ -83,8 +84,14 @@ void		tkn_lst_clear(t_tkn_lst **lst);
 //			lst_redir.c
 int			redirect(t_tkn_lst *node, t_commande **cmd);
 //          lst_cmd.c
-int cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
+int         cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
 //			lst_creator.c
 t_commande	*creator(t_tkn_lst *node, t_env *env);
+
+/*****************************/
+/********* EXECUTION *********/
+/*****************************/
+//          execution.c
+int gestion(t_commande *cmd, char **env);
 
 #endif

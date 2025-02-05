@@ -22,8 +22,10 @@ typedef struct s_env
 
 typedef struct s_commande
 {
+	int					exit_code;
 	int					infile;
-	int					outfile;
+	int					outfile_type;//if 1==> , if 2==>>
+	char				*outfile;
 	char				**cmd;
 	char				*path;
 	struct s_commande	*next;

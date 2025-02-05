@@ -30,7 +30,7 @@ int cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
     if (!path)
         return (-2);
     if (!ft_strlen(path))
-        return (free(path), -1);
+        return ((*cmd)->exit_code = 127, ft_printf("%s: command not found\n", node->value), free(path), -1);
     (*cmd)->path = path;
     utils = malloc(sizeof(char *) * (size_tab(node) + 1));
     if (!utils)
@@ -46,6 +46,5 @@ int cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
         utils[i] = NULL;
         node = node->next;
     }
-    (*cmd)->cmd = utils;
-    return (1);
+    return ((*cmd)->cmd = utils, 1);
 }

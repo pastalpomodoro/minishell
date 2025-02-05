@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-int	double_in(t_tkn_lst *node)
+int	double_in(t_tkn_lst *node, t_commande **cmd)
 {
 	char		*line;
 	int			pipe_fd[2];
@@ -20,10 +20,10 @@ int	double_in(t_tkn_lst *node)
 
 	next = node->next;
 	if (node->next == NULL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `%s'\n", next->value), -1);
 	if (pipe(pipe_fd) == -1)
 		return (-2);
@@ -41,43 +41,57 @@ unexpected token `%s'\n", next->value), -1);
 	return (pipe_fd[0]);
 }
 
-int	simple_in(t_tkn_lst *node)
+int	simple_in(t_tkn_lst *node, t_commande **cmd)
 {
 	int			fd;
 	t_tkn_lst	*next;
 
 	next = node->next;
 	if (node->next == NULL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `%s'\n", next->value), -1);
 	fd = open(next->value, O_RDONLY);
 	if (fd < 0)
+	{
+		(*cmd)->exit_code = 1;
 		ft_printf("minishell: %s: No such file or directory\n", next->value);
+	}
 	return (fd);
 }
 
-int	out(t_tkn_lst *node, int type)
+void type_out(t_tkn_lst *next, t_commande **cmd, int type)
 {
-	int			fd;
+	if (type == 1)//>
+	{
+		(*cmd)->outfile = ft_strdup(next->value);
+		(*cmd)->outfile_type = 1;
+	}
+	if (type == 2)//>>
+	{
+		(*cmd)->outfile = ft_strdup(next->value);
+		(*cmd)->outfile_type = 2;
+	}
+}
+int	out(t_tkn_lst *node, t_commande **cmd, int type)
+{
 	t_tkn_lst	*next;
 
 	next = node->next;
 	if (next == NULL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)
-		return (ft_printf("minishell: syntax error near \
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `%s'\n", next->value), -1);
-	if (type == 1)//>
-		fd = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
-	if (type == 2)//>>
-		fd = open(next->value, O_RDWR | O_CREAT | O_APPEND, 0777);
-	if (fd < 0)
-		ft_printf("bash: %s: Permission denied", next->next);
-	return (fd);
+	if ((*cmd)->outfile)
+		free((*cmd)->outfile);
+	type_out(next, cmd, type);
+	if (!(*cmd)->outfile)
+		return (-2);
+	return (1);
 }
 
 int	redirect(t_tkn_lst *node, t_commande **cmd)
@@ -88,22 +102,18 @@ int	redirect(t_tkn_lst *node, t_commande **cmd)
 	i = 0;
 	fd = -1;
 	if (i++, ft_strcmp(node->value, "<<") == 0)
-		fd = double_in(node);
+		fd = double_in(node, cmd);
 	else if (i++, ft_strcmp(node->value, "<") == 0)
-		fd = simple_in(node);
+		fd = simple_in(node, cmd);
 	else if (i++, ft_strcmp(node->value, ">") == 0)
-		fd = out(node, 1);
+		fd = out(node, cmd, 1);
 	else if (i++, ft_strcmp(node->value, ">>") == 0)
-		fd = out(node, 2);
+		fd = out(node, cmd, 2);
 	if (fd < 0)
 		return (fd);
-	if ((*cmd)->infile > 2)
+	if (i < 3 && (*cmd)->infile > 2)
 		close((*cmd)->infile);
-	if ((*cmd)->outfile > 2)
-		close((*cmd)->outfile);
 	if (i < 3)
 		(*cmd)->infile = fd;
-	else if (i > 2)
-		(*cmd)->outfile = fd;
 	return (fd);
 }
