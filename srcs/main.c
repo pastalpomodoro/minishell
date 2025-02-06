@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 13:41:50 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:36:25 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	t_commande	*cmd;
+	/*t_commande	*cmd;*/
 	t_tkn_lst	*lst;
 
 	(void) argv;
@@ -77,10 +77,16 @@ int	main(int argc, char **argv, char **env)
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
-			// if (!ft_strncmp(input, "cd", 2))
-			// 	ft_cd(ft_split(input, ' ')[1], data.env);
-			// if (!ft_strcmp(input, "pwd"))
-			// 	ft_pwd();
+			if (!ft_strncmp(input, "cd", 2))
+				ft_cd(ft_split(input, ' ')[1], data.env);
+			if (!ft_strcmp(input, "pwd"))
+				ft_pwd();
+			if (!ft_strcmp(input, "env"))
+				ft_env(data.env);
+			if (!ft_strncmp(input, "export", 6))
+				ft_export(ft_split(input, ' ')[1], &data.env);
+			if (!ft_strncmp(input, "unset", 5))
+				ft_unset(ft_split(input, ' ')[1], &data.env);
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
@@ -91,13 +97,13 @@ int	main(int argc, char **argv, char **env)
 					lst->value);
 				lst = lst->next;
 			}
-			cmd = creator(data.lst, data.env);
-			if (cmd)
-			{
-				afficher_cmds(cmd);
-				gestion(cmd, env);
-				free_cmd(&cmd);
-			}
+			/*cmd = creator(data.lst, data.env);*/
+			/*if (cmd)*/
+			/*{*/
+			/*	afficher_cmds(cmd);*/
+			/*	gestion(cmd, env);*/
+			/*	free_cmd(&cmd);*/
+			/*}*/
 			printf("------------------------------------------\n");
 			if (data.lst)
 				tkn_lst_clear(&data.lst);

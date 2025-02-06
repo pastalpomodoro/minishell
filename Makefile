@@ -5,7 +5,6 @@ CFLAGS = -Wall -Werror -Wextra -g3
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
-			 parsing/parsing.c \
 			 utils/utils.c \
 			 utils/ft_split2.c \
 			 utils/variadic_strjoin.c \

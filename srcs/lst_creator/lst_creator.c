@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   lst_creator.c                                      :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/04 13:41:05 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:42:06 by rbaticle         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../../includes/minishell.h"
 
 t_commande	*cmd_init(void)
@@ -41,9 +29,10 @@ void	free_cmd_node(t_commande **cmd)
 		free_double_tab((*cmd)->cmd);
 	free((*cmd));
 }
-void free_cmd(t_commande **cmd)
+
+void	free_cmd(t_commande **cmd)
 {
-	t_commande *tmp;
+	t_commande	*tmp;
 
 	while ((*cmd))
 	{
@@ -52,11 +41,12 @@ void free_cmd(t_commande **cmd)
 		(*cmd) = tmp;
 	}
 }
+
 t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
 	t_commande	*init;
-	int i;
+	int			i;
 
 	cmd = cmd_init();
 	if (!cmd)
@@ -77,12 +67,12 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 				return (free_cmd(&init), NULL);
 			i = 1;
 		}
-		else if (node->token  == T_PIPE)
+		else if (node->token == T_PIPE)
 		{
-		    cmd->next = cmd_init();
-		    if (!cmd->next)
-		        return (NULL);
-		    cmd = cmd->next;
+			cmd->next = cmd_init();
+			if (!cmd->next)
+				return (NULL);
+			cmd = cmd->next;
 			i = 0;
 		}
 		node = node->next;
