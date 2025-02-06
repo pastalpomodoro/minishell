@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:41:37 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:10:22 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ unexpected token `%s'\n", next->value), -1);
 	return (fd);
 }
 
-void type_out(t_tkn_lst *next, t_commande **cmd, int type)
+void	type_out(t_tkn_lst *next, t_commande **cmd, int type)
 {
 	if (type == 1)//>
 	{
@@ -75,6 +75,7 @@ void type_out(t_tkn_lst *next, t_commande **cmd, int type)
 		(*cmd)->outfile_type = 2;
 	}
 }
+
 int	out(t_tkn_lst *node, t_commande **cmd, int type)
 {
 	t_tkn_lst	*next;

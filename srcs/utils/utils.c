@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 13:11:05 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:23:05 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ char	*ft_strjoin_char(char *s1, char ch)
 
 //return NULL si probleme de malloc
 //return malloc(1) s'il ne trouve pas le path
+
 char	*get_path(char *c, t_env *env)
 {
 	char	**all_path;
@@ -72,7 +73,8 @@ char	*get_path(char *c, t_env *env)
 	i = -1;
 	if (!env)
 		return (ft_strdup(""));
-	while ((ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '=') && env)
+	while ((ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '=')
+		&& env)
 		env = env->next;
 	all_path = ft_split(&env->content[5], ':');
 	if (!all_path)
@@ -89,6 +91,5 @@ char	*get_path(char *c, t_env *env)
 			return (free_double_tab(all_path), free(cmd), path);
 		free(path);
 	}
-	free_double_tab(all_path);
-	return (free(cmd), ft_strdup(""));
+	return (free_double_tab(all_path), free(cmd), ft_strdup(""));
 }
