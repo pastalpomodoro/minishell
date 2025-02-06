@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:53:16 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 11:08:58 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ int	main(int argc, char **argv, char **env)
 	char		*input;
 	t_data		data;
 	t_commande	*cmd;
+	t_tkn_lst	*lst;
 
 	(void) argv;
 	if (argc > 1)
@@ -81,6 +82,13 @@ int	main(int argc, char **argv, char **env)
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
+			lst = data.lst;
+			while (lst)
+			{
+				printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+					lst->value);
+				lst = lst->next;
+			}
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
