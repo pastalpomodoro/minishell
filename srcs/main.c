@@ -60,8 +60,8 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	/*t_commande	*cmd;*/
-	t_tkn_lst	*lst;
+	t_commande	*cmd;
+	// t_tkn_lst	*lst;
 
 	(void) argv;
 	if (argc > 1)
@@ -75,35 +75,35 @@ int	main(int argc, char **argv, char **env)
 		{
 			add_history(input);
 			data.line = input;
-			if (!ft_strcmp(input, "exit"))
-				break ;
-			if (!ft_strncmp(input, "cd", 2))
-				ft_cd(ft_split(input, ' ')[1], data.env);
-			if (!ft_strcmp(input, "pwd"))
-				ft_pwd();
-			if (!ft_strcmp(input, "env"))
-				ft_env(data.env);
-			if (!ft_strncmp(input, "export", 6))
-				ft_export(ft_split(input, ' ')[1], &data.env);
-			if (!ft_strncmp(input, "unset", 5))
-				ft_unset(ft_split(input, ' ')[1], &data.env);
+			// if (!ft_strcmp(input, "exit"))
+			// 	break ;
+			// if (!ft_strncmp(input, "cd", 2))
+			// 	ft_cd(ft_split(input, ' ')[1], data.env);
+			// if (!ft_strcmp(input, "pwd"))
+			// 	ft_pwd();
+			// if (!ft_strcmp(input, "env"))
+			// 	ft_env(data.env);
+			// if (!ft_strncmp(input, "export", 6))
+			// 	ft_export(ft_split(input, ' ')[1], &data.env);
+			// if (!ft_strncmp(input, "unset", 5))
+			// 	ft_unset(ft_split(input, ' ')[1], &data.env);
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
-			lst = data.lst;
-			while (lst)
+			// lst = data.lst;
+			// while (lst)
+			// {
+			// 	printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+			// 		lst->value);
+			// 	lst = lst->next;
+			// }
+			cmd = creator(data.lst, data.env);
+			if (cmd)
 			{
-				printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
-					lst->value);
-				lst = lst->next;
+				afficher_cmds(cmd);
+				gestion(cmd, env);
+				free_cmd(&cmd);
 			}
-			/*cmd = creator(data.lst, data.env);*/
-			/*if (cmd)*/
-			/*{*/
-			/*	afficher_cmds(cmd);*/
-			/*	gestion(cmd, env);*/
-			/*	free_cmd(&cmd);*/
-			/*}*/
 			printf("------------------------------------------\n");
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
