@@ -17,6 +17,7 @@ SRCS_NAMES = main.c \
 			 tokens/tkn_lst.c \
 			 env/env_creator.c \
 			 env/replace_var.c \
+			 env/replace_var_utils.c \
 			 env/search_env.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \
@@ -24,7 +25,7 @@ SRCS_NAMES = main.c \
 			 execution/execution.c \
 			 cmds/echo.c \
 			 cmds/env.c \
-			#  cmds/export.c \
+			 cmds/export.c \
 			 cmds/pwd.c \
 			 cmds/cd.c
 

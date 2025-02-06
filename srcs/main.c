@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:53:16 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:41:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ int	show_token(t_tkn_lst *tmp)
 	}
 	return (1);
 }
-void afficher_cmds(t_commande *cmd)
+
+void	afficher_cmds(t_commande *cmd)
 {
-	int i;
+	int	i;
 
 	while (cmd)
 	{
@@ -48,7 +49,8 @@ void afficher_cmds(t_commande *cmd)
 		}
 		ft_printf("INFILE: %d\n", cmd->infile);
 		if (cmd->outfile)
-			ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile, cmd->outfile_type);
+			ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
+				cmd->outfile_type);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n");
@@ -59,6 +61,7 @@ int	main(int argc, char **argv, char **env)
 	char		*input;
 	t_data		data;
 	t_commande	*cmd;
+	t_tkn_lst	*lst;
 
 	(void) argv;
 	if (argc > 1)
@@ -66,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("<infile grep je >outfile");
+		/*input = ft_strdup("e$USER");*/
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -81,6 +84,13 @@ int	main(int argc, char **argv, char **env)
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
+			lst = data.lst;
+			while (lst)
+			{
+				printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+					lst->value);
+				lst = lst->next;
+			}
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{

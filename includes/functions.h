@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:53:10 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:41:14 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "structs.h"
 # include <curses.h>
 # include <stdbool.h>
+
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
@@ -34,9 +35,9 @@ void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
 char		*get_path(char *c, t_env *env);
-//          lst_creator.c
-void        free_cmd_node(t_commande **cmd);
-void        free_cmd(t_commande **cmd);
+//			lst_creator.c
+void		free_cmd_node(t_commande **cmd);
+void		free_cmd(t_commande **cmd);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
 
@@ -50,6 +51,8 @@ t_env		*env_creator(char **env);
 t_env		*init_env(char *value);
 //			replace_var.c
 char		*replace_vars(t_env *env, char *str);
+//			replace_var_utils.c
+char		*handle_regular_char(char *res, char **line);
 //			search_env.c
 char		*search_env(t_env *env, char *str);
 
@@ -83,15 +86,15 @@ void		tkn_lst_clear(t_tkn_lst **lst);
 /*****************************/
 //			lst_redir.c
 int			redirect(t_tkn_lst *node, t_commande **cmd);
-//          lst_cmd.c
-int         cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
+//			lst_cmd.c
+int			cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
 //			lst_creator.c
 t_commande	*creator(t_tkn_lst *node, t_env *env);
 
 /*****************************/
 /********* EXECUTION *********/
 /*****************************/
-//          execution.c
-int gestion(t_commande *cmd, char **env);
+//			execution.c
+int			gestion(t_commande *cmd, char **env);
 
 #endif
