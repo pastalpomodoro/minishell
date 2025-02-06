@@ -1,30 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 19:18:11 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 14:40:23 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/04 13:35:52 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/04 15:59:52 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../../includes/minishell.h"
 
-# include "functions.h"
-# include "macros.h"
-# include "../libft/libft.h"
+int	ft_pwd(void)
+{
+	char	*pwd;
 
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <fcntl.h>
-# include <sys/wait.h>
-# include <readline/readline.h>
-# include <readline/history.h>
-# include <sys/types.h>
-# include <dirent.h>
-
-#endif
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (1);
+	ft_printf("%s\n", pwd);
+	free(pwd);
+	return (0);
+}

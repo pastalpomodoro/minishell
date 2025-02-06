@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 11:39:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 16:53:16 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,43 @@ t_data	init_data(char *line, char **env)
 	return (data);
 }
 
+int	show_token(t_tkn_lst *tmp)
+{
+	while (tmp)
+	{
+		printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", tmp->token,
+			tmp->value);
+		tmp = tmp->next;
+	}
+	return (1);
+}
+void afficher_cmds(t_commande *cmd)
+{
+	int i;
+
+	while (cmd)
+	{
+		if (cmd->path)
+			ft_printf("PATH: %s\n", cmd->path);
+		if (cmd->cmd)
+		{
+			i = -1;
+			while (i++, cmd->cmd[i])
+				ft_printf("%s\n", cmd->cmd[i]);
+		}
+		ft_printf("INFILE: %d\n", cmd->infile);
+		if (cmd->outfile)
+			ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile, cmd->outfile_type);
+		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
+		cmd = cmd->next;
+		printf("------------------------------------------\n");
+	}
+}
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	t_tkn_lst	*tmp;
+	t_commande	*cmd;
 
 	(void) argv;
 	if (argc > 1)
@@ -34,26 +66,31 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
+		// input = ft_strdup("<infile grep je >outfile");
 		input = readline("Minishell> ");
 		if (input)
 		{
+			add_history(input);
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
+			// if (!ft_strncmp(input, "cd", 2))
+			// 	ft_cd(ft_split(input, ' ')[1], data.env);
+			// if (!ft_strcmp(input, "pwd"))
+			// 	ft_pwd();
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);
-			tmp = data.lst;
-			while (data.lst)
+			cmd = creator(data.lst, data.env);
+			if (cmd)
 			{
-				printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", data.lst->token,
-					data.lst->value);
-				data.lst = data.lst->next;
+				afficher_cmds(cmd);
+				gestion(cmd, env);
+				free_cmd(&cmd);
 			}
-			if (input)
-				add_history(data.line);
-			if (tmp)
-				tkn_lst_clear(&tmp);
+			printf("------------------------------------------\n");
+			if (data.lst)
+				tkn_lst_clear(&data.lst);
 			free(data.line);
 		}
 	}
@@ -62,3 +99,4 @@ int	main(int argc, char **argv, char **env)
 		free(data.line);
 	rl_clear_history();
 }
+//bash --posix

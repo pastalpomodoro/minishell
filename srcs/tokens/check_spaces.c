@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 16:18:56 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 11:31:18 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/04 15:51:25 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool	inside_quotes(char *line, int *i)
 	return (FALSE);
 }
 
-static bool	no_spaces_around(char *line, char *line_init)
+static bool	no_spaces_around(char *line, char *line_init, int *i)
 {
 	char	*tmp;
 
@@ -49,10 +49,14 @@ static bool	no_spaces_around(char *line, char *line_init)
 	{
 		line++;
 		if (*line && (*line == '>' || *line == '<' || *line == '|'))
+		{
 			line++;
+			(*i)++;
+		}
 		if (!ft_isspace(*line) || !ft_isspace(*tmp))
 			return (TRUE);
 	}
+	(*i)++;
 	return (FALSE);
 }
 
@@ -66,18 +70,13 @@ char	*check_insert_spaces(char *line)
 	{
 		if (inside_quotes(&line[i], &i))
 			i++;
-		if (line[i] && no_spaces_around(&line[i], line))
+		if (line[i] && no_spaces_around(&line[i], line, &i))
 		{
 			new_line = insert_spaces(&line[i], line, &i);
 			free(line);
 			if (new_line == NULL)
 				return (NULL);
 			line = new_line;
-		}
-		else
-		{
-			if (line[i])
-				i++;
 		}
 	}
 	return (line);

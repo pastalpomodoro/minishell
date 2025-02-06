@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -g3
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
@@ -17,9 +17,22 @@ SRCS_NAMES = main.c \
 			 tokens/tkn_lst.c \
 			 env/env_creator.c \
 			 env/replace_var.c \
+			 env/search_env.c \
+			 lst_creator/lst_creator.c \
+			 lst_creator/lst_redir.c \
+			 lst_creator/lst_cmd.c \
+			 execution/execution.c \
+			 cmds/echo.c \
+			 cmds/env.c \
+			 cmds/export.c \
+			 cmds/pwd.c \
+			 cmds/cd.c
 			 env/search_env.c
+       
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
-OBJS = $(SRCS:.c=.o)
+
+OBJ_DIR = ./obj/
+OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.c=.o))
 
 LIBFT_DIR = libft
 LIBFT_LIB = libft/libft.a
@@ -33,17 +46,21 @@ all: $(NAME)
 $(NAME): $(OBJS) $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) $(OBJS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
+$(OBJ_DIR)%.o: %.c $(HEADERS)
+	@mkdir -p $(dir $@) # Crée les répertoires nécessaires
+	$(CC) $(CFLAGS) -I $(INCLUDES) -c $< -o $@
+
 $(LIBFT_LIB):
 	@make printf -C $(LIBFT_DIR)
 
 fsan: $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 -fsanitize=address $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
-debug:$(LIBFT_LIB) $(HEADERS)
+debug: $(LIBFT_LIB) $(HEADERS)
 	$(CC) $(CFLAGS) -g3 $(SRCS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 clean:
-	rm -rf $(OBJS)
+	rm -rf $(OBJ_DIR)
 	@make -C $(LIBFT_DIR) clean
 
 fclean: clean
@@ -53,3 +70,4 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
