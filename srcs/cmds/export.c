@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:54:06 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 11:12:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,27 +41,6 @@ int	ft_export(char *cmd, t_env **env)
 	while (cmd[i] != '=')
 		i++;
 	name = ft_substr(cmd, 0, i);
-<<<<<<< HEAD
-	if (!name)
-		return (1);
-	while (env)
-	{
-		temp = env;
-		if (ft_strncmp(name, env->content, i) == 0 && env->content[i] == '=')
-		{
-			free(env->content);
-			env->content = ft_strdup(cmd);
-			if (!env->content)
-				return (free(name), 1);
-			return (free(name), 0);
-		}
-		env = env->next;
-	}
-	temp->next = init_env(cmd);
-	if (!temp->next)
-		return (free(name), 1);
-	return (free(name), 0);
-=======
 	if (name == NULL)
 		return (1);
 	i = search_replace_env(name, cmd, *env);
@@ -70,7 +49,6 @@ int	ft_export(char *cmd, t_env **env)
 		return (i);
 	else
 		return (env_add_last(env, init_env(cmd)));
->>>>>>> 64a81f7b7f6e2e3127a826bc05e0bcdda866b212
 }
 
 void	del_node_env(t_env *node)

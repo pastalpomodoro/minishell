@@ -17,6 +17,7 @@ SRCS_NAMES = main.c \
 			 tokens/tkn_lst.c \
 			 env/env_creator.c \
 			 env/replace_var.c \
+			 env/replace_var_utils.c \
 			 env/search_env.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \

@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/30 12:34:33 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/06 13:40:39 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ static char	*get_var(t_env *env, char **line, bool inside_quote)
 	tmp = NULL;
 	(*line)++;
 	if (inside_quote && (**line == '\'' || **line == '\"'))
-	{
 		return (ft_strdup("$"));
-	}
 	while (**line && !(ft_isspace(**line) || **line == '\''
 			|| **line == '\"'))
 	{
@@ -36,6 +34,7 @@ static char	*get_var(t_env *env, char **line, bool inside_quote)
 static int	join_var_res(t_env *env, char **line, char **res, bool inside_quote)
 {
 	char	*tmp;
+	char	*new_res;
 
 	tmp = get_var(env, line, inside_quote);
 	if (tmp == NULL)
@@ -44,10 +43,16 @@ static int	join_var_res(t_env *env, char **line, char **res, bool inside_quote)
 		*res = NULL;
 		return (1);
 	}
-	*res = ft_strjoin(*res, tmp);
+	new_res = ft_strjoin(*res, tmp);
 	free(tmp);
-	if (*res == NULL)
+	if (new_res == NULL)
+	{
+		free(*res);
+		*res = NULL;
 		return (1);
+	}
+	free(*res);
+	*res = new_res;
 	return (0);
 }
 
@@ -99,7 +104,7 @@ char	*replace_vars(t_env *env, char *line)
 		if (*line == '$')
 		{
 			if (join_var_res(env, &line, &res, FALSE))
-				return (NULL);
+				return (free(res), NULL);
 		}
 		else if (*line == '\'' || *line == '\"')
 		{
@@ -109,10 +114,9 @@ char	*replace_vars(t_env *env, char *line)
 		}
 		else
 		{
-			res = ft_strjoin_char(res, *line);
+			res = handle_regular_char(res, &line);
 			if (res == NULL)
 				return (NULL);
-			line++;
 		}
 	}
 	return (res);
