@@ -16,6 +16,7 @@
 # include "structs.h"
 # include <curses.h>
 # include <stdbool.h>
+
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
@@ -93,5 +94,6 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /*****************************/
 //          execution.c
 int gestion(t_commande *cmd, char **env);
+
 
 #endif

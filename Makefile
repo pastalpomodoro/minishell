@@ -24,10 +24,11 @@ SRCS_NAMES = main.c \
 			 execution/execution.c \
 			 cmds/echo.c \
 			 cmds/env.c \
-			#  cmds/export.c \
+			 cmds/export.c \
 			 cmds/pwd.c \
 			 cmds/cd.c
-
+			 env/search_env.c
+       
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
 OBJ_DIR = ./obj/
