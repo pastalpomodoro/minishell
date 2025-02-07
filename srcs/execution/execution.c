@@ -32,7 +32,7 @@ int	exec_avec_outfile(t_commande *cmd, char **env, int *fd_in, int i)
 		return (0);
 	if (cmd->infile <= 2 && *fd_in > 2 && i > 0)
 	{
-		close(cmd->infile);
+		// close(cmd->infile);
 		cmd->infile = *fd_in;
 	}
 	cmd->fd_out = 1;
