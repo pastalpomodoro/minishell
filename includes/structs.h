@@ -24,6 +24,7 @@ typedef struct s_commande
 {
 	int					exit_code;
 	int					infile;
+	int					fd_out;
 	int					outfile_type;//if 1==> , if 2==>>
 	char				*outfile;
 	char				**cmd;

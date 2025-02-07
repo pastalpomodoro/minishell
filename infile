@@ -1,0 +1,40 @@
+Architecture :                          x86_64
+Mode(s) opératoire(s) des processeurs : 32-bit, 64-bit
+Address sizes:                          39 bits physical, 48 bits virtual
+Boutisme :                              Little Endian
+Processeur(s) :                         8
+Liste de processeur(s) en ligne :       0-7
+Identifiant constructeur :              GenuineIntel
+Nom de modèle :                         Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
+Famille de processeur :                 6
+Modèle :                                142
+Thread(s) par cœur :                    2
+Cœur(s) par socket :                    4
+Socket(s) :                             1
+Révision :                              12
+CPU(s) scaling MHz:                     17%
+Vitesse maximale du processeur en MHz : 4600,0000
+Vitesse minimale du processeur en MHz : 400,0000
+BogoMIPS :                              3999,93
+Drapaux :                               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch cpuid_fault epb ssbd ibrs ibpb stibp ibrs_enhanced tpr_shadow flexpriority ept vpid ept_ad fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves dtherm ida arat pln pts hwp hwp_notify hwp_act_window hwp_epp vnmi md_clear flush_l1d arch_capabilities
+Virtualisation :                        VT-x
+Cache L1d :                             128 KiB (4 instances)
+Cache L1i :                             128 KiB (4 instances)
+Cache L2 :                              1 MiB (4 instances)
+Cache L3 :                              8 MiB (1 instance)
+Nœud(s) NUMA :                          1
+Nœud NUMA 0 de processeur(s) :          0-7
+Vulnerability Gather data sampling:     Mitigation; Microcode
+Vulnerability Itlb multihit:            KVM: Mitigation: VMX disabled
+Vulnerability L1tf:                     Not affected
+Vulnerability Mds:                      Not affected
+Vulnerability Meltdown:                 Not affected
+Vulnerability Mmio stale data:          Mitigation; Clear CPU buffers; SMT vulnerable
+Vulnerability Reg file data sampling:   Not affected
+Vulnerability Retbleed:                 Mitigation; Enhanced IBRS
+Vulnerability Spec rstack overflow:     Not affected
+Vulnerability Spec store bypass:        Mitigation; Speculative Store Bypass disabled via prctl
+Vulnerability Spectre v1:               Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:               Mitigation; Enhanced / Automatic IBRS; IBPB conditional; RSB filling; PBRSB-eIBRS SW sequence; BHI SW loop, KVM SW loop
+Vulnerability Srbds:                    Mitigation; Microcode
+Vulnerability Tsx async abort:          Not affected

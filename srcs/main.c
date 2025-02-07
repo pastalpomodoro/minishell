@@ -33,7 +33,7 @@ int	show_token(t_tkn_lst *tmp)
 	return (1);
 }
 
-void	afficher_cmds(t_commande *cmd)
+void	show_cmds(t_commande *cmd)
 {
 	int	i;
 
@@ -45,7 +45,7 @@ void	afficher_cmds(t_commande *cmd)
 		{
 			i = -1;
 			while (i++, cmd->cmd[i])
-				ft_printf("%s\n", cmd->cmd[i]);
+				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
 		ft_printf("INFILE: %d\n", cmd->infile);
 		if (cmd->outfile)
@@ -69,14 +69,14 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		/*input = ft_strdup("e$USER");*/
+		// input = ft_strdup("grep CPU infile | cat >outfile");
 		input = readline("Minishell> ");
 		if (input)
 		{
 			add_history(input);
 			data.line = input;
-			// if (!ft_strcmp(input, "exit"))
-			// 	break ;
+			if (!ft_strcmp(input, "exit"))
+				break ;
 			// if (!ft_strncmp(input, "cd", 2))
 			// 	ft_cd(ft_split(input, ' ')[1], data.env);
 			// if (!ft_strcmp(input, "pwd"))
@@ -100,8 +100,8 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				afficher_cmds(cmd);
-				gestion(cmd, env);
+				show_cmds(cmd);
+				exec_manage(cmd, env);
 				free_cmd(&cmd);
 			}
 			printf("------------------------------------------\n");

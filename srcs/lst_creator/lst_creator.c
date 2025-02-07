@@ -11,6 +11,7 @@ t_commande	*cmd_init(void)
 	cmd->path = NULL;
 	cmd->next = NULL;
 	cmd->outfile = NULL;
+	cmd->fd_out = 1;
 	cmd->outfile_type = 0;
 	cmd->infile = 0;
 	cmd->exit_code = 0;
