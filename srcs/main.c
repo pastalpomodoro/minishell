@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("grep CPU infile | cat >outfile");
+		// input = ft_strdup("grep je >outfile");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -100,7 +100,7 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				show_cmds(cmd);
+				// show_cmds(cmd);
 				exec_manage(cmd, env);
 				free_cmd(&cmd);
 			}

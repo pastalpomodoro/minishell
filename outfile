@@ -1,5 +1,2 @@
-pipe_fd: 4, 5, 5
-pipe_fd: 3, 4, 4
-Nom de modèle :                         Intel(R) Core(TM) i7-8565U CPU @ 1.80GHz
-CPU(s) scaling MHz:                     17%
-Vulnerability Mmio stale data:          Mitigation; Clear CPU buffers; SMT vulnerable
+je fais caca
+je mange une pomme
