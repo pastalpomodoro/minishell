@@ -24,7 +24,7 @@ int	exec(t_commande *cmd, char **env, int *pipe_fd)
 	return (1);
 }
 
-int	exec_avec_outfile(t_commande *cmd, t_commande *next, char **env)
+int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
@@ -56,19 +56,16 @@ int	exec_manage(t_commande *cmd, char **env)
 {
 	t_commande	*temp;
 	int i;
-	// int fd_in;
 
 	i = 0;
-	// fd_in = 0;
 	while (cmd)
 	{
 		temp = cmd->next;
 		if (cmd->exit_code == 0)
 		{
-			if (exec_avec_outfile(cmd, temp, env) != 0)
+			if (exec_pipe(cmd, temp, env) != 0)
 				return (0);
 		}
-		// ft_printf("fd_in: %d\n", fd_in);
 		cmd = temp;
 		i++;
 	}

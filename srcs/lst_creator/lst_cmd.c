@@ -37,13 +37,20 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 		return (-2);
 	i = 0;
 	utils[i] = NULL;
-	while (node && node->token == T_LITERAL)
+	while (node && (node->token == T_LITERAL || node->token == T_REDIRECT))
 	{
-		utils[i] = ft_strdup(node->value);
-		if (!utils[i])
-			return (free_double_tab(utils), -2);
-		i++;
-		utils[i] = NULL;
+		if (node->token == T_REDIRECT)
+			node = node->next;
+		else
+		{
+			utils[i] = ft_strdup(node->value);
+			if (!utils[i])
+				return (free_double_tab(utils), -2);
+			i++;
+			utils[i] = NULL;
+		}
+		if (!node)
+			break;
 		node = node->next;
 	}
 	return ((*cmd)->cmd = utils, 1);

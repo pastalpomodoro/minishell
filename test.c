@@ -1,13 +1,13 @@
 #include <unistd.h>
 # include <stdio.h>
+# include <string.h>
 
-int main()
+int main(int ac, char **av, char **env)
 {
-    int pipe_fd[2];
-
-    pipe(pipe_fd);
-    printf("before: %d, %d\n", pipe_fd[0], pipe_fd[1]);
-    close(pipe_fd[0]);
-    close(pipe_fd[1]);
-    printf("before: %d, %d", pipe_fd[0], pipe_fd[1]);
+    ac = 0;
+    (void)av;
+    int i = 0;
+    while (env[i])
+        i++;
+    printf("%d\n", i);
 }
