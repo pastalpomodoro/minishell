@@ -60,7 +60,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	// t_commande	*cmd;
+	t_commande	*cmd;
 	// t_tkn_lst	*lst;
 
 	(void) argv;
@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("grep je >outfile");
+		// input = ft_strdup("echo a > b c d");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -97,13 +97,13 @@ int	main(int argc, char **argv, char **env)
 			// 		lst->value);
 			// 	lst = lst->next;
 			// }
-			// cmd = creator(data.lst, data.env);
-			// if (cmd)
-			// {
-			// 	show_cmds(cmd);
-			// 	exec_manage(cmd, env);
-			// 	free_cmd(&cmd);
-			// }
+			cmd = creator(data.lst, data.env);
+			if (cmd)
+			{
+				show_cmds(cmd);
+				exec_manage(cmd, env);
+				free_cmd(&cmd);
+			}
 			printf("------------------------------------------\n");
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
