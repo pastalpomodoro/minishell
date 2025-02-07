@@ -47,6 +47,7 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
 	t_commande	*init;
+	t_tkn_lst	*next;
 	int			i;
 
 	cmd = cmd_init();
@@ -56,6 +57,7 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 	init = cmd;
 	while (node)
 	{
+		next = node->next;
 		if (node->token == T_REDIRECT && cmd->exit_code == 0)
 		{
 			if (redirect(node, &cmd) == -2)
@@ -70,6 +72,11 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 		}
 		else if (node->token == T_PIPE)
 		{
+			if (next)
+			{
+				if (next->token != T_LITERAL || next->token != T_REDIRECT)
+					return (ft_printf("bash: syntax error near unexpected token `%s'\n", next->value), free_cmd(&init), NULL);
+			}
 			cmd->next = cmd_init();
 			if (!cmd->next)
 				return (NULL);
