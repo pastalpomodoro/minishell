@@ -26,7 +26,17 @@ int	size_tab(t_tkn_lst *node)
 	}
 	return (size);
 }
-
+int t_redirect(t_tkn_lst **node)
+{
+		if ((*node) && (*node)->token == T_REDIRECT)
+		{
+			(*node) = (*node)->next;
+			if (!(*node))
+				return (0);
+			(*node) = (*node)->next;
+		}
+		return (1);
+}
 int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 {
 	char	*path;
@@ -52,13 +62,8 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 		i++;
 		utils[i] = NULL;
 		node = node->next;
-		if (node && node->token == T_REDIRECT)
-		{
-			node = node->next;
-			if (!node)
-				break;
-			node = node->next;
-		}
-	}
+		if (t_redirect(&node) == 0)
+			break;
+}
 	return ((*cmd)->cmd = utils, 1);
 }

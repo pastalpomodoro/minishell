@@ -48,8 +48,8 @@ void	show_cmds(t_commande *cmd)
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
 		ft_printf("INFILE: %d\n", cmd->infile);
-		if (cmd->outfile)
-			ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
+		// if (cmd->outfile)
+		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
 				cmd->outfile_type);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;

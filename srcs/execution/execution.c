@@ -61,7 +61,7 @@ int	exec_manage(t_commande *cmd, char **env)
 	while (cmd)
 	{
 		temp = cmd->next;
-		if (cmd->exit_code == 0)
+		if (cmd->exit_code == 0 && cmd->cmd)
 		{
 			if (exec_pipe(cmd, temp, env) != 0)
 				return (0);
