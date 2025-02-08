@@ -26,6 +26,7 @@ typedef struct s_commande
 	int					infile;
 	int					fd_out;
 	int					outfile_type;//if 1==> , if 2==>>
+	int					cmd_type;
 	char				*outfile;
 	char				**cmd;
 	char				*path;

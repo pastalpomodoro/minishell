@@ -2,9 +2,6 @@
 
 // static int if_mine(t_tkn_lst *node)
 // {
-//     if (!ft_strcmp("echo", node->value) || !ft_strcmp("cd", node->value)
-//         || !ft_strcmp("env", node->value) || !ft_strcmp("export", node->value)
-//         || !ft_strcmp("pwd", node->value) || !ft_strcmp("unset", node->value))
 
 // }
 int	size_tab(t_tkn_lst *node)
@@ -26,6 +23,13 @@ int	size_tab(t_tkn_lst *node)
 	}
 	return (size);
 }
+int is_our_cmd(char *value)
+{
+    if (ft_strcmp("echo", value) || ft_strcmp("cd", value)
+        || ft_strcmp("env", value) || ft_strcmp("export", value)
+        || ft_strcmp("pwd", value) || ft_strcmp("unset", value) || ft_strcmp("exit", value))
+		return (1);
+}
 int t_redirect(t_tkn_lst **node)
 {
 		if ((*node) && (*node)->token == T_REDIRECT)
@@ -37,6 +41,7 @@ int t_redirect(t_tkn_lst **node)
 		}
 		return (1);
 }
+
 int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 {
 	char	*path;

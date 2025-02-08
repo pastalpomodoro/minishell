@@ -13,6 +13,7 @@ t_commande	*cmd_init(void)
 	cmd->outfile = NULL;
 	cmd->fd_out = 1;
 	cmd->outfile_type = 0;
+	cmd->cmd_type = 0;
 	cmd->infile = 0;
 	cmd->exit_code = 0;
 	return (cmd);
