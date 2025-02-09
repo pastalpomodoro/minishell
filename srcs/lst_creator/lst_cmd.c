@@ -1,9 +1,5 @@
 #include "../../includes/minishell.h"
 
-// static int if_mine(t_tkn_lst *node)
-// {
-
-// }
 int	size_tab(t_tkn_lst *node)
 {
 	int	size;
@@ -23,23 +19,27 @@ int	size_tab(t_tkn_lst *node)
 	}
 	return (size);
 }
-int is_our_cmd(char *value)
+
+int	is_our_cmd(char *value)
 {
-    if (ft_strcmp("echo", value) || ft_strcmp("cd", value)
-        || ft_strcmp("env", value) || ft_strcmp("export", value)
-        || ft_strcmp("pwd", value) || ft_strcmp("unset", value) || ft_strcmp("exit", value))
+	if (ft_strcmp("echo", value) || ft_strcmp("cd", value)
+		|| ft_strcmp("env", value) || ft_strcmp("export", value)
+		|| ft_strcmp("pwd", value) || ft_strcmp("unset", value)
+		|| ft_strcmp("exit", value))
 		return (1);
+	return (0);
 }
-int t_redirect(t_tkn_lst **node)
+
+int	t_redirect(t_tkn_lst **node)
 {
-		if ((*node) && (*node)->token == T_REDIRECT)
-		{
-			(*node) = (*node)->next;
-			if (!(*node))
-				return (0);
-			(*node) = (*node)->next;
-		}
-		return (1);
+	if ((*node) && (*node)->token == T_REDIRECT)
+	{
+		(*node) = (*node)->next;
+		if (!(*node))
+			return (0);
+		(*node) = (*node)->next;
+	}
+	return (1);
 }
 
 int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
@@ -68,7 +68,7 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 		utils[i] = NULL;
 		node = node->next;
 		if (t_redirect(&node) == 0)
-			break;
-}
+			break ;
+	}
 	return ((*cmd)->cmd = utils, 1);
 }
