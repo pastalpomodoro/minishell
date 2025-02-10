@@ -19,7 +19,7 @@ int my_execve(t_commande *cmd, t_env **lst_env)
 	}
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
 		ft_echo(cmd->cmd);
-	else if (!ft_strcmp(cmd->cmd[0], "export"))
+	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1]) // juste export ca fais un truc a gerer
 		ft_export(cmd->cmd[1], lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "cd"))
 		ft_cd(cmd->cmd[1], *lst_env);
@@ -99,9 +99,9 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 	while (cmd)
 	{
 		temp = cmd->next;
-		if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+		if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 			my_execve(cmd, lst_env);
-		else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
+		if (cmd->exit_code == 0 && cmd->cmd_type == 1)
 			exec_pipe(cmd, temp, env);
 		cmd = temp;
 		i++;
