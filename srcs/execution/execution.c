@@ -85,15 +85,11 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 	while (cmd)
 	{
 		temp = cmd->next;
+		if (cmd->cmd_type == 2 && (!ft_strcmp(cmd->cmd[0], "export")
+			|| !ft_strcmp(cmd->cmd[0], "unset") || !ft_strcmp(cmd->cmd[0], "cd")))
+			my_execve(cmd, lst_env);
 		if (cmd->exit_code == 0)
-		{
 			exec_pipe(cmd, temp, lst_env, env);
-				// return (0);
-		}
-		else if (cmd->exit_code == 0 && cmd->cmd_type == 2)
-		{
-			ft_printf("YOYO FAUT FAIRE LA COMMANDE");
-		}
 		cmd = temp;
 		i++;
 	}

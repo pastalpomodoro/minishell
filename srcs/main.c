@@ -47,7 +47,7 @@ void	show_cmds(t_commande *cmd)
 			while (i++, cmd->cmd[i])
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
-		ft_printf("INFILE: %d\n", cmd->infile);
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
 		// if (cmd->outfile)
 		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
 				cmd->outfile_type);
@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("echo salut");
+		// input = ft_strdup("| |");
 		input = readline("Minishell> ");
 		if (input)
 		{
