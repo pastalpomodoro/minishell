@@ -99,10 +99,13 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 	while (cmd)
 	{
 		temp = cmd->next;
-		if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
-			my_execve(cmd, lst_env);
-		if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-			exec_pipe(cmd, temp, env);
+		if (cmd->cmd)
+		{
+			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+				my_execve(cmd, lst_env);
+			if (cmd->exit_code == 0 && cmd->cmd_type == 1)
+				exec_pipe(cmd, temp, env);
+		}
 		cmd = temp;
 		i++;
 	}

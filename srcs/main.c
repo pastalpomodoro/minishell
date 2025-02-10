@@ -62,6 +62,7 @@ int	main(int argc, char **argv, char **env)
 	t_data		data;
 	// char *cmd[] = {"input", "$SALUT"};
 	t_commande	*cmd;
+	int i = 0;
 	// t_tkn_lst	*lst;
 
 	(void) argv;
@@ -70,11 +71,12 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("cd srcs");
+		if (i == 0)
+			// input = ft_strdup("env");
 		input = readline("Minishell> ");
 		if (input)
 		{
-			add_history(input);
+			// add_history(input);
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
@@ -103,7 +105,7 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				// show_cmds(cmd);
+				show_cmds(cmd);
 				exec_manage(cmd, &data.env, env);
 				free_cmd(&cmd);
 			}
