@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("echo a > b c d");
+		// input = ft_strdup("echo >");
 		input = readline("Minishell> ");
 		if (input)
 		{

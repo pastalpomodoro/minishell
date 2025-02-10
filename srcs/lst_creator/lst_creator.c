@@ -91,7 +91,8 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 			return (free_cmd(&init), NULL);
 		else if (node->token == T_AND_OR)
 			ft_printf("Faire le bonus");
-		node = node->next;
+		if (node)
+			node = node->next;
 	}
 	return (init);
 }

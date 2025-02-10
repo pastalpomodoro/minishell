@@ -8,6 +8,7 @@ int	size_tab(t_tkn_lst *node)
 	while (node && node->token == T_LITERAL)
 	{
 		node = node->next;
+		size++;
 		if (node && node->token == T_REDIRECT)
 		{
 			node = node->next;
@@ -15,17 +16,16 @@ int	size_tab(t_tkn_lst *node)
 				break;
 			node = node->next;
 		}
-		size++;
 	}
 	return (size);
 }
 
 int	is_our_cmd(char *value)
 {
-	if (ft_strcmp("echo", value) || ft_strcmp("cd", value)
-		|| ft_strcmp("env", value) || ft_strcmp("export", value)
-		|| ft_strcmp("pwd", value) || ft_strcmp("unset", value)
-		|| ft_strcmp("exit", value))
+	if (!ft_strcmp("echo", value) || !ft_strcmp("cd", value)
+		|| !ft_strcmp("env", value) || !ft_strcmp("export", value)
+		|| !ft_strcmp("pwd", value) || !ft_strcmp("unset", value)
+		|| !ft_strcmp("exit", value))
 		return (1);
 	return (0);
 }
@@ -51,8 +51,8 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 	path = get_path(node->value, env);
 	if (!path)
 		return (-2);
-	if (!ft_strlen(path))
-		return ((*cmd)->exit_code = 127, ft_printf("%s: command not found\n", node->value), free(path), -1);
+	if (!ft_strlen(path) && !is_our_cmd(node->value))
+		return ((*cmd)->exit_code = 127, ft_printf("minishell: %s: command not found\n", node->value), free(path), -1);
 	(*cmd)->path = path;
 	utils = malloc(sizeof(char *) * (size_tab(node) + 1));
 	if (!utils)
