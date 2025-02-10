@@ -60,6 +60,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
+	// char *cmd[] = {"input", "$SALUT"};
 	t_commande	*cmd;
 	// t_tkn_lst	*lst;
 
@@ -69,7 +70,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("| |");
+		// input = ft_strdup("cd srcs");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -77,6 +78,8 @@ int	main(int argc, char **argv, char **env)
 			data.line = input;
 			if (!ft_strcmp(input, "exit"))
 				break ;
+			// if (!ft_strcmp(input, "salut"))
+			// 	ft_echo(cmd);
 			// if (!ft_strncmp(input, "cd", 2))
 			// 	ft_cd(ft_split(input, ' ')[1], data.env);
 			// if (!ft_strcmp(input, "pwd"))
@@ -100,7 +103,7 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (cmd)
 			{
-				show_cmds(cmd);
+				// show_cmds(cmd);
 				exec_manage(cmd, &data.env, env);
 				free_cmd(&cmd);
 			}
