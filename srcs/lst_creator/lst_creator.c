@@ -45,6 +45,8 @@ void	free_cmd(t_commande **cmd)
 }
 int is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 {
+	if (node->token == T_PIPE && !next)
+		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near unexpected token `newline'\n"), -1);
 	if (node->token == T_PIPE)
 	{
 		if (next)

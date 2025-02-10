@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		// input = ft_strdup("echo >");
+		// input = ft_strdup("echo salut");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -101,7 +101,7 @@ int	main(int argc, char **argv, char **env)
 			if (cmd)
 			{
 				show_cmds(cmd);
-				exec_manage(cmd, env);
+				exec_manage(cmd, &data.env, env);
 				free_cmd(&cmd);
 			}
 			printf("------------------------------------------\n");

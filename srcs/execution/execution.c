@@ -1,6 +1,27 @@
 #include "../../includes/minishell.h"
 
-int	exec(t_commande *cmd, char **env, int *pipe_fd)
+int my_execve(t_commande *cmd, t_env **lst_env)
+{
+	int i = 0;
+	if (i++, !ft_strcmp(cmd->cmd[0], "echo"))
+		ft_echo(cmd->cmd);
+	else if (i++, !ft_strcmp(cmd->cmd[0], "export"))
+		ft_export(cmd->cmd[1], lst_env);
+	else if (i++, !ft_strcmp(cmd->cmd[0], "cd"))
+		ft_cd(cmd->cmd[1], *lst_env);
+	else if (i++, !ft_strcmp(cmd->cmd[0], "env"))
+		ft_env(*lst_env);
+	// if (!ft_strcmp(cmd->cmd[0], "echo"))
+	// 	ft_echo(cmd->cmd);
+	// if (!ft_strcmp(cmd->cmd[0], "echo"))
+	// 	ft_echo(cmd->cmd);
+	// if (!ft_strcmp(cmd->cmd[0], "echo"))
+	// 	ft_echo(cmd->cmd);
+	ft_printf("%d\n", i);
+	return (1);
+}
+
+int	exec(t_commande *cmd, t_env **lst_env, char **env, int *pipe_fd)
 {
 	close(pipe_fd[0]);
 	if (cmd->outfile_type == 0 && cmd->next)
@@ -19,12 +40,15 @@ int	exec(t_commande *cmd, char **env, int *pipe_fd)
 			exit(1);
 		close(cmd->fd_out);
 	}
-	if (execve(cmd->path, cmd->cmd, env) == -1)
+	if (cmd->cmd_type == 1 && execve(cmd->path, cmd->cmd, env) == -1)
 		exit(1);
+	if (cmd->cmd_type == 2)
+		my_execve(cmd, lst_env);
+	exit(1);
 	return (1);
 }
 
-int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
+int	exec_pipe(t_commande *cmd, t_commande *next, t_env **lst_env, char **env)
 {
 	int	status;
 	int	pid;
@@ -41,7 +65,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 	if (pid < 0)
 		return (ft_printf("Erreur avec fork\n"), -2);
 	else if (pid == 0)
-		exec(cmd, env, pipe_fd);
+		exec(cmd, lst_env, env, pipe_fd);
 	wait(&status);
 	if (next && next->infile <= 2)
 		next->infile = pipe_fd[0];
@@ -52,7 +76,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 	return (close(pipe_fd[1]), status);
 }
 
-int	exec_manage(t_commande *cmd, char **env)
+int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*temp;
 	int i;
@@ -61,10 +85,14 @@ int	exec_manage(t_commande *cmd, char **env)
 	while (cmd)
 	{
 		temp = cmd->next;
-		if (cmd->exit_code == 0 && cmd->cmd)
+		if (cmd->exit_code == 0)
 		{
-			if (exec_pipe(cmd, temp, env) != 0)
-				return (0);
+			exec_pipe(cmd, temp, lst_env, env);
+				// return (0);
+		}
+		else if (cmd->exit_code == 0 && cmd->cmd_type == 2)
+		{
+			ft_printf("YOYO FAUT FAIRE LA COMMANDE");
 		}
 		cmd = temp;
 		i++;
