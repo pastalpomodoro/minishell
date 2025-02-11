@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:33:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:58:49 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	main(int argc, char **argv, char **env)
 	char		*input;
 	t_data		data;
 	t_commande	*cmd;
+	t_sig
 	int i = 0;
 
 	(void) argv;

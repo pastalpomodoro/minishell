@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:33:47 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:48:57 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char		*search_env(t_env *env, char *str);
 /********   TOKENS    ********/
 /*****************************/
 //			tokenize.c
-t_tkn_lst	*get_tokens(t_data *data);
+void		get_tokens(t_data *data);
 //			check_spaces.c
 char		*check_insert_spaces(char *line);
 bool		inside_quotes(char *line, int *i);
