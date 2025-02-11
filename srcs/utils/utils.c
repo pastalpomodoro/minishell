@@ -63,17 +63,25 @@ char	*ft_strjoin_char(char *s1, char ch)
 //return NULL si probleme de malloc
 //return malloc(1) s'il ne trouve pas le path
 
-char	*get_path(char *c, t_env *env)
+char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 {
 	char	**all_path;
 	char	*cmd;
 	char	*path;
 	int		i;
+	int status;
 
+	status = 0;
 	i = -1;
 	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
 	{
-		if (access(c, F_OK | X_OK) == 0)
+		status = access(c, F_OK);
+		if (status != 0)
+			return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
+		status = access(c, X_OK);
+		if (status != 0)
+			return ((*lst_cmd)->exit_code = 126, ft_strdup(""));
+		if (status == 0)
 			return (ft_strdup(c));
 	}
 	if (!env)
@@ -93,8 +101,14 @@ char	*get_path(char *c, t_env *env)
 		path = ft_strjoin(all_path[i], cmd);
 		if (!path)
 			return (free_double_tab(all_path), free(cmd), NULL);
-		if (access(path, F_OK | X_OK) == 0)
-			return (free_double_tab(all_path), free(cmd), path);
+		status = access(path, F_OK);
+		if (status != 0)
+			return ((*lst_cmd)->exit_code = 127, free_double_tab(all_path), free(cmd), free(path), ft_strdup(""));
+		status = access(path, X_OK);
+		if (status != 0)
+			return ((*lst_cmd)->exit_code = 126, free_double_tab(all_path), free(cmd), free(path), ft_strdup(""));
+		if (status == 0)
+			return (path);
 		free(path);
 	}
 	return (free_double_tab(all_path), free(cmd), ft_strdup(""));

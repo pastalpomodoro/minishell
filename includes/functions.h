@@ -35,7 +35,7 @@ void		ft_exit(char *arg, t_data *data);
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
-char		*get_path(char *c, t_env *env);
+char		*get_path(char *c, t_env *env, t_commande **cmd);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
 void		free_cmd(t_commande **cmd);
