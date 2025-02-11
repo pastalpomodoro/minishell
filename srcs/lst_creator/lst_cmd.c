@@ -22,10 +22,10 @@ int	size_tab(t_tkn_lst *node)
 
 int	is_our_cmd(char *value)
 {
-	if (!ft_strcmp("echo", value) || !ft_strcmp("cd", value)
-		|| !ft_strcmp("env", value) || !ft_strcmp("export", value)
-		|| !ft_strcmp("pwd", value) || !ft_strcmp("unset", value)
-		|| !ft_strcmp("exit", value))
+	if (!ft_strcmp("echo", value) || !ft_strcmp("env", value)
+		|| !ft_strcmp("export", value) || !ft_strcmp("pwd", value)
+		|| !ft_strcmp("unset", value) || !ft_strcmp("exit", value)
+		|| !ft_strcmp("cd", value))
 		return (1);
 	return (0);
 }
