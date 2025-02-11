@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 13:41:14 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:33:47 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,13 @@
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
-int			ft_echo(char **cmd, int outfile);
+int			ft_echo(char **cmd);
 int			ft_env(t_env *node);
 int			ft_export(char *cmd, t_env **env);
 int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
 int			ft_cd(char *val, t_env *env);
+void		ft_exit(char *arg, t_data *data);
 
 /*****************************/
 /********   UTILS   **********/
@@ -95,6 +96,6 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /********* EXECUTION *********/
 /*****************************/
 //			execution.c
-int			gestion(t_commande *cmd, char **env);
+int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
 
 #endif

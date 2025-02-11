@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 13:40:39 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/09 16:10:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ static void	replace_inside_quote(t_env *env, char **line, char **res)
 				return ;
 			(*line)++;
 		}
-		(*line)++;
+		if (**line)
+			(*line)++;
 	}
 	else if (**line == '\"')
 		replace_inside_dquote(env, line, res);

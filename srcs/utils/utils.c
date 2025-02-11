@@ -71,11 +71,17 @@ char	*get_path(char *c, t_env *env)
 	int		i;
 
 	i = -1;
+	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
+	{
+		if (access(c, F_OK | X_OK) == 0)
+			return (ft_strdup(c));
+	}
 	if (!env)
 		return (ft_strdup(""));
-	while ((ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '=')
-		&& env)
+	while (env && (ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '='))
 		env = env->next;
+	if (!env)
+		return (ft_strdup(""));
 	all_path = ft_split(&env->content[5], ':');
 	if (!all_path)
 		return (NULL);
