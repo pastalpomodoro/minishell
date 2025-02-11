@@ -1,63 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   export.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/06 14:41:46 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-int ft_export(char *cmd, t_env *env)
+// 0 -> remplace 1 -> erreur de malloc 2 -> pas de cas trouve
+static int	search_replace_env(char *name, char *cmd, t_env *env)
 {
-    t_env *temp;
-    char *name;
-    int i;
-
-    i = 0;
-    while (cmd[i] != '=')
-        i++;
-    name = ft_substr(cmd, 0, i);
-    if (!name)
-        return (-2);
-    while (env)
-    {
-        temp = env;
-        if (ft_strncmp(name, env->content, i) == 0 && env->content[i] == '=')
-        {
-            free(env->content);
-            env->content = ft_strdup(cmd);
-            if (!env->content)
-                return (free(name), -2);
-            return (free(name), 1);
-        }
-        env = env->next;
-    }
-    temp->next = init_env(cmd);
-    if (!temp->next)
-        return (free(name), -2);
-    return (free(name), 1);
+	while (env)
+	{
+		if (!ft_strncmp(name, env->content, ft_strlen(name)))
+		{
+			free(env->content);
+			env->content = ft_strdup(cmd);
+			if (env->content == NULL)
+				return (1);
+			return (0);
+		}
+		env = env->next;
+	}
+	return (2);
 }
-void del_node_env(t_env *node)
-{
-    free(node->content);
-    free(node);
-}
-int ft_unset(char *cmd, t_env **env)
-{
-    t_env *temp;
-    t_env *temp1;
 
-    if (ft_strncmp(cmd, env[0]->content, ft_strlen(cmd)) == 0 && env[0]->content[ft_strlen(cmd)] == '=')
-    {
-        temp = env[0]->next;
-        del_node_env(env[0]);
-        env[0] = temp;
-        return (1);
-    }
-    temp1 = env[0];
-    while (temp1)
-    {
-        if (ft_strncmp(cmd, temp1->content, ft_strlen(cmd)) == 0 && temp1->content[ft_strlen(cmd)] == '=')
-        {
-            temp->next = temp1->next;
-            del_node_env(temp1);
-            return (1);
-        }
-        temp = temp1;
-        temp1 = temp1->next;
-    }
-    return (1);
+static int	check_cmd(char *cmd)
+{
+	if (!(ft_isalpha(*cmd) || *cmd == '_'))
+		return (1);
+	cmd++;
+	if (*cmd == '=')
+		return (1);
+	while (ft_isalnum(*cmd) || *cmd == '_')
+		cmd++;
+	if (*cmd != '=')
+		return (1);
+	return (0);
+}
+
+int	ft_export(char *cmd, t_env **env)
+{
+	char	*name;
+	int		i;
+
+	i = 0;
+	if (check_cmd(cmd))
+		return (ft_printf("minishell: export: « %s » : \
+identifiant non valable\n", cmd), 1);
+	if (*env == NULL)
+		return (env_add_last(env, init_env(cmd)));
+	while (cmd[i] != '=')
+		i++;
+	name = ft_substr(cmd, 0, i);
+	if (name == NULL)
+		return (1);
+	i = search_replace_env(name, cmd, *env);
+	free(name);
+	if (i == 0 || i == 1)
+		return (i);
+	else
+		return (env_add_last(env, init_env(cmd)));
+}
+
+static void	delete_node(t_env *to_delete, t_env *init)
+{
+	t_env	*tmp;
+
+	while (ft_strcmp(init->next->content, to_delete->content))
+		init = init->next;
+	tmp = to_delete->next;
+	free(to_delete->content);
+	free(to_delete);
+	init->next = tmp;
+}
+
+int	ft_unset(char *cmd, t_env **env)
+{
+	t_env	*tmp;
+
+	if (*env)
+	{
+		tmp = *env;
+		while (tmp)
+		{
+			if (!ft_strncmp(cmd, tmp->content, ft_strlen(cmd)))
+				return (delete_node(tmp, *env), 0);
+			tmp = tmp->next;
+		}
+	}
+	return (0);
 }

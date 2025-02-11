@@ -1,22 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pwd.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/04 13:35:52 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/04 15:59:52 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-//je n ai pas gere le cas ou je fais cd ../
-int ad_pwd_to_env(char *str, t_env *env)
+int	ft_pwd(void)
 {
-    char *path;
+	char	*pwd;
 
-    while (env)
-    {
-        if (ft_strncmp("PWD", env->content, 3) && env->content[3] == '=')
-        {
-            path = variadic_strjoin(3, env->content, "/", str);
-            if (!path)
-                return (-2);
-            free(env->content);
-            env->content = path;
-            return (1);
-        }
-        env = env->next;
-    }
-
+	pwd = getcwd(NULL, 0);
+	if (pwd == NULL)
+		return (1);
+	ft_printf("%s\n", pwd);
+	free(pwd);
+	return (0);
 }

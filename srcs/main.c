@@ -6,77 +6,75 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/17 11:20:55 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:33:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	if_exit(char *input)
+t_data	init_data(char *line, char **env)
 {
-	char	*exit;
-	int		i;
+	t_data	data;
 
-	exit = "exit";
-	i = 0;
-	while (input[i])
+	data.line = line;
+	data.lst = NULL;
+	data.env = env_creator(env);
+	return (data);
+}
+
+int	show_token(t_tkn_lst *tmp)
+{
+	while (tmp)
 	{
-		if (exit[i] != input[i])
-			return (0);
-		i++;
+		printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", tmp->token,
+			tmp->value);
+		tmp = tmp->next;
 	}
 	return (1);
 }
 
-int	main(int ac, char **av, char **envi)
+
+int	main(int argc, char **argv, char **env)
 {
-	// char	*input;
-	t_env	*env;
-	t_env *temp;
-	// char *var;
+	char		*input;
+	t_data		data;
+	int i = 0;
 
-	if (ac < 1)
-		return (0);
-	(void)av;
-	env = env_creator(envi);
-	ft_unset("CIAO", &env);
-	temp = env;
-	while (temp)
+	(void) argv;
+	if (argc > 1)
+		return (1);
+	data = init_data(NULL, env);
+	while (1)
 	{
-		ft_printf("%s\n", temp->content);
-		temp = temp->next;
+		if (i == 0)
+			// input = ft_strdup("echo je mange une pomme | wc >outfile && <infile grep je >outfile");
+		input = readline("Minishell> ");
+		if (input)
+		{
+			add_history(input);
+			data.line = input;
+			if (!ft_strncmp(input, "exit", 4))
+				break;
+				// ft_exit(ft_split(data.line, ' ')[1], &data);
+			get_tokens(&data);
+			if (data.lst == NULL)
+				exit(1);
+			// lst = data.lst;
+			// while (lst)
+			// {
+			// 	printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+			// 		lst->value);
+			// 	lst = lst->next;
+			// }
+			exec_and_or(&data.env, data.lst, env);
+			if (data.lst)
+				tkn_lst_clear(&data.lst);
+			free(data.line);
+		}
 	}
-	free_env(env);
-	// free(var);
-	// while (1)
-	// {
-	// 	input = readline("Minishell> ");
-	// 	if (if_exit(input) == 1)
-	// 		break ;
-	// 	if (input)
-	// 	{
-	// 		// input = "<<infile grep je >outfile";
-	// 		// chepas(input);
-	// 		add_history(input);
-	// 	}
-	// 	free(input);
-	// }
-	// free_env(env);
-	// free(input);
-	// rl_clear_history();
+	free_env(data.env);
+	if (data.line)
+		free(data.line);
+	rl_clear_history();
 }
-//redir
-//<<"$FILE"->$FILE
-//<<'$FILE'->$FILE
-
-//<'$FILE'->$FILE
-//<"$FILE"->valeur de FILE
-
-//>'$FILE'->$FILE
-//>"$FILE"->file
-//>>'$FILE'->$FILE
-//>>"$FILE"->file
-
-//comment ca marche?
-//redirection et apres prendre tout les literal ou double cote comment non du file
-//cmd et apres prendre tout les literal ou double cote comme utils de la commande
+//bash --posix

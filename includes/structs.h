@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/01/17 11:14:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/03 10:35:35 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,36 @@
 
 typedef struct s_env
 {
-	char *content;
-	struct s_env *next;
-}				t_env;
+	char			*content;
+	struct s_env	*next;
+}	t_env;
 
 typedef struct s_commande
 {
-	int	infile;
-	int	outfile;
-	char	*path;
-	char	**cmd;
-	struct s_commande *next;
-
+	int					exit_code;
+	int					infile;
+	int					fd_out;
+	int					outfile_type;//if 1==> , if 2==>>
+	int					cmd_type;
+	char				*outfile;
+	char				**cmd;
+	char				*path;
+	struct s_commande	*next;
 }	t_commande;
+
+typedef struct s_and_or
+{
+	t_commande 		*cmd;
+	struct s_and_or	*next;
+}	t_and_or; 
+
+typedef struct s_node
+{
+	struct s_node	*left;
+	struct s_node	*right;
+	char			*val;
+	t_token			type;
+}	t_node;
 
 typedef struct s_tkn_lst
 {
@@ -38,16 +55,11 @@ typedef struct s_tkn_lst
 	struct s_tkn_lst	*prev;
 }	t_tkn_lst;
 
-typedef struct s_node
+typedef struct s_data
 {
-	struct s_node	*next;
-	t_tkn_lst		*right;
-	t_tkn_lst		*left;
-	int 			infile;
-	int 			outfile;
-	t_token			type;
-	char			*path;
-	char			**cmd;
-}	t_node;
+	char		*line;
+	t_tkn_lst	*lst;
+	t_env		*env;
+}	t_data;
 
 #endif
