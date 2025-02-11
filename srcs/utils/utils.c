@@ -82,7 +82,7 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 		if (status != 0)
 			return ((*lst_cmd)->exit_code = 126, ft_strdup(""));
 		if (status == 0)
-			return (ft_strdup(c));
+			return ((*lst_cmd)->exit_code = 0, ft_strdup(c));
 	}
 	if (!env)
 		return (ft_strdup(""));
@@ -103,12 +103,12 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 			return (free_double_tab(all_path), free(cmd), NULL);
 		status = access(path, F_OK);
 		if (status != 0)
-			return ((*lst_cmd)->exit_code = 127, free_double_tab(all_path), free(cmd), free(path), ft_strdup(""));
+			(*lst_cmd)->exit_code = 127;
 		status = access(path, X_OK);
 		if (status != 0)
-			return ((*lst_cmd)->exit_code = 126, free_double_tab(all_path), free(cmd), free(path), ft_strdup(""));
+			(*lst_cmd)->exit_code = 126;
 		if (status == 0)
-			return (path);
+			return ((*lst_cmd)->exit_code = 0, free_double_tab(all_path), free(cmd), path);
 		free(path);
 	}
 	return (free_double_tab(all_path), free(cmd), ft_strdup(""));

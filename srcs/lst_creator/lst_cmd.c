@@ -53,8 +53,11 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 		return (-2);
 	if (!ft_strlen(path) && !is_our_cmd(node->value))
 		return (ft_printf("minishell: %s: command not found\n", node->value), free(path), -1);
-	if (!ft_strlen(path) && is_our_cmd(node->value))
+	else if (!ft_strlen(path) && is_our_cmd(node->value))
+	{
+		(*cmd)->exit_code = 0;
 		(*cmd)->cmd_type = 2;
+	}
 	else if (ft_strlen(path))
 		(*cmd)->cmd_type = 1;
 	(*cmd)->path = path;

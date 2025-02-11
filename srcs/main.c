@@ -70,11 +70,11 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("env");
+			// input = ft_strdup("cd srcs");
 		input = readline("Minishell> ");
 		if (input)
 		{
-			// add_history(input);
+			add_history(input);
 			data.line = input;
 			if (!ft_strncmp(input, "exit", 4))
 				ft_exit(ft_split(data.line, ' ')[1], &data);
