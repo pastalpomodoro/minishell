@@ -38,7 +38,7 @@ void exec_and_or(t_env **lst_env, t_tkn_lst *node, char **env)
         exit_code = and_or->cmd->exit_code;
         if (and_or->cmd)
         {
-            show_cmds(and_or->cmd);
+            // show_cmds(and_or->cmd);
             exit_code = exec_manage(and_or->cmd, lst_env, env);
             free_cmd(&and_or->cmd);
         }

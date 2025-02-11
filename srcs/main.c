@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("echo je mange une pomme | wc >outfile && <infile grep je >outfile");
+			// input = ft_strdup("echo je suis une licorne || echo Error");
 		input = readline("Minishell> ");
 		if (input)
 		{
