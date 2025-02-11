@@ -26,7 +26,8 @@ SRCS_NAMES = main.c \
 			 cmds/env.c \
 			 cmds/export.c \
 			 cmds/pwd.c \
-			 cmds/cd.c
+			 cmds/cd.c \
+			 cmds/exit.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
