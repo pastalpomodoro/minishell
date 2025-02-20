@@ -1,39 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   handle_signal.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/04 13:37:48 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/19 13:56:20 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/19 13:39:36 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/19 14:01:17 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_env(t_env *node)
+void	handle_signal(int sig, siginfo_t *info, void *content)
 {
-	if (node)
-	{
-		while (node)
-		{
-			ft_printf("%s\n", node->content);
-			node = node->next;
-		}
-	}
-	return (0);
-}
+	t_data	*data;
 
-int	ft_env_export(t_env *node)
-{
-	if (node)
-	{
-		while (node)
-		{
-			ft_printf("export %s\n", node->content);
-			node = node->next;
-		}
-	}
-	return (0);
+	(void) info;
+	data = (t_data *) content;
+	(void) data;
+	if (sig == SIGINT)
+		ft_printf("CTRL+C\n");
+	if (sig == SIGQUIT)
+		ft_printf("CTRL+\\\n");
 }

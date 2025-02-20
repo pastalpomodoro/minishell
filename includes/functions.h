@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:48:57 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:00:09 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,22 @@
 # include "structs.h"
 # include <curses.h>
 # include <stdbool.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/types.h>
+# include <dirent.h>
 
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
 int			ft_echo(char **cmd);
 int			ft_env(t_env *node);
+int			ft_env_export(t_env *node);
 int			ft_export(char *cmd, t_env **env);
 int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
@@ -97,5 +107,11 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /*****************************/
 //			execution.c
 int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
+
+/*****************************/
+/*********    SIG    *********/
+/*****************************/
+//			handle_signal.c
+void		handle_signal(int sig, siginfo_t *info, void *content);
 
 #endif

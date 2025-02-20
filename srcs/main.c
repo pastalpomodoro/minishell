@@ -6,11 +6,12 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:58:49 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:58:54 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include <signal.h>
 
 t_data	init_data(char *line, char **env)
 {
@@ -19,6 +20,18 @@ t_data	init_data(char *line, char **env)
 	data.line = line;
 	data.lst = NULL;
 	data.env = env_creator(env);
+	data.sa = malloc(sizeof(t_sa));
+	if (data.sa == NULL)
+	{
+		free_env(data.env);
+		ft_putstr_fd("MALLOC ERROR\n", 1);
+		exit(1);
+	}
+	data.sa->sa_sigaction = handle_signal;
+	data.sa->sa_flags = 0;
+	sigemptyset(&data.sa->sa_mask);
+	sigaction(SIGINT, data.sa, (void *) &data);
+	sigaction(SIGQUIT, data.sa, (void *) &data);
 	return (data);
 }
 
@@ -61,7 +74,6 @@ int	main(int argc, char **argv, char **env)
 	char		*input;
 	t_data		data;
 	t_commande	*cmd;
-	t_sig
 	int i = 0;
 
 	(void) argv;

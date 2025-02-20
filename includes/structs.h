@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 10:35:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:47:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,14 @@ typedef struct s_tkn_lst
 	struct s_tkn_lst	*prev;
 }	t_tkn_lst;
 
+typedef struct sigaction	t_sa;
+
 typedef struct s_data
 {
 	char		*line;
 	t_tkn_lst	*lst;
 	t_env		*env;
+	t_sa		*sa;
 }	t_data;
 
 #endif
