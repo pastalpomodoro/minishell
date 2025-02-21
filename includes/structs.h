@@ -31,13 +31,9 @@ typedef struct s_commande
 	char				**cmd;
 	char				*path;
 	struct s_commande	*next;
+	struct s_commande	*o_par;
+	struct s_commande	*c_par;
 }	t_commande;
-
-typedef struct s_and_or
-{
-	t_commande 		*cmd;
-	struct s_and_or	*next;
-}	t_and_or; 
 
 typedef struct s_node
 {

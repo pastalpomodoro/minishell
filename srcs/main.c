@@ -32,12 +32,39 @@ int	show_token(t_tkn_lst *tmp)
 	}
 	return (1);
 }
+void	show_cmds(t_commande *cmd)
+{
+	int	i;
 
+	while (cmd)
+	{
+		if (cmd->path)
+			ft_printf("PATH: %s\n", cmd->path);
+		if (cmd->cmd)
+		{
+			i = -1;
+			while (i++, cmd->cmd[i])
+				ft_printf("CMD: %s\n", cmd->cmd[i]);
+		}
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
+		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
+				cmd->outfile_type);
+		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
+		if (cmd->o_par)
+			cmd = cmd->o_par;
+		else if (cmd->c_par)
+			cmd = cmd->c_par;
+		else
+			cmd = cmd->next;
+		printf("------------------------------------------\n");
+	}
+}
 
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
+	t_commande *cmd;
 	int i = 0;
 
 	(void) argv;
@@ -47,7 +74,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("echo je suis une licorne || echo Error");
+			// input = ft_strdup("echo je suis une licorne");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -66,7 +93,12 @@ int	main(int argc, char **argv, char **env)
 			// 		lst->value);
 			// 	lst = lst->next;
 			// }
-			exec_and_or(&data.env, data.lst, env);
+			cmd = creator(data.lst, data.env);
+			if (!cmd)
+				break ;
+			show_cmds(cmd);
+			exec_manage(cmd, &data.env, env);
+			free_cmd(&cmd);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
 			free(data.line);

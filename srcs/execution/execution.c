@@ -41,8 +41,11 @@ int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 
 int	exec(t_commande *cmd, char **env, int *pipe_fd, t_env **lst_env)
 {
+	t_commande *next;
+
+	next = cmd->next;
 	close(pipe_fd[0]);
-	if (cmd->outfile_type == 0 && cmd->next)
+	if (cmd->outfile_type == 0 && cmd->next && ft_strcmp(next->path, "&&") && ft_strcmp(next->path, "||"))
 		cmd->fd_out = pipe_fd[1];
 	else
 		close(pipe_fd[1]);
@@ -83,7 +86,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env, t_env **lst_env)
 	else if (pid == 0)
 		exec(cmd, env, pipe_fd, lst_env);
 	wait(&status);
-	if (next && next->infile <= 2)
+	if (next && ft_strcmp(next->path, "||") && ft_strcmp(next->path, "&&") && next->infile <= 2)
 		next->infile = pipe_fd[0];
 	else
 		close(pipe_fd[0]);
@@ -94,7 +97,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env, t_env **lst_env)
 
 int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
-	t_commande	*temp;
+	t_commande	*next;
 	int exit_code;
 	int i;
 
@@ -102,15 +105,19 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 	while (cmd)
 	{
 		exit_code = cmd->exit_code;
-		temp = cmd->next;
+		next = cmd->next;
 		if (cmd->cmd)
 		{
 			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-				exit_code = exec_pipe(cmd, temp, env, lst_env);
+				exit_code = exec_pipe(cmd, next, env, lst_env);
 		}
-		cmd = temp;
+		cmd = next;
+		if (cmd && !ft_strcmp(cmd->path, "||") && exit_code == 0)
+			break;
+		else if (cmd && !ft_strcmp(cmd->path, "&&") && exit_code != 0)
+			break;
 		i++;
 	}
 	return (exit_code);

@@ -28,8 +28,8 @@ SRCS_NAMES = main.c \
 			 cmds/pwd.c \
 			 cmds/cd.c \
 			 cmds/exit.c \
-			 and_or/init_and_or.c \
-			 and_or/using_and_or.c \
+			#  and_or/init_and_or.c \
+			#  and_or/using_and_or.c \
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
