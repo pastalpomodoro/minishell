@@ -21,15 +21,13 @@ SRCS_NAMES = main.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \
 			 lst_creator/lst_cmd.c \
-			 execution/execution.c \
 			 cmds/echo.c \
 			 cmds/env.c \
 			 cmds/export.c \
 			 cmds/pwd.c \
 			 cmds/cd.c \
 			 cmds/exit.c \
-			#  and_or/init_and_or.c \
-			#  and_or/using_and_or.c \
+			 execution/execution.c \
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 

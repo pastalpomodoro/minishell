@@ -7,11 +7,10 @@ t_commande	*cmd_init(void)
 	cmd = malloc(sizeof(t_commande));
 	if (!cmd)
 		return (NULL);
+	cmd->token = T_NULL;
 	cmd->cmd = NULL;
 	cmd->path = NULL;
 	cmd->next = NULL;
-	cmd->c_par = NULL;
-	cmd->o_par = NULL;
 	cmd->outfile = NULL;
 	cmd->fd_out = 1;
 	cmd->outfile_type = 0;
@@ -40,12 +39,7 @@ void	free_cmd(t_commande **cmd)
 
 	while ((*cmd))
 	{
-		if ((*cmd)->o_par)
-			nxt = (*cmd)->o_par;
-		else if ((*cmd)->c_par)
-			nxt = (*cmd)->c_par;
-		else
-			nxt = (*cmd)->next;
+		nxt = (*cmd)->next;
 		free_cmd_node(cmd);
 		(*cmd) = nxt;
 	}
@@ -93,17 +87,15 @@ int is_parentesys(t_commande **cmd, t_tkn_lst *node)
 {
 	if (node->token == T_OPAR)
 	{
-		(*cmd)->o_par = cmd_init();
-		if (!(*cmd)->o_par)
-			return (0);
-		(*cmd) = (*cmd)->o_par;
+		(*cmd)->token = T_OPAR;
+		(*cmd)->next = cmd_init();
+		(*cmd) = (*cmd)->next;
 	}
 	else if (node->token == T_CPAR)
 	{
-		(*cmd)->c_par = cmd_init();
-		if (!(*cmd)->c_par)
-			return (0);
-		(*cmd) = (*cmd)->c_par;
+		(*cmd)->next = cmd_init();
+		(*cmd) = (*cmd)->next;
+		(*cmd)->token = T_CPAR;
 	}
 	return (1);
 }

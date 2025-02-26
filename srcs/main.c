@@ -47,15 +47,10 @@ void	show_cmds(t_commande *cmd)
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
 		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
-		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
-				cmd->outfile_type);
+		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
+				cmd->outfile_type, cmd->token);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
-		if (cmd->o_par)
-			cmd = cmd->o_par;
-		else if (cmd->c_par)
-			cmd = cmd->c_par;
-		else
-			cmd = cmd->next;
+		cmd = cmd->next;
 		printf("------------------------------------------\n");
 	}
 }
@@ -74,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("echo je suis une licorne");
+			// input = ft_strdup("echo ciao | grep je | wc");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -96,7 +91,7 @@ int	main(int argc, char **argv, char **env)
 			cmd = creator(data.lst, data.env);
 			if (!cmd)
 				break ;
-			show_cmds(cmd);
+			// show_cmds(cmd);
 			exec_manage(cmd, &data.env, env);
 			free_cmd(&cmd);
 			if (data.lst)

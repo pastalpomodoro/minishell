@@ -20,6 +20,7 @@ typedef enum e_token
 	T_PIPE,
 	T_REDIRECT,
 	T_LITERAL,
+	T_NULL,
 	T_OPAR,
 	T_CPAR,
 }	t_token;
