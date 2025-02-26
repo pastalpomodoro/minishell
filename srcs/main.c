@@ -69,7 +69,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("echo ciao | grep je | wc");
+			// input = ft_strdup("grep je | (wc)");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -92,7 +92,7 @@ int	main(int argc, char **argv, char **env)
 			if (!cmd)
 				break ;
 			// show_cmds(cmd);
-			exec_manage(cmd, &data.env, env);
+			exec_manage(cmd, &data.env, env, 1);
 			free_cmd(&cmd);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);

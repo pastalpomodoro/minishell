@@ -39,13 +39,10 @@ int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 	return (1);
 }
 
-int	exec(t_commande *cmd, char **env, int *pipe_fd, t_env **lst_env)
+int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
 {
-	t_commande *next;
-
-	next = cmd->next;
 	close(pipe_fd[0]);
-	if (cmd->outfile_type == 0 && next && next->path && ft_strcmp(next->path, "&&") && ft_strcmp(next->path, "||"))
+	if (cmd->outfile_type == 0 && next && next->cmd)
 		cmd->fd_out = pipe_fd[1];
 	else
 		close(pipe_fd[1]);
@@ -61,15 +58,12 @@ int	exec(t_commande *cmd, char **env, int *pipe_fd, t_env **lst_env)
 			exit(1);
 		close(cmd->fd_out);
 	}
-	// ft_printf("OUTFILE: %d\n", cmd->fd_out);
-	if (!ft_strcmp(cmd->cmd[0], "env"))
-		ft_env(*lst_env);
-	else if (execve(cmd->path, cmd->cmd, env) == -1)
+	if (execve(cmd->path, cmd->cmd, env) == -1)
 		exit(0);
 	exit (0);
 }
 
-int	exec_pipe(t_commande *cmd, t_commande *next, char **env, t_env **lst_env)
+int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
@@ -85,14 +79,16 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env, t_env **lst_env)
 	if (pid < 0)
 		return (ft_printf("Erreur avec fork\n"), -2);
 	else if (pid == 0)
-		exec(cmd, env, pipe_fd, lst_env);
+		exec(cmd, next, env, pipe_fd);
 	wait(&status);
 	if (next && next->cmd && next->infile <= 2)
 		next->infile = pipe_fd[0];
 	else
 		close(pipe_fd[0]);
-	if (cmd->fd_out > 2)
+	if (cmd && cmd->fd_out > 2)
 		close(cmd->fd_out);
+	if (cmd && cmd->infile > 2)
+		close(cmd->infile);
 	return (close(pipe_fd[1]), status);
 }
 void skip_parentesys(t_commande **cmd)
@@ -114,7 +110,7 @@ void skip_parentesys(t_commande **cmd)
 			c_par--;
 	}
 }
-int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
+int	exec_manage(t_commande *cmd, t_env **lst_env, char **env, int p)
 {
 	t_commande	*next;
 	int exit_code;
@@ -134,7 +130,7 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 				return (ft_printf("Erreur avec fork\n"), -2);
 			else if (pid == 0)
 			{
-				exec_manage(cmd, lst_env, env);
+				exec_manage(cmd, lst_env, env, 0);
 			}
 			wait(NULL);
 			skip_parentesys(&cmd);
@@ -147,23 +143,30 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 			next = cmd->next;
 		if (cmd && cmd->cmd)
 		{
-			// if (cmd->path)
-				// ft_printf("INFILE: %d, PATH: %s", cmd->infile, cmd->path);
-			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-				exit_code = exec_pipe(cmd, next, env, lst_env);
+			{
+				if (next && next->token == T_OPAR)
+					exit_code = exec_pipe(cmd, next->next, env);
+				else
+					exit_code = exec_pipe(cmd, next, env);
+			}
 		}
 		if (cmd && cmd->token == T_CPAR)
 		{
-			// printf("EXIT\n");
 			exit(1);
 		}
-		cmd = next;
-		if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0)//sy je suis dans un processus enfant je dois exit
+		if (cmd)
+			cmd = next;
+		if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 1)
 			break;
-		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0)
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 0)
+			exit(1);
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 1)
 			break;
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 0)
+			exit(1);
 		i++;
 	}
 	return (exit_code);
