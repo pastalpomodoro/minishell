@@ -110,64 +110,42 @@ void skip_parentesys(t_commande **cmd)
 			c_par--;
 	}
 }
-int	exec_manage(t_commande *cmd, t_env **lst_env, char **env, int p)
+int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*next;
 	int exit_code;
-	int i;
-	int pid;
+	// int pid;
 
-	i = 0;
-	pid = -1;
+	// pid = -1;
 	while (cmd)
 	{
 		exit_code = cmd->exit_code;
-		if (cmd->token == T_OPAR)
-		{
-			cmd = cmd->next;
-			pid = fork();
-			if (pid < 0)
-				return (ft_printf("Erreur avec fork\n"), -2);
-			else if (pid == 0)
-			{
-				exec_manage(cmd, lst_env, env, 0);
-			}
-			wait(NULL);
-			skip_parentesys(&cmd);
-			if (cmd)
-				next = cmd->next;
-			else
-				next = cmd;
-		}
-		else
-			next = cmd->next;
+		// if (cmd->token == T_OPAR)
+		// {
+		// 	cmd = cmd->next;
+		// 	pid = fork();
+		// 	if (pid < 0)
+		// 		return (ft_printf("Erreur avec fork\n"), -2);
+		// 	else if (pid == 0)
+		// 		exec_manage(cmd, lst_env, env, 0);
+		// 	wait(NULL);
+		// 	skip_parentesys(&cmd);
+		// 	if (cmd)
+		// 		next = cmd->next;
+		// 	else
+		// 		next = cmd;
+		// }
+		// else
+		next = cmd->next;
 		if (cmd && cmd->cmd)
 		{
 			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-			{
-				if (next && next->token == T_OPAR)
-					exit_code = exec_pipe(cmd, next->next, env);
-				else
 					exit_code = exec_pipe(cmd, next, env);
-			}
-		}
-		if (cmd && cmd->token == T_CPAR)
-		{
-			exit(1);
 		}
 		if (cmd)
 			cmd = next;
-		if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 1)
-			break;
-		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 0)
-			exit(1);
-		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 1)
-			break;
-		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 0)
-			exit(1);
-		i++;
 	}
 	return (exit_code);
 }

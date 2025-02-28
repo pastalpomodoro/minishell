@@ -93,6 +93,13 @@ int	main(int argc, char **argv, char **env)
 				break ;
 			// show_cmds(cmd);
 			exec_manage(cmd, &data.env, env, 1);
+			// printf("\n");
+			// int i = -1;
+			// while (i++, env[i])
+			// {
+			// 	if (ft_strncmp(env[i], "SAL=", 4) == 0)
+			// 		printf("%s\n", env[i]);	
+			// }
 			free_cmd(&cmd);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);

@@ -9,23 +9,65 @@
 # include <sys/types.h>
 # include <dirent.h>
 
-void chepas(int i)
+char* chepas(char *input)
 {
-    int pid;
-    if (i > 0)
+    int button;
+    int i = 0;
+
+    button = 0;
+    while (input[i])
     {
-        pid = fork();
-        if (pid == 0)
+        if (input[i] == '\'' && button == 0)
         {
-            printf("PID son: %d\n", pid);
-            chepas(i - 1);
+            button = 2;
+            i++;
         }
-        else
-            printf("PID dad: %d\n", pid);
+        else if (input[i] == '\'' && button == 2)   
+        {
+            button = 0;
+            i++;
+        }
+        if (input[i] == '"' && button == 0)
+            button = 1;
+        else if (input[i] == '"' && button == 1)
+            button = 0;
+        if (input[i] == '$' && (button == 0 || button == 1))
+
+        if (input[i] == ' ' && button == 0)
+            break;
+        i++;
     }
+    char *word = malloc(i);
+    i = 0;
+    int f = 0;
+    while (input[i])
+    {
+        if (input[i] == '\'' && button == 0)
+        {
+            button = 2;
+            i++;
+        }
+        else if (input[i] == '\'' && button == 2)   
+        {
+            button = 0;
+            i++;
+        }
+        if (input[i] == '"' && button == 0)
+            button = 1;
+        else if (input[i] == '"' && button == 1)
+            button = 0;
+        // if (input[i] == '$' && (button == 0 || button == 1))
+        //     fcn(&word[f], &input[i])
+        if (input[i] == ' ' && button == 0)
+            break;
+        word[f] = input[i];
+        i++;
+        f++;
+    }
+    return (word);
 }
 
 int main()
 {
-    chepas(5);
+    printf("%s\n", chepas("'salut tu'va bien"));
 }
