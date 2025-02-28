@@ -1,6 +1,6 @@
 #include "../../includes/minishell.h"
 
-int my_execve(t_commande *cmd, t_env **lst_env)
+int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 {
 	int save;
 
@@ -18,17 +18,17 @@ int my_execve(t_commande *cmd, t_env **lst_env)
 		close(cmd->fd_out);
 	}
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		ft_echo(cmd->cmd);
+		*exit_code = ft_echo(cmd->cmd);
 	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1]) 
-		ft_export(cmd->cmd[1], lst_env);
+		*exit_code = ft_export(cmd->cmd[1], lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
-		ft_cd(cmd->cmd[1], *lst_env);
+		*exit_code = ft_cd(cmd->cmd[1], *lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		ft_env(*lst_env);
+		*exit_code = ft_env(*lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
-		ft_unset(cmd->cmd[1], lst_env);
+		*exit_code = ft_unset(cmd->cmd[1], lst_env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		ft_pwd();
+		*exit_code = ft_pwd();
 	// if (!ft_strcmp(cmd->cmd[0], "exit"))
 	// 	ft_exit(init);
 	if (cmd->outfile_type > 0)
@@ -39,10 +39,10 @@ int my_execve(t_commande *cmd, t_env **lst_env)
 	return (1);
 }
 
-int	exec(t_commande *cmd, char **env, int *pipe_fd)
+int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
 {
 	close(pipe_fd[0]);
-	if (cmd->outfile_type == 0 && cmd->next)
+	if (cmd->outfile_type == 0 && next && next->cmd)
 		cmd->fd_out = pipe_fd[1];
 	else
 		close(pipe_fd[1]);
@@ -59,8 +59,8 @@ int	exec(t_commande *cmd, char **env, int *pipe_fd)
 		close(cmd->fd_out);
 	}
 	if (execve(cmd->path, cmd->cmd, env) == -1)
-		exit(1);
-	return (1);
+		exit(0);
+	exit (0);
 }
 
 int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
@@ -79,35 +79,87 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 	if (pid < 0)
 		return (ft_printf("Erreur avec fork\n"), -2);
 	else if (pid == 0)
-		exec(cmd, env, pipe_fd);
+		exec(cmd, next, env, pipe_fd);
 	wait(&status);
-	if (next && next->infile <= 2)
+	if (next && next->cmd && next->infile <= 2)
 		next->infile = pipe_fd[0];
 	else
 		close(pipe_fd[0]);
-	if (cmd->fd_out > 2)
+	if (cmd && cmd->fd_out > 2)
 		close(cmd->fd_out);
+	if (cmd && cmd->infile > 2)
+		close(cmd->infile);
 	return (close(pipe_fd[1]), status);
 }
-
-int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
+void skip_parentesys(t_commande **cmd)
 {
-	t_commande	*temp;
+	int c_par;
+
+	c_par = 0;
+	while ((*cmd))
+	{
+		(*cmd) = (*cmd)->next;
+		if ((*cmd)->token == T_OPAR)
+			c_par++;
+		else if ((*cmd)->token == T_CPAR && c_par == 0)
+		{
+			(*cmd) = (*cmd)->next;
+			break;
+		}
+		else if ((*cmd)->token == T_CPAR && c_par > 0)
+			c_par--;
+	}
+}
+int	exec_manage(t_commande *cmd, t_env **lst_env, char **env, int p)
+{
+	t_commande	*next;
+	int exit_code;
 	int i;
+	int pid;
 
 	i = 0;
+	pid = -1;
 	while (cmd)
 	{
-		temp = cmd->next;
-		if (cmd->cmd)
+		exit_code = cmd->exit_code;
+		if (cmd->token == T_OPAR)
 		{
-			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
-				my_execve(cmd, lst_env);
-			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-				exec_pipe(cmd, temp, env);
+			cmd = cmd->next;
+			pid = fork();
+			if (pid < 0)
+				return (ft_printf("Erreur avec fork\n"), -2);
+			else if (pid == 0)
+				exec_manage(cmd, lst_env, env, 0);
+			wait(NULL);
+			skip_parentesys(&cmd);
+			if (cmd)
+				next = cmd->next;
+			else
+				next = cmd;
 		}
-		cmd = temp;
+		else
+			next = cmd->next;
+		if (cmd && cmd->cmd)
+		{
+			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+				my_execve(cmd, lst_env, &exit_code);
+			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
+					exit_code = exec_pipe(cmd, next, env);
+		}
+		if (cmd && cmd->token == T_CPAR)
+			exit(1);
+		if (cmd)
+			cmd = next;
+		if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 1)
+			break;
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "||") && exit_code == 0 && p == 0)
+			exit(1);
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 1)
+			break;
+		else if (cmd && cmd->path && !ft_strcmp(cmd->path, "&&") && exit_code != 0 && p == 0)
+			exit(1);
+
 		i++;
 	}
-	return (1);
+	return (exit_code);
 }

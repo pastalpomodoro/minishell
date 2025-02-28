@@ -96,6 +96,6 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /********* EXECUTION *********/
 /*****************************/
 //			execution.c
-int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
+int			exec_manage(t_commande *cmd, t_env **lst_env, char **env, int pid);
 
 #endif

@@ -17,4 +17,7 @@
 # define PIPE 2
 # define REDIRECT 3
 
+# define OR 5
+# define AND 6
+
 #endif
