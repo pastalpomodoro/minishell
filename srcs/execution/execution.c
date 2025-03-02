@@ -1,8 +1,8 @@
 #include "../../includes/minishell.h"
 
-int my_execve(t_commande *cmd, t_env **lst_env)
+int	my_execve(t_commande *cmd, t_env **lst_env)
 {
-	int save;
+	int	save;
 
 	if (cmd->outfile_type > 0)
 	{
@@ -67,7 +67,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
@@ -93,9 +93,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*temp;
-	int i;
 
-	i = 0;
 	while (cmd)
 	{
 		temp = cmd->next;
@@ -107,7 +105,6 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 				exec_pipe(cmd, temp, env);
 		}
 		cmd = temp;
-		i++;
 	}
 	return (1);
 }

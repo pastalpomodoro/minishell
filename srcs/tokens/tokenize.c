@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:48:44 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:01:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,11 @@ void	get_tokens(t_data *data)
 	int			i;
 
 	lst = NULL;
+	if (data->line == NULL || data->line[0] == '\0')
+	{
+		data->lst = new_token(ft_strdup("exit"), T_LITERAL);
+		return ;
+	}
 	if (no_need_token(data))
 		return ;
 	data->line = check_insert_spaces(data->line);

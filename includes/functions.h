@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/19 14:00:09 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:23:19 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <dirent.h>
+# include <errno.h>
 
 /*****************************/
 /********   CMDS    **********/
@@ -45,7 +46,9 @@ void		ft_exit(char *arg, t_data *data);
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
-char		*get_path(char *c, t_env *env);
+char		*get_path(char *c, t_env *env, t_commande **lst_cmd);
+//			utils2.c
+char		*strjoin_space(char *s1, char *s2);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
 void		free_cmd(t_commande **cmd);
@@ -91,6 +94,8 @@ t_tkn_lst	*get_first_tkn(t_tkn_lst *lst);
 t_tkn_lst	*get_last_tkn(t_tkn_lst *lst);
 void		tkn_add_back(t_tkn_lst **lst, t_tkn_lst *token);
 void		tkn_lst_clear(t_tkn_lst **lst);
+//			get_wildcard.c
+char		*get_wildcard(char *value);
 
 /*****************************/
 /******** LST_CREATOR ********/
@@ -111,7 +116,8 @@ int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
 /*****************************/
 /*********    SIG    *********/
 /*****************************/
-//			handle_signal.c
-void		handle_signal(int sig, siginfo_t *info, void *content);
+//			signals.c
+void		init_signal(void);
+void		handle_signal(int sig);
 
 #endif

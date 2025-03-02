@@ -81,7 +81,7 @@ int	out(t_tkn_lst *node, t_commande **cmd, int type)
 	t_tkn_lst	*next;
 
 	next = node->next;
-	if (next == NULL)
+	if (next == NULL || (type == 1 && next->token == T_PIPE))
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)

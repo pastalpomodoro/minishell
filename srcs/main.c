@@ -6,12 +6,13 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/19 13:58:54 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:40:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include <signal.h>
+
+int	g_error_value;
 
 t_data	init_data(char *line, char **env)
 {
@@ -20,18 +21,6 @@ t_data	init_data(char *line, char **env)
 	data.line = line;
 	data.lst = NULL;
 	data.env = env_creator(env);
-	data.sa = malloc(sizeof(t_sa));
-	if (data.sa == NULL)
-	{
-		free_env(data.env);
-		ft_putstr_fd("MALLOC ERROR\n", 1);
-		exit(1);
-	}
-	data.sa->sa_sigaction = handle_signal;
-	data.sa->sa_flags = 0;
-	sigemptyset(&data.sa->sa_mask);
-	sigaction(SIGINT, data.sa, (void *) &data);
-	sigaction(SIGQUIT, data.sa, (void *) &data);
 	return (data);
 }
 
@@ -69,54 +58,51 @@ void	show_cmds(t_commande *cmd)
 		printf("------------------------------------------\n");
 	}
 }
+
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
 	t_commande	*cmd;
-	int i = 0;
+	t_tkn_lst	*lst;
 
 	(void) argv;
 	if (argc > 1)
 		return (1);
+	g_error_value = 0;
+	init_signal();
 	data = init_data(NULL, env);
 	while (1)
 	{
-		if (i == 0)
-			// input = ft_strdup("env");
 		input = readline("Minishell> ");
-		if (input)
+		add_history(input);
+		data.line = input;
+		if (input == NULL || !ft_strncmp(input, "exit", 4))
+			ft_exit("0", &data);
+		get_tokens(&data);
+		if (data.lst == NULL)
+			exit(1);
+		lst = data.lst;
+		while (lst)
 		{
-			// add_history(input);
-			data.line = input;
-			if (!ft_strncmp(input, "exit", 4))
-				ft_exit(ft_split(data.line, ' ')[1], &data);
-			get_tokens(&data);
-			if (data.lst == NULL)
-				exit(1);
-			// lst = data.lst;
-			// while (lst)
-			// {
-			// 	printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
-			// 		lst->value);
-			// 	lst = lst->next;
-			// }
-			cmd = creator(data.lst, data.env);
-			if (cmd)
-			{
-				show_cmds(cmd);
-				exec_manage(cmd, &data.env, env);
-				free_cmd(&cmd);
-			}
-			printf("------------------------------------------\n");
-			if (data.lst)
-				tkn_lst_clear(&data.lst);
-			free(data.line);
+			printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+				lst->value);
+			lst = lst->next;
 		}
+		cmd = creator(data.lst, data.env);
+		if (cmd)
+		{
+			show_cmds(cmd);
+			exec_manage(cmd, &data.env, env);
+			free_cmd(&cmd);
+		}
+		printf("------------------------------------------\n");
+		if (data.lst)
+			tkn_lst_clear(&data.lst);
+		free(data.line);
 	}
 	free_env(data.env);
 	if (data.line)
 		free(data.line);
 	rl_clear_history();
 }
-//bash --posix

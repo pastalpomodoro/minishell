@@ -1,23 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   macros.h                                           :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 19:22:45 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/26 11:26:06 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/26 11:22:35 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/26 11:22:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MACROS_H
-# define MACROS_H
+#include "../../includes/minishell.h"
 
-# define MALLOC_ERROR 1
-# define ERROR_CWD 2
+char	*strjoin_space(char *s1, char *s2)
+{
+	char	*res;
 
-# define CMD 1
-# define PIPE 2
-# define REDIRECT 3
-
-#endif
+	if (s1 == NULL)
+		res = ft_strdup(s2);
+	else
+	{
+		res = variadic_strjoin(3, s1, " ", s2);
+		free(s1);
+	}
+	return (res);
+}
