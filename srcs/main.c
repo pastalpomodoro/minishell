@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/03 14:29:04 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:31:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,11 @@ int	main(int argc, char **argv, char **env)
 		{
 			get_tokens(&data);
 			if (data.lst == NULL)
-				ft_exit(NULL, &data);
+				(free_cmd(&cmd), ft_exit(NULL, &data));
 			and_or_execution(NULL, data.lst, data.env, env);
-			if (data.lst)
-				tkn_lst_clear(&data.lst);
+			tkn_lst_clear(&data.lst);
+			free_cmd(&cmd);
 		}
-		free_cmd(&cmd);
 		free(data.line);
 	}
 	free_env(data.env);
