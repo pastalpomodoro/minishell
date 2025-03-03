@@ -46,8 +46,7 @@ void		ft_exit(char *arg, t_data *data);
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
-char		*get_path(char *c, t_env *env, t_commande **lst_cmd);
-//			utils2.c
+char		*get_path(char *c, t_env *env, t_commande **cmd);
 char		*strjoin_space(char *s1, char *s2);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
@@ -105,13 +104,14 @@ int			redirect(t_tkn_lst *node, t_commande **cmd);
 //			lst_cmd.c
 int			cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
 //			lst_creator.c
-t_commande	*creator(t_tkn_lst *node, t_env *env);
+t_commande	*creator(t_tkn_lst **node, t_env *env);
 
 /*****************************/
 /********* EXECUTION *********/
 /*****************************/
 //			execution.c
 int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
+int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env);
 
 /*****************************/
 /*********    SIG    *********/

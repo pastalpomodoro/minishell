@@ -31,6 +31,7 @@ typedef struct s_commande
 	char				**cmd;
 	char				*path;
 	struct s_commande	*next;
+	t_token				token;
 }	t_commande;
 
 typedef struct s_node

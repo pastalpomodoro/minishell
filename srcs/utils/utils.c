@@ -69,19 +69,15 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	char	*cmd;
 	char	*path;
 	int		i;
-	int		status;
 
-	status = 0;
 	i = -1;
 	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
 	{
-		status = access(c, F_OK);
-		if (status != 0)
+		if (access(c, F_OK) != 0)
 			return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
-		status = access(c, X_OK);
-		if (status != 0)
+		if (access(c, F_OK) != 0)
 			return ((*lst_cmd)->exit_code = 126, ft_strdup(""));
-		if (status == 0)
+		else
 			return ((*lst_cmd)->exit_code = 0, ft_strdup(c));
 	}
 	if (!env)
@@ -89,7 +85,7 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	while (env && (ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '='))
 		env = env->next;
 	if (!env)
-		return (ft_strdup(""));
+		return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
 	all_path = ft_split(&env->content[5], ':');
 	if (!all_path)
 		return (NULL);
@@ -101,13 +97,11 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 		path = ft_strjoin(all_path[i], cmd);
 		if (!path)
 			return (free_double_tab(all_path), free(cmd), NULL);
-		status = access(path, F_OK);
-		if (status != 0)
+		if (access(path, F_OK) != 0)
 			(*lst_cmd)->exit_code = 127;
-		status = access(path, X_OK);
-		if (status != 0)
+		else if (access(path, X_OK) != 0)
 			(*lst_cmd)->exit_code = 126;
-		if (status == 0)
+		else
 			return ((*lst_cmd)->exit_code = 0, free_double_tab(all_path), free(cmd), path);
 		free(path);
 	}
