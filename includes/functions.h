@@ -90,12 +90,13 @@ int			redirect(t_tkn_lst *node, t_commande **cmd);
 //			lst_cmd.c
 int			cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
 //			lst_creator.c
-t_commande	*creator(t_tkn_lst *node, t_env *env);
+t_commande	*creator(t_tkn_lst **node, t_env *env);
 
 /*****************************/
 /********* EXECUTION *********/
 /*****************************/
 //			execution.c
-int			exec_manage(t_commande *cmd, t_env **lst_env, char **env, int pid);
+int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
+int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env);
 
 #endif

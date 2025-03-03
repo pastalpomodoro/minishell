@@ -1,5 +1,28 @@
 #include "../../includes/minishell.h"
 
+void	show_cmds(t_commande *cmd)
+{
+	int	i;
+
+	while (cmd)
+	{
+		if (cmd->path)
+			ft_printf("PATH: %s\n", cmd->path);
+		if (cmd->cmd)
+		{
+			i = -1;
+			while (i++, cmd->cmd[i])
+				ft_printf("CMD: %s\n", cmd->cmd[i]);
+		}
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
+		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
+				cmd->outfile_type, cmd->token);
+		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
+		cmd = cmd->next;
+		printf("------------------------------------------\n");
+	}
+}
+
 int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 {
 	int save;
@@ -91,61 +114,90 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 		close(cmd->infile);
 	return (close(pipe_fd[1]), status);
 }
-void skip_parentesys(t_commande **cmd)
-{
-	int c_par;
 
-	c_par = 0;
-	while ((*cmd))
-	{
-		(*cmd) = (*cmd)->next;
-		if ((*cmd)->token == T_OPAR)
-			c_par++;
-		else if ((*cmd)->token == T_CPAR && c_par == 0)
-		{
-			(*cmd) = (*cmd)->next;
-			break;
-		}
-		else if ((*cmd)->token == T_CPAR && c_par > 0)
-			c_par--;
-	}
-}
 int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*next;
 	int exit_code;
-	// int pid;
 
-	// pid = -1;
 	while (cmd)
 	{
 		exit_code = cmd->exit_code;
-		// if (cmd->token == T_OPAR)
-		// {
-		// 	cmd = cmd->next;
-		// 	pid = fork();
-		// 	if (pid < 0)
-		// 		return (ft_printf("Erreur avec fork\n"), -2);
-		// 	else if (pid == 0)
-		// 		exec_manage(cmd, lst_env, env, 0);
-		// 	wait(NULL);
-		// 	skip_parentesys(&cmd);
-		// 	if (cmd)
-		// 		next = cmd->next;
-		// 	else
-		// 		next = cmd;
-		// }
-		// else
 		next = cmd->next;
 		if (cmd && cmd->cmd)
 		{
-			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
 					exit_code = exec_pipe(cmd, next, env);
 		}
+		if (cmd->token == T_CPAR)
+			break;
 		if (cmd)
 			cmd = next;
 	}
 	return (exit_code);
+}
+
+void skip_par(t_tkn_lst **node)
+{
+	int tmp;
+
+	tmp = 0;
+	while ((*node))
+	{
+		if ((*node)->token == T_OPAR)
+			tmp++;
+		else if ((*node)->token == T_CPAR && tmp > 0)
+			tmp--;
+		else if ((*node)->token == T_CPAR && tmp == 0)
+		{
+			(*node) = (*node)->next;
+			break;
+		}
+		(*node) = (*node)->next;
+	}
+}
+
+int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env)
+{
+	int exit_code;
+	int pid;
+
+	while (1)
+	{
+		if (cmd)
+		{
+			if (cmd->token == T_OPAR)
+			{
+				cmd = cmd->next;
+				pid = fork();
+				if (pid < 0)
+					return (ft_printf("Erreur avec fork\n"), -2);
+				else if (pid == 0)
+					and_or_execution(cmd, node, lst_env, env);
+				wait(NULL);
+				skip_par(&node);
+			}
+			else
+				exit_code = exec_manage(cmd, &lst_env, env);
+			if (!node)
+				break;
+			else if (node && node->token == T_AND_OR)
+			{
+				if (exit_code == 0 && node->value[0] != '&')
+					break;
+				else if (exit_code == 0 && node->value[0] == '|')
+					break;
+				node = node->next;
+			}
+			free_cmd(&cmd);
+		}
+		cmd = creator(&node, lst_env);
+		// show_cmds(cmd);
+	}
+	if (cmd)
+		free_cmd(&cmd);
+	return (1);
+	printf("%s", env[0]);
 }

@@ -135,27 +135,3 @@ t_commande	*creator(t_tkn_lst **node, t_env *env)
 	}
 	return (init);
 }
-
-int and_or_execution(t_tkn_lst *node, t_env *lst_env, char **env)
-{
-	t_commande *cmd;
-	int pid;
-
-	while (node)
-	{
-		cmd = creator(&node, lst_env);
-		if (cmd)
-		{
-			// if (cmd->token == T_OPAR)
-			// {
-			// 	cmd = cmd->next;
-			// 	pid = fork();
-			// 	if (pid < 0)
-			// 		return (ft_printf("Erreur avec fork\n"), -2);
-			// 	else if (pid == 0)
-			// 		exec_manage(cmd, )
-			// }
-			exec_manage(cmd, &lst_env, env, 0);
-		}
-	}
-}

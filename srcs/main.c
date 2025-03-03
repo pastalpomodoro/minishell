@@ -32,34 +32,13 @@ int	show_token(t_tkn_lst *tmp)
 	}
 	return (1);
 }
-void	show_cmds(t_commande *cmd)
-{
-	int	i;
 
-	while (cmd)
-	{
-		if (cmd->path)
-			ft_printf("PATH: %s\n", cmd->path);
-		if (cmd->cmd)
-		{
-			i = -1;
-			while (i++, cmd->cmd[i])
-				ft_printf("CMD: %s\n", cmd->cmd[i]);
-		}
-		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
-		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
-				cmd->outfile_type, cmd->token);
-		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
-		cmd = cmd->next;
-		printf("------------------------------------------\n");
-	}
-}
 
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	t_commande *cmd;
+	// t_tkn_lst	*lst;
 	int i = 0;
 
 	(void) argv;
@@ -69,7 +48,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		if (i == 0)
-			// input = ft_strdup("grep je | (wc)");
+			// input = ft_strdup("(echo salut && echo ciao)");
 		input = readline("Minishell> ");
 		if (input)
 		{
@@ -88,11 +67,10 @@ int	main(int argc, char **argv, char **env)
 			// 		lst->value);
 			// 	lst = lst->next;
 			// }
-			cmd = creator(data.lst, data.env);
-			if (!cmd)
-				break ;
-			// show_cmds(cmd);
-			exec_manage(cmd, &data.env, env, 1);
+			// cmd = creator(data.lst, data.env);
+			// if (!cmd)
+			// 	break ;
+			and_or_execution(NULL, data.lst, data.env, env);
 			// printf("\n");
 			// int i = -1;
 			// while (i++, env[i])
@@ -100,7 +78,7 @@ int	main(int argc, char **argv, char **env)
 			// 	if (ft_strncmp(env[i], "SAL=", 4) == 0)
 			// 		printf("%s\n", env[i]);	
 			// }
-			free_cmd(&cmd);
+			// free_cmd(&cmd);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
 			free(data.line);
