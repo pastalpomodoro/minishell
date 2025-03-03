@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 15:37:50 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:45:10 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,44 @@ static bool	is_single_dollar_sign(char *line)
 	return (TRUE);
 }
 
-static bool	no_need_token(char *line)
+static bool	no_need_token(t_data *data)
 {
-	if (is_eof(line))
+	if (is_eof(data->line))
 		return (TRUE);
-	if (*line == '\0')
+	if (*data->line == '\0')
 		return (TRUE);
-	if (is_single_dollar_sign(line))
+	if (is_single_dollar_sign(data->line))
+	{
+		data->lst = new_token(ft_strdup("$"), ERROR);
 		return (TRUE);
+	}
 	return (FALSE);
 }
 
-t_tkn_lst	*get_tokens(t_data *data)
+static int	check_line(t_data *data)
+{
+	if (data->line == NULL || data->line[0] == '\0')
+	{
+		data->lst = new_token(ft_strdup("exit"), T_LITERAL);
+		return (1);
+	}
+	if (no_need_token(data))
+		return (1);
+	data->line = check_insert_spaces(data->line);
+	if (data->line == NULL)
+		return (1);
+	return (0);
+}
+
+void	get_tokens(t_data *data)
 {
 	t_tkn_lst	*lst;
 	int			i;
+	int			code;
 
 	lst = NULL;
-	if (no_need_token(data->line))
-		return (NULL);
-	data->line = check_insert_spaces(data->line);
-	if (data->line == NULL)
-		return (NULL);
+	if (check_line(data))
+		return ;
 	i = 0;
 	while (data->line[i])
 	{
@@ -64,12 +80,14 @@ t_tkn_lst	*get_tokens(t_data *data)
 			i++;
 		if (data->line[i])
 		{
-			if (split_token(data, &i))
+			code = split_token(data, &i);
+			if (code == 1)
 			{
 				tkn_lst_clear(&lst);
-				return (NULL);
+				return ;
 			}
+			if (code == 2)
+				return ;
 		}
 	}
-	return (lst);
 }

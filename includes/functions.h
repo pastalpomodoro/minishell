@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:33:47 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:23:19 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,23 @@
 # include "structs.h"
 # include <curses.h>
 # include <stdbool.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <sys/types.h>
+# include <dirent.h>
+# include <errno.h>
 
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
 int			ft_echo(char **cmd);
 int			ft_env(t_env *node);
+int			ft_env_export(t_env *node);
 int			ft_export(char *cmd, t_env **env);
 int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
@@ -36,6 +47,7 @@ void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
 char		*get_path(char *c, t_env *env, t_commande **cmd);
+char		*strjoin_space(char *s1, char *s2);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
 void		free_cmd(t_commande **cmd);
@@ -65,7 +77,7 @@ char		*search_env(t_env *env, char *str);
 /********   TOKENS    ********/
 /*****************************/
 //			tokenize.c
-t_tkn_lst	*get_tokens(t_data *data);
+void		get_tokens(t_data *data);
 //			check_spaces.c
 char		*check_insert_spaces(char *line);
 bool		inside_quotes(char *line, int *i);
@@ -81,6 +93,8 @@ t_tkn_lst	*get_first_tkn(t_tkn_lst *lst);
 t_tkn_lst	*get_last_tkn(t_tkn_lst *lst);
 void		tkn_add_back(t_tkn_lst **lst, t_tkn_lst *token);
 void		tkn_lst_clear(t_tkn_lst **lst);
+//			get_wildcard.c
+char		*get_wildcard(char *value);
 
 /*****************************/
 /******** LST_CREATOR ********/
@@ -98,5 +112,12 @@ t_commande	*creator(t_tkn_lst **node, t_env *env);
 //			execution.c
 int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
 int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env);
+
+/*****************************/
+/*********    SIG    *********/
+/*****************************/
+//			signals.c
+void		init_signal(void);
+void		handle_signal(int sig);
 
 #endif

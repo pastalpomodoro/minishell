@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 14:00:26 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 16:54:41 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/23 12:49:28 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ static int	cd_friend(char *val, t_env *env)
 
 	pwd = getcwd(NULL, 0);
 	if (pwd == NULL)
+	{
+		if (errno == EACCES)
+			ft_printf("chdir: error retrieving current directory: getcwd: \
+cannot access parent directories: No such file or directory\n");
 		return (1);
+	}
 	tmp = variadic_strjoin(3, pwd, "/", val);
 	if (tmp == NULL)
 		return (free(pwd), 1);

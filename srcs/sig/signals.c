@@ -1,30 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/04 13:35:52 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/23 12:49:16 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/19 13:39:36 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/23 12:30:13 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_pwd(void)
+void	handle_signal(int sig)
 {
-	char	*pwd;
-
-	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
+	if (sig == SIGINT)
 	{
-		if (errno == EACCES)
-			ft_printf("pwd: error retrieving current directory: getcwd: cannot\
-access parent directories: No such file or directory\n");
-		return (1);
+		ft_printf("\n");
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
-	ft_printf("%s\n", pwd);
-	free(pwd);
-	return (0);
+}
+
+void	init_signal(void)
+{
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, handle_signal);
 }

@@ -1,30 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/04 13:35:52 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/23 12:49:16 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/26 11:22:35 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/26 11:22:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_pwd(void)
+char	*strjoin_space(char *s1, char *s2)
 {
-	char	*pwd;
+	char	*res;
 
-	pwd = getcwd(NULL, 0);
-	if (pwd == NULL)
+	if (s1 == NULL)
+		res = ft_strdup(s2);
+	else
 	{
-		if (errno == EACCES)
-			ft_printf("pwd: error retrieving current directory: getcwd: cannot\
-access parent directories: No such file or directory\n");
-		return (1);
+		res = variadic_strjoin(3, s1, " ", s2);
+		free(s1);
 	}
-	ft_printf("%s\n", pwd);
-	free(pwd);
-	return (0);
+	return (res);
 }

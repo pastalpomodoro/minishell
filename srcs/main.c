@@ -6,11 +6,13 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:33:01 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:30:43 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+int	g_error_value;
 
 t_data	init_data(char *line, char **env)
 {
@@ -33,7 +35,6 @@ int	show_token(t_tkn_lst *tmp)
 	return (1);
 }
 
-
 int	main(int argc, char **argv, char **env)
 {
 	char		*input;
@@ -44,19 +45,34 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 	if (argc > 1)
 		return (1);
+	init_signal();
 	data = init_data(NULL, env);
 	while (1)
 	{
 		if (i == 0)
 			// input = ft_strdup("(echo salut && echo ciao)");
 		input = readline("Minishell> ");
-		if (input)
+		add_history(input);
+		data.line = input;
+		if (input == NULL || !ft_strncmp(input, "exit", 4))
+			ft_exit("0", &data);
+		get_tokens(&data);
+		if (data.lst == NULL)
+			exit(1);
+		lst = data.lst;
+		while (lst)
+		{
+			printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
+				lst->value);
+			lst = lst->next;
+		}
+		cmd = creator(data.lst, data.env);
+		if (cmd)
 		{
 			add_history(input);
 			data.line = input;
 			if (!ft_strncmp(input, "exit", 4))
 				break;
-				// ft_exit(ft_split(data.line, ' ')[1], &data);
 			get_tokens(&data);
 			if (data.lst == NULL)
 				exit(1);

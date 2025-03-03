@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 14:41:46 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:35:02 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ static int	check_cmd(char *cmd)
 {
 	if (!(ft_isalpha(*cmd) || *cmd == '_'))
 		return (1);
-	cmd++;
-	if (*cmd == '=')
+	if (*cmd == '_' && *(cmd + 1) == '=')
 		return (1);
 	while (ft_isalnum(*cmd) || *cmd == '_')
 		cmd++;
@@ -50,6 +49,8 @@ int	ft_export(char *cmd, t_env **env)
 	int		i;
 
 	i = 0;
+	if (cmd == NULL)
+		return (ft_env_export(*env));
 	if (check_cmd(cmd))
 		return (ft_printf("minishell: export: « %s » : \
 identifiant non valable\n", cmd), 1);
