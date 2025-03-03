@@ -16,16 +16,16 @@ void	show_cmds(t_commande *cmd)
 		}
 		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
 		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
-				cmd->outfile_type, cmd->token);
+			cmd->outfile_type, cmd->token);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n");
 	}
 }
 
-int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
+int	my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 {
-	int save;
+	int	save;
 
 	if (cmd->outfile_type > 0)
 	{
@@ -90,7 +90,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
@@ -118,7 +118,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*next;
-	int exit_code;
+	int			exit_code;
 
 	while (cmd)
 	{
@@ -129,19 +129,19 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-					exit_code = exec_pipe(cmd, next, env);
+				exit_code = exec_pipe(cmd, next, env);
 		}
 		if (cmd->token == T_CPAR)
-			break;
+			break ;
 		if (cmd)
 			cmd = next;
 	}
 	return (exit_code);
 }
 
-void skip_par(t_tkn_lst **node)
+void	skip_par(t_tkn_lst **node)
 {
-	int tmp;
+	int	tmp;
 
 	tmp = 0;
 	while ((*node))
@@ -153,16 +153,16 @@ void skip_par(t_tkn_lst **node)
 		else if ((*node)->token == T_CPAR && tmp == 0)
 		{
 			(*node) = (*node)->next;
-			break;
+			break ;
 		}
 		(*node) = (*node)->next;
 	}
 }
 
-int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env)
+int	and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env)
 {
-	int exit_code;
-	int pid;
+	int	exit_code;
+	int	pid;
 
 	while (1)
 	{
@@ -180,16 +180,16 @@ int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **en
 				skip_par(&node);
 			}
 			else
-				exit_code = exec_manage(cmd, &lst_env, env);
+			exit_code = exec_manage(cmd, &lst_env, env);
 			if (!node)
-				break;
+				break ;
 			else if (node && node->token == T_AND_OR)
 			{
 				if (exit_code == 0 && node->value[0] != '&')
-					break;
+					break ;
 				else if (exit_code == 0 && node->value[0] == '|')
-					break;
-				node = node->next;
+					break ;
+			node = node->next;
 			}
 			free_cmd(&cmd);
 		}
@@ -199,5 +199,4 @@ int and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **en
 	if (cmd)
 		free_cmd(&cmd);
 	return (1);
-	printf("%s", env[0]);
 }

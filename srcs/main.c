@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/03 13:30:43 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:29:04 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char		*input;
 	t_data		data;
-	// t_tkn_lst	*lst;
-	int i = 0;
+	t_commande	*cmd;
 
 	(void) argv;
 	if (argc > 1)
@@ -49,56 +48,23 @@ int	main(int argc, char **argv, char **env)
 	data = init_data(NULL, env);
 	while (1)
 	{
-		if (i == 0)
-			// input = ft_strdup("(echo salut && echo ciao)");
 		input = readline("Minishell> ");
 		add_history(input);
 		data.line = input;
 		if (input == NULL || !ft_strncmp(input, "exit", 4))
 			ft_exit("0", &data);
-		get_tokens(&data);
-		if (data.lst == NULL)
-			exit(1);
-		lst = data.lst;
-		while (lst)
-		{
-			printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
-				lst->value);
-			lst = lst->next;
-		}
-		cmd = creator(data.lst, data.env);
+		cmd = creator(&data.lst, data.env);
 		if (cmd)
 		{
-			add_history(input);
-			data.line = input;
-			if (!ft_strncmp(input, "exit", 4))
-				break;
 			get_tokens(&data);
 			if (data.lst == NULL)
-				exit(1);
-			// lst = data.lst;
-			// while (lst)
-			// {
-			// 	printf("TOKEN:$\nTYPE: %d$\nVALUE: %s$\n$\n", lst->token,
-			// 		lst->value);
-			// 	lst = lst->next;
-			// }
-			// cmd = creator(data.lst, data.env);
-			// if (!cmd)
-			// 	break ;
+				ft_exit(NULL, &data);
 			and_or_execution(NULL, data.lst, data.env, env);
-			// printf("\n");
-			// int i = -1;
-			// while (i++, env[i])
-			// {
-			// 	if (ft_strncmp(env[i], "SAL=", 4) == 0)
-			// 		printf("%s\n", env[i]);	
-			// }
-			// free_cmd(&cmd);
 			if (data.lst)
 				tkn_lst_clear(&data.lst);
-			free(data.line);
 		}
+		free_cmd(&cmd);
+		free(data.line);
 	}
 	free_env(data.env);
 	if (data.line)
