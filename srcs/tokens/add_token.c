@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/27 12:00:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:46:28 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,18 @@ static int	add_wildcard_tokens(t_data *data, char *value)
 	return (free_double_tab(split), 0);
 }
 
-// TODO: special case : $* -> empty value
+static int	end_tokenisation_change_line(t_data *data, int size, int *i)
+{
+	char	*tmp;
+
+	tmp = ft_strdup(&data->line[*i + size]);
+	if (tmp == NULL)
+		return (1);
+	free(data->line);
+	data->line = tmp;
+	return (2);
+}
+
 int	add_token(t_data *data, int size, int *i)
 {
 	char		*value;
@@ -98,5 +109,7 @@ int	add_token(t_data *data, int size, int *i)
 	if (e == NULL)
 		return (free(value), 1);
 	tkn_add_back(&data->lst, e);
+	if (type == T_AND_OR)
+		return (end_tokenisation_change_line(data, size, i));
 	return (0);
 }

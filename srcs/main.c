@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/26 11:40:00 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:30:43 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,10 @@ void	show_cmds(t_commande *cmd)
 			while (i++, cmd->cmd[i])
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
-		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n", cmd->cmd_type, cmd->infile);
 		// if (cmd->outfile)
 		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\n", cmd->outfile,
-				cmd->outfile_type);
+			cmd->outfile_type);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n");

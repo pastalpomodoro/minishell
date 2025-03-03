@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/23 12:01:06 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:45:10 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,21 +49,29 @@ static bool	no_need_token(t_data *data)
 	return (FALSE);
 }
 
+static int	check_line(t_data *data)
+{
+	if (data->line == NULL || data->line[0] == '\0')
+	{
+		data->lst = new_token(ft_strdup("exit"), T_LITERAL);
+		return (1);
+	}
+	if (no_need_token(data))
+		return (1);
+	data->line = check_insert_spaces(data->line);
+	if (data->line == NULL)
+		return (1);
+	return (0);
+}
+
 void	get_tokens(t_data *data)
 {
 	t_tkn_lst	*lst;
 	int			i;
+	int			code;
 
 	lst = NULL;
-	if (data->line == NULL || data->line[0] == '\0')
-	{
-		data->lst = new_token(ft_strdup("exit"), T_LITERAL);
-		return ;
-	}
-	if (no_need_token(data))
-		return ;
-	data->line = check_insert_spaces(data->line);
-	if (data->line == NULL)
+	if (check_line(data))
 		return ;
 	i = 0;
 	while (data->line[i])
@@ -72,11 +80,14 @@ void	get_tokens(t_data *data)
 			i++;
 		if (data->line[i])
 		{
-			if (split_token(data, &i))
+			code = split_token(data, &i);
+			if (code == 1)
 			{
 				tkn_lst_clear(&lst);
 				return ;
 			}
+			if (code == 2)
+				return ;
 		}
 	}
 }

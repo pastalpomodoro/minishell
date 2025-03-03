@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/26 11:32:56 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:31:15 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	char	*cmd;
 	char	*path;
 	int		i;
-	int status;
+	int		status;
 
 	status = 0;
 	i = -1;
