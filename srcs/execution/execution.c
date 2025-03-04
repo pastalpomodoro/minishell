@@ -171,11 +171,9 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 	int exit_code;
 	int status;
 	int pid;
-	char *temp;
 	t_commande *tmp;
 	t_tkn_lst *l;
 
-	temp = data.line;
 	while (1 && ft_strlen(data.line) > 1)
 	{
 		if (!data.lst)
@@ -196,17 +194,12 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		}
 		else if (cmd)
 			exit_code = exec_manage(cmd, &data.env, env);
-		// if (p == 2)
-		// 	show_cmds(cmd);
-		// printf("P: %d\n", p);
 		free_cmd(&cmd, &data);
 		l = data.lst;
 		while (l && l->next)
 			l = l->next;
 		if (l && ((l->value[0] == '&' && exit_code != 0) || (l->value[0] == '|' && exit_code == 0)) && data.line[1] == '(')
-		{
 			skip_par(&data.line, 1);
-		}
 		else if ((l && l->value[0] == '&' && exit_code != 0) || (l && l->value[0] == '|' && exit_code == 0))
 			break;
 		tkn_lst_clear(&data.lst);
