@@ -30,7 +30,9 @@ unexpected token `%s'\n", next->value), -1);
 	while (1)
 	{
 		line = readline("> ");
-		if (ft_strcmp(line, next->value) == 0)
+		if (!line)
+			break;
+		else if (ft_strcmp(line, next->value) == 0)
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
 		write(pipe_fd[1], "\n", 1);

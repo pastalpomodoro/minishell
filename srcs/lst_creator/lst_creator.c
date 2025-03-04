@@ -99,7 +99,7 @@ int is_parentesys(t_commande **cmd, t_tkn_lst *node)
 	}
 	return (1);
 }
-t_commande	*creator(t_tkn_lst **node, t_env *env)
+t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
 	t_commande	*init;
@@ -111,27 +111,27 @@ t_commande	*creator(t_tkn_lst **node, t_env *env)
 		return (NULL);
 	i = 0;
 	init = cmd;
-	while ((*node) && (*node)->token != T_AND_OR)
+	while (node && node->token != T_AND_OR)
 	{
-		next = (*node)->next;
-		if ((*node)->token == T_REDIRECT && cmd->exit_code == 0)
+		next = node->next;
+		if (node->token == T_REDIRECT && cmd->exit_code == 0)
 		{
-			if (redirect((*node), &cmd) == -2)
+			if (redirect(node, &cmd) == -2)
 				return (free_cmd(&init), NULL);
-			(*node) = (*node)->next;
+			node = node->next;
 		}
-		else if ((*node)->token == T_LITERAL && i == 0 && cmd->exit_code == 0)
+		else if (node->token == T_LITERAL && i == 0 && cmd->exit_code == 0)
 		{
-			if (cmd_creator((*node), &cmd, env) == -2)
+			if (cmd_creator(node, &cmd, env) == -2)
 				return (free_cmd(&init), NULL);
 			i = 1;
 		}
-		else if (is_pipe(&cmd, next, (*node), &i) == 0)
+		else if (is_pipe(&cmd, next, node, &i) == 0)
 			return (free_cmd(&init), NULL);
-		else if (is_parentesys(&cmd, (*node)) == 0)
+		else if (is_parentesys(&cmd, node) == 0)
 			return (free_cmd(&init), NULL);
-		if ((*node))
-			(*node) = (*node)->next;
+		if (node)
+			node = node->next;
 	}
 	return (init);
 }

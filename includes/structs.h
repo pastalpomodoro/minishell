@@ -13,6 +13,7 @@
 #ifndef STRUCTS_H
 # define STRUCTS_H
 # include "enums.h"
+# include <stdbool.h>
 
 typedef struct s_env
 {
@@ -55,6 +56,7 @@ typedef struct s_data
 	char		*line;
 	t_tkn_lst	*lst;
 	t_env		*env;
+	bool		and_or;
 }	t_data;
 
 #endif

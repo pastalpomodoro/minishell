@@ -81,11 +81,12 @@ static int	end_tokenisation_change_line(t_data *data, int size, int *i)
 {
 	char	*tmp;
 
-	tmp = ft_strdup(&data->line[*i + size]);
+	tmp = ft_strdup(&data->line[*i + size - 1]);
 	if (tmp == NULL)
 		return (1);
 	free(data->line);
 	data->line = tmp;
+	data->and_or = true;
 	return (2);
 }
 
@@ -97,6 +98,7 @@ int	add_token(t_data *data, int size, int *i)
 
 	type = get_type(&data->line[*i]);
 	value = get_value(&data->line[*i], size, i, data->env);
+	data->and_or = false;
 	if (value == NULL)
 		return (1);
 	if (ft_strchr(value, '*'))

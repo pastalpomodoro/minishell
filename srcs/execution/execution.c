@@ -131,72 +131,79 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
 				exit_code = exec_pipe(cmd, next, env);
 		}
-		if (cmd->token == T_CPAR)
-			break ;
 		if (cmd)
 			cmd = next;
 	}
 	return (exit_code);
+	printf("%s", env[0]);
 }
 
-void	skip_par(t_tkn_lst **node)
+void skip_par(char *line)
 {
-	int	tmp;
+	int o_par;
 
-	tmp = 0;
-	while ((*node))
+	o_par = 0;
+	while (*line)
 	{
-		if ((*node)->token == T_OPAR)
-			tmp++;
-		else if ((*node)->token == T_CPAR && tmp > 0)
-			tmp--;
-		else if ((*node)->token == T_CPAR && tmp == 0)
+		if (*line == '(')
+			o_par++;
+		else if (*line == ')' && o_par > 0)
+			o_par--;
+		else if (*line == ')' && o_par == 0)
 		{
-			(*node) = (*node)->next;
-			break ;
+			(*line)++;
+			break;
 		}
-		(*node) = (*node)->next;
+		(*line)++;
 	}
 }
 
-int	and_or_execution(t_commande *cmd, t_tkn_lst *node, t_env *lst_env, char **env)
+int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
-	int	exit_code;
-	int	pid;
+	int exit_code;
+	int status;
+	int pid;
+	t_commande *tmp;
+	t_tkn_lst *l;
 
-	while (1)
+	while (1 && ft_strlen(data.line))
 	{
-		if (cmd)
+		if (!data.lst)
+			get_tokens(&data);
+		if (!cmd)
+			cmd = creator(data.lst, data.env);
+		if (cmd && cmd->token == T_OPAR)
 		{
-			if (cmd->token == T_OPAR)
-			{
-				cmd = cmd->next;
-				pid = fork();
-				if (pid < 0)
-					return (ft_printf("Erreur avec fork\n"), -2);
-				else if (pid == 0)
-					and_or_execution(cmd, node, lst_env, env);
-				wait(NULL);
-				skip_par(&node);
-			}
-			else
-			exit_code = exec_manage(cmd, &lst_env, env);
-			if (!node)
-				break ;
-			else if (node && node->token == T_AND_OR)
-			{
-				if (exit_code == 0 && node->value[0] != '&')
-					break ;
-				else if (exit_code == 0 && node->value[0] == '|')
-					break ;
-			node = node->next;
-			}
-			free_cmd(&cmd);
+			tmp = cmd;
+			cmd = cmd->next;
+			free_cmd_node(&tmp);
+			pid = fork();
+			if (pid == 0)
+				and_or_exec(cmd, data, env, p + 1);
+			wait(&status);
+			skip_par(data.line);
+			exit_code = status;
 		}
-		cmd = creator(&node, lst_env);
-		// show_cmds(cmd);
-	}
-	if (cmd)
+		else if (cmd)
+			exit_code = exec_manage(cmd, &data.env, env);
 		free_cmd(&cmd);
+		l = data.lst;
+		while (l->next)
+			l = l->next;
+		if ((l->value[0] == '&' && exit_code != 0) || (l->value[0] == '|' && exit_code == 0))
+			break;
+		tkn_lst_clear(&data.lst);
+		if (!data.and_or)
+			break;
+	}
+	free(data.line);
+	if (data.lst)
+		tkn_lst_clear(&data.lst);
+	if (p > 0)
+	{
+		free_env(data.env);
+		exit(0);
+	}
 	return (1);
+	printf("%s", env[0]);
 }
