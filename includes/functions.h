@@ -95,10 +95,18 @@ char		*get_wildcard(char *value);
 /*****************************/
 /******** LST_CREATOR ********/
 /*****************************/
+//          lst_creator.c
+t_commande	*cmd_init(void);
 //			lst_redir.c
 int			redirect(t_tkn_lst *node, t_commande **cmd);
 //			lst_cmd.c
 int			cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
+//          lst_creator_utils.c
+int is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i);
+int is_redir(t_commande **cmd, t_tkn_lst **node);
+int	is_parentesys(t_commande **cmd, t_tkn_lst *node);
+int	is_and_or(t_commande **cmd, t_tkn_lst *node, int *i);
+int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i);
 //			lst_creator.c
 t_commande	*creator(t_tkn_lst *node, t_env *env);
 

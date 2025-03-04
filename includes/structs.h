@@ -26,9 +26,7 @@ typedef struct s_commande
 	int					exit_code;
 	int					infile;
 	int					fd_out;
-	int					outfile_type;
 	int					cmd_type;
-	char				*outfile;
 	char				**cmd;
 	char				*path;
 	struct s_commande	*next;

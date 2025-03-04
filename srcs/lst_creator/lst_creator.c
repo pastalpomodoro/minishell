@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_creator.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
+/*   Updated: 2025/03/04 19:12:55 by tgastelu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 t_commande	*cmd_init(void)
@@ -11,9 +23,7 @@ t_commande	*cmd_init(void)
 	cmd->cmd = NULL;
 	cmd->path = NULL;
 	cmd->next = NULL;
-	cmd->outfile = NULL;
 	cmd->fd_out = 1;
-	cmd->outfile_type = 0;
 	cmd->cmd_type = 0;
 	cmd->infile = 0;
 	cmd->exit_code = 0;
@@ -24,8 +34,6 @@ void	free_cmd_node(t_commande **cmd)
 {
 	if ((*cmd)->infile > 2)
 		close((*cmd)->infile);
-	if ((*cmd)->outfile)
-		free((*cmd)->outfile);
 	if ((*cmd)->path)
 		free((*cmd)->path);
 	if ((*cmd)->cmd)
@@ -46,61 +54,7 @@ void	free_cmd(t_commande **cmd, t_data *data)
 		(*cmd) = nxt;
 	}
 }
-int is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
-{
-	if (node->token == T_PIPE)
-	{
-		if (next)
-		{
-			if (next->token != T_LITERAL && next->token != T_REDIRECT && next->token != T_OPAR)
-				return (ft_printf("bash: syntax error near unexpected token `%s'\n", next->value), 0);
-		}
-		(*cmd)->next = cmd_init();
-		if (!(*cmd)->next)
-			return (0);
-		(*cmd) = (*cmd)->next;
-		*i = 0;
-	}
-	return (1);
-}
-int is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
-{
-	if (node->token == T_AND_OR)
-	{
-		(*cmd)->next = cmd_init();
-		if (!(*cmd)->next)
-			return (0);
-		(*cmd) = (*cmd)->next;
-		if (!ft_strcmp(node->value, "||"))
-			(*cmd)->path = ft_strdup("||");
-		else if (!ft_strcmp(node->value, "&&"))
-			(*cmd)->path = ft_strdup("&&");
-		if (!(*cmd)->path)
-			return (0);
-		(*cmd)->next = cmd_init();
-		if (!(*cmd)->next)
-			return (0);
-		(*cmd) = (*cmd)->next;
-		*i = 0;
-	}
-	return (1);
-}
-int is_parentesys(t_commande **cmd, t_tkn_lst *node)
-{
-	if (node->token == T_OPAR)
-	{
-		(*cmd)->token = T_OPAR;
-		(*cmd)->next = cmd_init();
-		(*cmd) = (*cmd)->next;
-	}
-	else if (node->token == T_CPAR)
-	{
-		(*cmd)->next = cmd_init();
-		(*cmd) = (*cmd)->next;
-		(*cmd)->token = T_CPAR;
-	}
-	return (1);
-}
+
 t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
@@ -116,18 +70,10 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 	while (node && node->token != T_AND_OR)
 	{
 		next = node->next;
-		if (node->token == T_REDIRECT && cmd->exit_code == 0)
-		{
-			if (redirect(node, &cmd) == -2)
-				return (free_cmd(&init, NULL), NULL);
-			node = node->next;
-		}
-		else if (node->token == T_LITERAL && i == 0 && cmd->exit_code == 0)
-		{
-			if (cmd_creator(node, &cmd, env) == -2)
-				return (free_cmd(&init, NULL), NULL);
-			i = 1;
-		}
+		if (is_redir(&cmd, &node) == 0)
+			return (free_cmd(&init, NULL), NULL);
+		else if (is_cmd(&cmd, node, env, &i) == 0)
+			return (free_cmd(&init, NULL), NULL);
 		else if (is_pipe(&cmd, next, node, &i) == 0)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_parentesys(&cmd, node) == 0)

@@ -1,0 +1,92 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_creator_utils.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
+/*   Updated: 2025/03/04 19:13:47 by tgastelu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
+{
+	if (node->token == T_PIPE)
+	{
+		if (!next || (next->token != T_LITERAL && next->token != T_REDIRECT))
+			return (ft_printf
+				("minishell: syntax error near unexpected token `%s'\n",
+					next->value), 0);
+		(*cmd)->next = cmd_init();
+		if (!(*cmd)->next)
+			return (0);
+		(*cmd) = (*cmd)->next;
+		*i = 0;
+	}
+	return (1);
+}
+
+int	is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
+{
+	if (node->token == T_AND_OR)
+	{
+		(*cmd)->next = cmd_init();
+		if (!(*cmd)->next)
+			return (0);
+		(*cmd) = (*cmd)->next;
+		if (!ft_strcmp(node->value, "||"))
+			(*cmd)->path = ft_strdup("||");
+		else if (!ft_strcmp(node->value, "&&"))
+			(*cmd)->path = ft_strdup("&&");
+		if (!(*cmd)->path)
+			return (0);
+		(*cmd)->next = cmd_init();
+		if (!(*cmd)->next)
+			return (0);
+		(*cmd) = (*cmd)->next;
+		*i = 0;
+	}
+	return (1);
+}
+
+int	is_parentesys(t_commande **cmd, t_tkn_lst *node)
+{
+	if (node->token == T_OPAR)
+	{
+		(*cmd)->token = T_OPAR;
+		(*cmd)->next = cmd_init();
+		(*cmd) = (*cmd)->next;
+	}
+	else if (node->token == T_CPAR)
+	{
+		(*cmd)->next = cmd_init();
+		(*cmd) = (*cmd)->next;
+		(*cmd)->token = T_CPAR;
+	}
+	return (1);
+}
+
+int	is_redir(t_commande **cmd, t_tkn_lst **node)
+{
+	if ((*node)->token == T_REDIRECT && (*cmd)->exit_code == 0)
+	{
+		if (redirect(*node, cmd) == -2)
+			return (0);
+		(*node) = (*node)->next;
+	}
+	return (1);
+}
+
+int	is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i)
+{
+	if (node->token == T_LITERAL && *i == 0 && (*cmd)->exit_code == 0)
+	{
+		if (cmd_creator(node, cmd, env) == -2)
+			return (0);
+		*i = 1;
+	}
+	return (1);
+}

@@ -48,6 +48,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
+		// input = ft_strdup("echo 1");
 		input = readline("Minishell> ");
 		add_history(input);
 		data.line = input;

@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:32:33 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:24:11 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ int	t_redirect(t_tkn_lst **node)
 	return (1);
 }
 
-int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
+int	che_pas(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
-	char	**utils;
-	int		i;
 
 	path = get_path(node->value, env, cmd);
 	if (!path)
@@ -74,6 +72,18 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 	else if (ft_strlen(path))
 		(*cmd)->cmd_type = 1;
 	(*cmd)->path = path;
+	return (1);
+}
+
+int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
+{
+	int		tmp;
+	char	**utils;
+	int		i;
+
+	tmp = che_pas(cmd, node, env);
+	if (tmp < 0)
+		return (tmp);
 	utils = malloc(sizeof(char *) * (size_tab(node) + 1));
 	if (!utils)
 		return (-2);

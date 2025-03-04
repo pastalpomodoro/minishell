@@ -15,8 +15,6 @@ void	show_cmds(t_commande *cmd)
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
 		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
-		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
-				cmd->outfile_type, cmd->token);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n\n");
@@ -27,15 +25,11 @@ int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 {
 	int save;
 
-	if (cmd->outfile_type > 0)
+	if (cmd->fd_out > 2)
 	{
 		save = dup(STDOUT_FILENO);
 		if (save == -1)
 			return (0);
-		if (cmd->outfile_type == 1)
-			cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_TRUNC, 0777);
-		if (cmd->outfile_type == 2)
-			cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_APPEND, 0777);
 		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
 			return (0);
 		close(cmd->fd_out);
@@ -54,7 +48,7 @@ int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 		*exit_code = ft_pwd();
 	// if (!ft_strcmp(cmd->cmd[0], "exit"))
 	// 	ft_exit(init);
-	if (cmd->outfile_type > 0)
+	if (cmd->fd_out > 2)
 	{
 		if (dup2(save, STDOUT_FILENO) == -1)
 			return (0);
@@ -65,7 +59,7 @@ int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
 {
 	close(pipe_fd[0]);
-	if (cmd->outfile_type == 0 && next && next->cmd)
+	if (cmd->fd_out < 3 && next && next->cmd)
 		cmd->fd_out = pipe_fd[1];
 	else
 		close(pipe_fd[1]);
@@ -94,10 +88,6 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
-	if (cmd->outfile_type == 1)
-		cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_TRUNC, 0777);
-	if (cmd->outfile_type == 2)
-		cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_APPEND, 0777);
 	pid = fork();
 	if (pid < 0)
 		return (ft_printf("Erreur avec fork\n"), -2);
@@ -126,7 +116,7 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 		next = cmd->next;
 		if (cmd && cmd->cmd)
 		{
-			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
+			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
 					exit_code = exec_pipe(cmd, next, env);
@@ -141,11 +131,9 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 void skip_par(char **line, int n)
 {
 	int o_par;
-	// int i;
 	char *new;
 	char *tmp;
 
-	// i = 0;
 	o_par = 0;
 	tmp = *line;
 	while (**line)
@@ -180,6 +168,7 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 			get_tokens(&data);
 		if (!cmd)
 			cmd = creator(data.lst, data.env);
+		// show_cmds(cmd);
 		if (cmd && cmd->token == T_OPAR)
 		{
 			tmp = cmd;
@@ -217,5 +206,4 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		exit(0);
 	}
 	return (1);
-	printf("%s", env[0]);
 }

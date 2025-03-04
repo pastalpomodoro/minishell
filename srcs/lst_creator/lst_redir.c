@@ -64,20 +64,6 @@ unexpected token `%s'\n", next->value), -1);
 	return (fd);
 }
 
-void	type_out(t_tkn_lst *next, t_commande **cmd, int type)
-{
-	if (type == 1)
-	{
-		(*cmd)->outfile = ft_strdup(next->value);
-		(*cmd)->outfile_type = 1;
-	}
-	if (type == 2)
-	{
-		(*cmd)->outfile = ft_strdup(next->value);
-		(*cmd)->outfile_type = 2;
-	}
-}
-
 int	out(t_tkn_lst *node, t_commande **cmd, int type)
 {
 	t_tkn_lst	*next;
@@ -89,11 +75,10 @@ unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `%s'\n", next->value), -1);
-	if ((*cmd)->outfile)
-		free((*cmd)->outfile);
-	type_out(next, cmd, type);
-	if (!(*cmd)->outfile)
-		return (-2);
+	if (type == 1)
+		(*cmd)->fd_out = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
+	else if (type == 2)
+		(*cmd)->fd_out = open(next->value, O_RDWR | O_CREAT | O_APPEND, 0777);
 	return (1);
 }
 
