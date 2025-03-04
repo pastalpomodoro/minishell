@@ -16,16 +16,16 @@ void	show_cmds(t_commande *cmd)
 		}
 		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
 		ft_printf("OUTFILE: %s, OUTFILE_TYPE: %d\nTOKEN: %d\n", cmd->outfile,
-				cmd->outfile_type, cmd->token);
+			cmd->outfile_type, cmd->token);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n");
 	}
 }
 
-int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
+int	my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
 {
-	int save;
+	int	save;
 
 	if (cmd->outfile_type > 0)
 	{
@@ -90,7 +90,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
@@ -118,7 +118,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 {
 	t_commande	*next;
-	int exit_code;
+	int			exit_code;
 
 	while (cmd)
 	{
@@ -129,7 +129,7 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
 				my_execve(cmd, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-					exit_code = exec_pipe(cmd, next, env);
+				exit_code = exec_pipe(cmd, next, env);
 		}
 		if (cmd)
 			cmd = next;
