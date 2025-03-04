@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/26 11:23:19 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:00:39 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int			ft_export(char *cmd, t_env **env);
 int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
 int			ft_cd(char *val, t_env *env);
-void		ft_exit(char *arg, t_data *data);
+void		ft_exit(int code, t_data *data);
 
 /*****************************/
 /********   UTILS   **********/
@@ -68,10 +68,6 @@ char		*replace_vars(t_env *env, char *str);
 char		*handle_regular_char(char *res, char **line);
 //			search_env.c
 char		*search_env(t_env *env, char *str);
-
-/*****************************/
-/********   PARSING   ********/
-/*****************************/
 
 /*****************************/
 /********   TOKENS    ********/
@@ -111,13 +107,13 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /*****************************/
 //			execution.c
 int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
-int and_or_exec(t_commande *cmd, t_data data, char **env, int p);
+int			and_or_exec(t_commande *cmd, t_data data, char **env, int p);
 
 /*****************************/
 /*********    SIG    *********/
 /*****************************/
 //			signals.c
 void		init_signal(void);
-void		handle_signal(int sig);
+void		init_signal_in_cmd(void);
 
 #endif

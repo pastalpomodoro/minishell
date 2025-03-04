@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:22:24 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:00:49 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,15 @@ int	main(int argc, char **argv, char **env)
 	(void) argv;
 	if (argc > 1)
 		return (1);
-	init_signal();
 	data = init_data(NULL, env);
 	while (1)
 	{
+		init_signal();
 		input = readline("Minishell> ");
 		add_history(input);
 		data.line = input;
 		if (input == NULL || !ft_strncmp(input, "exit", 4))
-			ft_exit("0", &data);
+			ft_exit(g_error_value, &data);
 		and_or_exec(NULL, data, env, 0);
 	}
 	free_env(data.env);

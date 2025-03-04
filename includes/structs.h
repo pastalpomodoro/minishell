@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/03 13:30:08 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:30:26 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_commande
 	int					exit_code;
 	int					infile;
 	int					fd_out;
-	int					outfile_type;//if 1==> , if 2==>>
+	int					outfile_type;
 	int					cmd_type;
 	char				*outfile;
 	char				**cmd;

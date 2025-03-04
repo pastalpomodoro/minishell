@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_creator.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 14:32:42 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/03/04 14:33:56 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 t_commande	*cmd_init(void)
@@ -44,14 +56,17 @@ void	free_cmd(t_commande **cmd)
 		(*cmd) = nxt;
 	}
 }
-int is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
+
+int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 {
 	if (node->token == T_PIPE)
 	{
 		if (next)
 		{
-			if (next->token != T_LITERAL && next->token != T_REDIRECT && next->token != T_OPAR)
-				return (ft_printf("bash: syntax error near unexpected token `%s'\n", next->value), 0);
+			if (next->token != T_LITERAL && next->token != T_REDIRECT
+				&& next->token != T_OPAR)
+				return (ft_printf("bash: syntax error near unexpected \
+token `%s'\n", next->value), 0);
 		}
 		(*cmd)->next = cmd_init();
 		if (!(*cmd)->next)
@@ -61,7 +76,8 @@ int is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 	}
 	return (1);
 }
-int is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
+
+int	is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
 {
 	if (node->token == T_AND_OR)
 	{
@@ -83,7 +99,8 @@ int is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
 	}
 	return (1);
 }
-int is_parentesys(t_commande **cmd, t_tkn_lst *node)
+
+int	is_parentesys(t_commande **cmd, t_tkn_lst *node)
 {
 	if (node->token == T_OPAR)
 	{
@@ -99,6 +116,7 @@ int is_parentesys(t_commande **cmd, t_tkn_lst *node)
 	}
 	return (1);
 }
+
 t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;

@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 14:10:22 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:34:20 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ unexpected token `%s'\n", next->value), -1);
 	{
 		line = readline("> ");
 		if (!line)
-			break;
+			break ;
 		else if (ft_strcmp(line, next->value) == 0)
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));
@@ -66,12 +66,12 @@ unexpected token `%s'\n", next->value), -1);
 
 void	type_out(t_tkn_lst *next, t_commande **cmd, int type)
 {
-	if (type == 1)//>
+	if (type == 1)
 	{
 		(*cmd)->outfile = ft_strdup(next->value);
 		(*cmd)->outfile_type = 1;
 	}
-	if (type == 2)//>>
+	if (type == 2)
 	{
 		(*cmd)->outfile = ft_strdup(next->value);
 		(*cmd)->outfile_type = 2;

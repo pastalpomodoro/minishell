@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/03 13:31:15 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:35:28 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	}
 	if (!env)
 		return (ft_strdup(""));
-	while (env && (ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '='))
+	while (env && (ft_strncmp("PATH", env->content, 4) != 0
+			|| env->content[4] != '='))
 		env = env->next;
 	if (!env)
 		return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
@@ -102,7 +103,8 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 		else if (access(path, X_OK) != 0)
 			(*lst_cmd)->exit_code = 126;
 		else
-			return ((*lst_cmd)->exit_code = 0, free_double_tab(all_path), free(cmd), path);
+			return ((*lst_cmd)->exit_code = 0, free_double_tab(all_path),
+				free(cmd), path);
 		free(path);
 	}
 	return (free_double_tab(all_path), free(cmd), ft_strdup(""));

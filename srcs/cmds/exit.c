@@ -6,13 +6,13 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:27:36 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:35:32 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:00:23 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_exit(char *arg, t_data *data)
+void	ft_exit(int code, t_data *data)
 {
 	if (data->lst)
 		tkn_lst_clear(&(data->lst));
@@ -22,7 +22,5 @@ void	ft_exit(char *arg, t_data *data)
 	if (data->env)
 		free_env(data->env);
 	ft_printf("exit\n");
-	if (arg)
-		exit(ft_atoi(arg));
-	exit(0);
+	exit(code);
 }

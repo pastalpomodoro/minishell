@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_cmd.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/03/04 14:32:33 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 int	size_tab(t_tkn_lst *node)
@@ -13,7 +25,7 @@ int	size_tab(t_tkn_lst *node)
 		{
 			node = node->next;
 			if (!node)
-				break;
+				break ;
 			node = node->next;
 		}
 	}
@@ -52,7 +64,8 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 	if (!path)
 		return (-2);
 	if (!ft_strlen(path) && !is_our_cmd(node->value))
-		return (ft_printf("minishell: %s: command not found\n", node->value), free(path), -1);
+		return (ft_printf("minishell: %s: command not found\n", node->value),
+			free(path), -1);
 	else if (!ft_strlen(path) && is_our_cmd(node->value))
 	{
 		(*cmd)->exit_code = 0;
