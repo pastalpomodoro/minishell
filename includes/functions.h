@@ -50,7 +50,7 @@ char		*get_path(char *c, t_env *env, t_commande **cmd);
 char		*strjoin_space(char *s1, char *s2);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
-void		free_cmd(t_commande **cmd);
+void		free_cmd(t_commande **cmd, t_data *data);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
 
