@@ -72,9 +72,9 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 	while (node && node->token != T_AND_OR)
 	{
 		next = node->next;
-		if (is_redir(&cmd, &node) == 0)
+		if (is_cmd(&cmd, node, env, &i) == 0)
 			return (free_cmd(&init, NULL), NULL);
-		else if (is_cmd(&cmd, node, env, &i) == 0)
+		else if (is_redir(&cmd, &node) == 0)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_pipe(&cmd, next, node, &i) == 0)
 			return (free_cmd(&init, NULL), NULL);
