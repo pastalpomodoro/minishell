@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_creator_utils.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/04 19:13:47 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/05 15:35:59 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 {
-	if (node->token == T_PIPE)
+	if (node && node->token == T_PIPE)
 	{
-		if (!next || (next->token != T_LITERAL && next->token != T_REDIRECT))
-			return (ft_printf
-				("minishell: syntax error near unexpected token `%s'\n",
-					next->value), 0);
+		if (!next || !node->prev)
+			return ((*cmd)->exit_code = 2, ft_printf
+				("minishell: syntax error near unexpected token `|'\n"), 0);
+		else if (next->token != T_LITERAL && next->token != T_REDIRECT)
+			return ((*cmd)->exit_code = 2, ft_printf
+				("minishell: syntax error near unexpected token `%s'\n", next->value), 0);
 		(*cmd)->next = cmd_init();
 		if (!(*cmd)->next)
 			return (0);
@@ -54,13 +56,13 @@ int	is_and_or(t_commande **cmd, t_tkn_lst *node, int *i)
 
 int	is_parentesys(t_commande **cmd, t_tkn_lst *node)
 {
-	if (node->token == T_OPAR)
+	if (node && node->token == T_OPAR)
 	{
 		(*cmd)->token = T_OPAR;
 		(*cmd)->next = cmd_init();
 		(*cmd) = (*cmd)->next;
 	}
-	else if (node->token == T_CPAR)
+	else if (node && node->token == T_CPAR)
 	{
 		(*cmd)->next = cmd_init();
 		(*cmd) = (*cmd)->next;
@@ -73,7 +75,7 @@ int	is_redir(t_commande **cmd, t_tkn_lst **node)
 {
 	if ((*node)->token == T_REDIRECT && (*cmd)->exit_code == 0)
 	{
-		if (redirect(*node, cmd) == -2)
+		if (redirect(*node, cmd) < 0)
 			return (0);
 		(*node) = (*node)->next;
 	}
@@ -82,9 +84,9 @@ int	is_redir(t_commande **cmd, t_tkn_lst **node)
 
 int	is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i)
 {
-	if (node->token == T_LITERAL && *i == 0 && (*cmd)->exit_code == 0)
+	if (node && node->token == T_LITERAL && *i == 0 && (*cmd)->exit_code == 0)
 	{
-		if (cmd_creator(node, cmd, env) == -2)
+		if (cmd_creator(node, cmd, env) < 0)
 			return (0);
 		*i = 1;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 15:00:49 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/05 16:33:53 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
-		// input = ft_strdup("echo 1");
+		// input = ft_strdup("echo -n");
 		input = readline("Minishell> ");
 		add_history(input);
 		data.line = input;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_creator.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/04 19:12:55 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/05 13:48:35 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ void	free_cmd_node(t_commande **cmd)
 {
 	if ((*cmd)->infile > 2)
 		close((*cmd)->infile);
+	if ((*cmd)->fd_out > 2)
+		close((*cmd)->fd_out);
 	if ((*cmd)->path)
 		free((*cmd)->path);
 	if ((*cmd)->cmd)

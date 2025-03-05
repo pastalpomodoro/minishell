@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
+/*   Updated: 2025/03/05 15:02:53 by tgastelu         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
 void	show_cmds(t_commande *cmd)
@@ -20,40 +32,64 @@ void	show_cmds(t_commande *cmd)
 		printf("------------------------------------------\n\n");
 	}
 }
-
-int my_execve(t_commande *cmd, t_env **lst_env, int *exit_code)
+void	if_statement(t_commande *cmd, t_env **lst_env, int **exit_code)
 {
-	int save;
-
-	if (cmd->fd_out > 2)
-	{
-		save = dup(STDOUT_FILENO);
-		if (save == -1)
-			return (0);
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			return (0);
-		close(cmd->fd_out);
-	}
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		*exit_code = ft_echo(cmd->cmd);
+		**exit_code = ft_echo(cmd->cmd);
 	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1]) 
-		*exit_code = ft_export(cmd->cmd[1], lst_env);
+		**exit_code = ft_export(cmd->cmd[1], lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
-		*exit_code = ft_cd(cmd->cmd[1], *lst_env);
+		**exit_code = ft_cd(cmd->cmd[1], *lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		*exit_code = ft_env(*lst_env);
+		**exit_code = ft_env(*lst_env);
 	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
-		*exit_code = ft_unset(cmd->cmd[1], lst_env);
+		**exit_code = ft_unset(cmd->cmd[1], lst_env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		*exit_code = ft_pwd();
+		**exit_code = ft_pwd();
 	// if (!ft_strcmp(cmd->cmd[0], "exit"))
 	// 	ft_exit(init);
+}
+
+int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2], int *save)
+{
+	if ((*cmd)->fd_out < 3 && (*next) && (*next)->cmd)
+		(*cmd)->fd_out = pipe_fd[1];
+	else
+		close(pipe_fd[1]);
+	if ((*cmd)->fd_out > 2)
+	{
+		*save = dup(STDOUT_FILENO);
+		if (*save == -1)
+			return (0);
+		if (dup2((*cmd)->fd_out, STDOUT_FILENO) == -1)
+			return (0);
+		close((*cmd)->fd_out);
+	}
+	if ((*next) && (*next)->cmd && (*next)->infile < 3)
+		(*next)->infile = pipe_fd[0];
+	else
+		close(pipe_fd[0]);
+	return (1);
+}
+
+int	my_execve(t_commande *cmd, t_commande *next, t_env **lst_env, int *exit_code)
+{
+	int save;
+	int pipe_fd[2];
+
+	if (pipe(pipe_fd) == -1)
+		return (0);
+	if (!pipe_settings(&cmd, &next, pipe_fd, &save))
+		return (0);
+	if_statement(cmd, lst_env, &exit_code);
 	if (cmd->fd_out > 2)
 	{
 		if (dup2(save, STDOUT_FILENO) == -1)
 			return (0);
+		close(save);
 	}
 	return (1);
+	printf("%s%d", (*lst_env)->content, *exit_code);
 }
 
 int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
@@ -117,7 +153,7 @@ int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
 		if (cmd && cmd->cmd)
 		{
 			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
-				my_execve(cmd, lst_env, &exit_code);
+				my_execve(cmd, next, lst_env, &exit_code);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
 					exit_code = exec_pipe(cmd, next, env);
 		}
@@ -154,6 +190,20 @@ void skip_par(char **line, int n)
 	*line = new;
 }
 
+int is_novoid_line(char *line)
+{
+	int i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] != 32 && line[i] != 9 && line[i] != 10 &&
+			line[i] != 11 && line[i] != 12 && line[i] != 13)
+			return (1);
+		i++;
+	}
+	return (0);
+}
 int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
 	int exit_code;
@@ -162,13 +212,15 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 	t_commande *tmp;
 	t_tkn_lst *l;
 
-	while (1 && ft_strlen(data.line) > 1)
+	exit_code = 0;
+	while (1 && is_novoid_line(data.line))
 	{
 		if (!data.lst)
 			get_tokens(&data);
 		if (!cmd)
 			cmd = creator(data.lst, data.env);
-		// show_cmds(cmd);
+		if (cmd)
+			exit_code = cmd->exit_code;
 		if (cmd && cmd->token == T_OPAR)
 		{
 			tmp = cmd;
@@ -203,7 +255,7 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 	{
 		if (data.env)
 			free_env(data.env);
-		exit(0);
+		exit(exit_code);
 	}
 	return (1);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_redir.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:34:20 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/05 14:29:31 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	simple_in(t_tkn_lst *node, t_commande **cmd)
 	t_tkn_lst	*next;
 
 	next = node->next;
-	if (node->next == NULL)
+	if (node->next == NULL || (!ft_strcmp(next->value, ">") && next->next == NULL))
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
 unexpected token `newline'\n"), -1);
 	if (next->token != T_LITERAL)
