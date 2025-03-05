@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/03 13:45:10 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/05 18:44:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ static int	check_line(t_data *data)
 	data->line = check_insert_spaces(data->line);
 	if (data->line == NULL)
 		return (1);
+	data->line = delete_useless(data->line);
 	return (0);
 }
 

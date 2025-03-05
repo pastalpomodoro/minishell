@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:55:11 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:11:20 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static void	replace_inside_dquote(t_env *env, char **line, char **res)
 	(*line)++;
 	while (**line && **line != '\"')
 	{
-		if (**line == '$')
+		if (**line == '$' && !(**(line + 1) == ' ' || **(line + 1) == '\0'))
 		{
 			if (join_var_res(env, line, res, TRUE))
 				return ;
@@ -102,7 +102,7 @@ char	*replace_vars(t_env *env, char *line)
 	res = NULL;
 	while (*line)
 	{
-		if (*line == '$')
+		if (*line == '$' && !(*(line + 1) == ' ' || *(line + 1) == '\0'))
 		{
 			if (join_var_res(env, &line, &res, FALSE))
 				return (free(res), NULL);

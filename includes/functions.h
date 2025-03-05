@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 15:00:39 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/05 18:50:04 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ char		*check_insert_spaces(char *line);
 bool		inside_quotes(char *line, int *i);
 //			insert_spaces.c
 char		*insert_spaces(char *op, char *line_init, int *i);
+//			delete_useless.c
+char		*delete_useless(char *line);
 //			split_token.c
 int			split_token(t_data *data, int *i);
 //			add_token.c
@@ -101,12 +103,12 @@ t_commande	*cmd_init(void);
 int			redirect(t_tkn_lst *node, t_commande **cmd);
 //			lst_cmd.c
 int			cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env);
-//          lst_creator_utils.c
-int is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i);
-int is_redir(t_commande **cmd, t_tkn_lst **node);
-int	is_parentesys(t_commande **cmd, t_tkn_lst *node);
-int	is_and_or(t_commande **cmd, t_tkn_lst *node, int *i);
-int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i);
+//			lst_creator_utils.c
+int			is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i);
+int			is_redir(t_commande **cmd, t_tkn_lst **node);
+int			is_parentesys(t_commande **cmd, t_tkn_lst *node);
+int			is_and_or(t_commande **cmd, t_tkn_lst *node, int *i);
+int			is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i);
 //			lst_creator.c
 t_commande	*creator(t_tkn_lst *node, t_env *env);
 
@@ -114,7 +116,7 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /********* EXECUTION *********/
 /*****************************/
 //			execution.c
-int			exec_manage(t_commande *cmd, t_env **lst_env, char **env);
+int			exec_manage(t_commande *cmd, t_data *data, char **env);
 int			and_or_exec(t_commande *cmd, t_data data, char **env, int p);
 
 /*****************************/

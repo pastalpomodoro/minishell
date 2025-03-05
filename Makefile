@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
@@ -13,6 +13,7 @@ SRCS_NAMES = main.c \
 			 tokens/split_token.c \
 			 tokens/check_spaces.c \
 			 tokens/insert_spaces.c \
+			 tokens/delete_useless.c \
 			 tokens/add_token.c \
 			 tokens/tkn_lst.c \
 			 tokens/get_wildcard.c \

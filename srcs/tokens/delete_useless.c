@@ -1,39 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   search_env.c                                       :+:      :+:    :+:   */
+/*   delete_useless.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/29 17:40:19 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 18:56:42 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/03/05 18:45:05 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/03/05 18:53:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-extern int	g_error_value;
-
-char	*search_env(t_env *env, char *str)
+char	*delete_useless(char *line)
 {
-	int	i;
+	char	*res;
+	int		i;
 
+	res = NULL;
 	i = 0;
-	if (str == NULL)
-		return (ft_strdup(""));
-	if (str[0] == '?' && str[1] == '\0')
-		return (free(str), ft_itoa(g_error_value));
-	while (env && env->content[i])
+	while (line[i])
 	{
-		if (str[i] && env->content[i] && env->content[i] == str[i])
-			i++;
-		else if (env->content[i] == '=')
-			return (free(str), ft_strdup(&env->content[i + 1]));
+		if (line[i] && line[i + 1] && ((line[i] == '\"' && line[i + 1] == '\"')
+				|| (line[i] == '\'' && line[i + 1] == '\'')))
+			i += 2;
 		else
 		{
-			env = env->next;
-			i = 0;
+			res = ft_strjoin_char(res, line[i]);
+			if (res == NULL)
+				return (free(line), NULL);
+			i++;
 		}
 	}
-	return (free(str), ft_strdup(""));
+	return (free(line), res);
 }

@@ -6,11 +6,13 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/05 15:02:53 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/05 19:26:38 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+extern int	g_error_value;
 
 void	show_cmds(t_commande *cmd)
 {
@@ -26,31 +28,38 @@ void	show_cmds(t_commande *cmd)
 			while (i++, cmd->cmd[i])
 				ft_printf("CMD: %s\n", cmd->cmd[i]);
 		}
-		ft_printf("CMD_TYPE: %d\nINFILE: %d\n",cmd->cmd_type, cmd->infile);
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n", cmd->cmd_type, cmd->infile);
 		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
 		cmd = cmd->next;
 		printf("------------------------------------------\n\n");
 	}
 }
-void	if_statement(t_commande *cmd, t_env **lst_env, int **exit_code)
+
+void	if_statement(t_commande *cmd, t_data *data)
 {
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		**exit_code = ft_echo(cmd->cmd);
-	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1]) 
-		**exit_code = ft_export(cmd->cmd[1], lst_env);
+		g_error_value = ft_echo(cmd->cmd);
+	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1])
+		g_error_value = ft_export(cmd->cmd[1], &data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
-		**exit_code = ft_cd(cmd->cmd[1], *lst_env);
+		g_error_value = ft_cd(cmd->cmd[1], data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		**exit_code = ft_env(*lst_env);
+		g_error_value = ft_env(data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
-		**exit_code = ft_unset(cmd->cmd[1], lst_env);
+		g_error_value = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		**exit_code = ft_pwd();
-	// if (!ft_strcmp(cmd->cmd[0], "exit"))
-	// 	ft_exit(init);
+		g_error_value = ft_pwd();
+	if (!ft_strcmp(cmd->cmd[0], "exit"))
+	{
+		if (cmd->cmd[1])
+			ft_exit(ft_atoi(cmd->cmd[1]), data);
+		else
+			ft_exit(0, data);
+	}
 }
 
-int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2], int *save)
+int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2],
+				int *save)
 {
 	if ((*cmd)->fd_out < 3 && (*next) && (*next)->cmd)
 		(*cmd)->fd_out = pipe_fd[1];
@@ -72,16 +81,16 @@ int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2], int *save
 	return (1);
 }
 
-int	my_execve(t_commande *cmd, t_commande *next, t_env **lst_env, int *exit_code)
+int	my_execve(t_commande *cmd, t_commande *next, t_data *data)
 {
-	int save;
-	int pipe_fd[2];
+	int	save;
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
 	if (!pipe_settings(&cmd, &next, pipe_fd, &save))
 		return (0);
-	if_statement(cmd, lst_env, &exit_code);
+	if_statement(cmd, data);
 	if (cmd->fd_out > 2)
 	{
 		if (dup2(save, STDOUT_FILENO) == -1)
@@ -89,7 +98,7 @@ int	my_execve(t_commande *cmd, t_commande *next, t_env **lst_env, int *exit_code
 		close(save);
 	}
 	return (1);
-	printf("%s%d", (*lst_env)->content, *exit_code);
+	printf("%s%d", data->env->content, g_error_value);
 }
 
 int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
@@ -120,7 +129,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 {
 	int	status;
 	int	pid;
-	int pipe_fd[2];
+	int	pipe_fd[2];
 
 	if (pipe(pipe_fd) == -1)
 		return (0);
@@ -141,34 +150,33 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 	return (close(pipe_fd[1]), status);
 }
 
-int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
+int	exec_manage(t_commande *cmd, t_data *data, char **env)
 {
 	t_commande	*next;
-	int exit_code;
 
 	while (cmd)
 	{
-		exit_code = cmd->exit_code;
+		g_error_value = cmd->exit_code;
 		next = cmd->next;
 		if (cmd && cmd->cmd)
 		{
-			if (cmd->exit_code == 0 && cmd->cmd_type == 2)//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
-				my_execve(cmd, next, lst_env, &exit_code);
+			if (cmd->exit_code == 0 && cmd->cmd_type == 2)
+				my_execve(cmd, next, data);
 			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-					exit_code = exec_pipe(cmd, next, env);
+				g_error_value = exec_pipe(cmd, next, env);
 		}
 		if (cmd)
 			cmd = next;
 	}
-	return (exit_code);
+	return (g_error_value);
 	printf("%s", env[0]);
 }
 
-void skip_par(char **line, int n)
+void	skip_par(char **line, int n)
 {
-	int o_par;
-	char *new;
-	char *tmp;
+	int		o_par;
+	char	*new;
+	char	*tmp;
 
 	o_par = 0;
 	tmp = *line;
@@ -181,7 +189,7 @@ void skip_par(char **line, int n)
 		else if (**line == ')' && o_par == n)
 		{
 			(*line)++;
-			break;
+			break ;
 		}
 		(*line)++;
 	}
@@ -190,27 +198,28 @@ void skip_par(char **line, int n)
 	*line = new;
 }
 
-int is_novoid_line(char *line)
+int	is_novoid_line(char *line)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] != 32 && line[i] != 9 && line[i] != 10 &&
-			line[i] != 11 && line[i] != 12 && line[i] != 13)
+		if (line[i] != 32 && line[i] != 9 && line[i] != 10
+			&& line[i] != 11 && line[i] != 12 && line[i] != 13)
 			return (1);
 		i++;
 	}
 	return (0);
 }
-int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
+
+int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
-	int exit_code;
-	int status;
-	int pid;
-	t_commande *tmp;
-	t_tkn_lst *l;
+	int			exit_code;
+	int			status;
+	int			pid;
+	t_commande	*tmp;
+	t_tkn_lst	*l;
 
 	exit_code = 0;
 	while (1 && is_novoid_line(data.line))
@@ -234,7 +243,7 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 			exit_code = status;
 		}
 		else if (cmd)
-			exit_code = exec_manage(cmd, &data.env, env);
+			exit_code = exec_manage(cmd, &data, env);
 		free_cmd(&cmd, &data);
 		l = data.lst;
 		while (l && l->next)
@@ -242,10 +251,10 @@ int and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		if (l && ((l->value[0] == '&' && exit_code != 0) || (l->value[0] == '|' && exit_code == 0)) && data.line[1] == '(')
 			skip_par(&data.line, 1);
 		else if ((l && l->value[0] == '&' && exit_code != 0) || (l && l->value[0] == '|' && exit_code == 0))
-			break;
+			break ;
 		tkn_lst_clear(&data.lst);
 		if (!data.and_or)
-			break;
+			break ;
 	}
 	if (data.line)
 		free(data.line);
