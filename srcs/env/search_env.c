@@ -6,13 +6,22 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 17:40:19 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 13:58:23 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:22:31 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 extern int	g_error_value;
+
+int	is_valid_input(char c, int first)
+{
+	if (first && !(c == '_' || ft_isalpha(c)))
+		return (0);
+	if (!(ft_isalnum(c) || c == '_'))
+		return (0);
+	return (1);
+}
 
 char	*search_env(t_env *env, char *str)
 {

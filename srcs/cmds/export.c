@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/19 13:35:02 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:21:08 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	search_replace_env(char *name, char *cmd, t_env *env)
 	return (2);
 }
 
-static int	check_cmd(char *cmd)
+int	check_cmd(char *cmd)
 {
 	if (!(ft_isalpha(*cmd) || *cmd == '_'))
 		return (1);
