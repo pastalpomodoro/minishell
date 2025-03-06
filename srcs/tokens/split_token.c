@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:56:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 18:43:20 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:43:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,15 @@ static int	get_end_quotes(char *line)
 	return (count);
 }
 
+static int	useless_quotes(char *line)
+{
+	if (*line == '\'' && *(line + 1) == '\'')
+		return (1);
+	if (*line == '\"' && *(line + 1) == '\"')
+		return (1);
+	return (0);
+}
+
 static int	get_end(char *line)
 {
 	int	count;
@@ -42,7 +51,9 @@ static int	get_end(char *line)
 	count = 0;
 	while (*line)
 	{
-		if (*line == '\'' || *line == '\"')
+		if (useless_quotes(line))
+			return (0);
+		else if (*line == '\'' || *line == '\"')
 		{
 			tmp = get_end_quotes(line) + 1;
 			count += tmp;

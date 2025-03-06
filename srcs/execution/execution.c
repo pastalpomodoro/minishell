@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 15:46:11 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:52:42 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,11 +201,11 @@ void	skip_par(char **line, int n)
 	free(tmp);
 	*line = new;
 }
-void skip_for_and_or(char **line)
+void	skip_for_and_or(char **line)
 {
-	char *tmp;
-	char *new;
-	int i;
+	char	*tmp;
+	char	*new;
+	int		i;
 
 	i = 0;
 	tmp = *line;
@@ -214,7 +214,7 @@ void skip_for_and_or(char **line)
 		if ((tmp[i] == '&' && tmp[i + 1] == '&')
 			|| (tmp[i] == '|' && tmp[i + 1] == '|'))
 		{
-			break;
+			break ;
 		}
 		i++;
 	}
@@ -250,6 +250,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 	exit_code = 0;
 	while (1 && is_novoid_line(data.line))
 	{
+		init_signal_in_cmd();
 		if (!data.lst)
 			get_tokens(&data);
 		if (!cmd)
