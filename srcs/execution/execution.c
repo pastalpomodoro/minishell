@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 16:53:51 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:34:49 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,7 +239,14 @@ int	is_novoid_line(char *line)
 	}
 	return (0);
 }
-
+int is_and_or_error(t_tkn_lst *node, char *line)
+{
+	while (node && node->next)
+		node = node->next;
+	if (node && node->token == T_AND_OR && line[1] == '|')
+		return (ft_printf("Minishell: syntax error near unexpected token `|'"), 1);
+	return (0);
+}
 int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
 	int			exit_code;

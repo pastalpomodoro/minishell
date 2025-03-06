@@ -6,11 +6,13 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 15:15:08 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:03:33 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+extern int	g_error_value;
 
 t_commande	*cmd_init(void)
 {
@@ -61,7 +63,6 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 {
 	t_commande	*cmd;
 	t_commande	*init;
-	t_tkn_lst	*next;
 	int			i;
 
 	cmd = cmd_init();
@@ -71,15 +72,15 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 	init = cmd;
 	while (node && node->token != T_AND_OR)
 	{
-		next = node->next;
 		if (is_cmd(&cmd, node, env, &i) == 0)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_redir(&cmd, &node) == 0)
 			return (free_cmd(&init, NULL), NULL);
-		else if (is_pipe(&cmd, next, node, &i) == 0)
+		else if (is_pipe(&cmd, node->next, node, &i) == 0)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_parentesys(&cmd, node) == 0)
 			return (free_cmd(&init, NULL), NULL);
+		g_error_value = cmd->exit_code;
 		if (node)
 			node = node->next;
 	}

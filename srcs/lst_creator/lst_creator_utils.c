@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/05 15:35:59 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:56:19 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	is_redir(t_commande **cmd, t_tkn_lst **node)
 {
 	if ((*node)->token == T_REDIRECT && (*cmd)->exit_code == 0)
 	{
-		if (redirect(*node, cmd) < 0)
+		if (redirect(*node, cmd) < -1)
 			return (0);
 		(*node) = (*node)->next;
 	}

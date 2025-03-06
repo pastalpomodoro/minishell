@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 14:29:31 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:56:11 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,10 @@ int	double_in(t_tkn_lst *node, t_commande **cmd)
 	next = node->next;
 	if (node->next == NULL)
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -1);
+unexpected token `newline'\n"), -2);
 	if (next->token != T_LITERAL)
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -1);
+unexpected token `%s'\n", next->value), -2);
 	if (pipe(pipe_fd) == -1)
 		return (-2);
 	while (1)
@@ -51,15 +51,16 @@ int	simple_in(t_tkn_lst *node, t_commande **cmd)
 	next = node->next;
 	if (node->next == NULL || (!ft_strcmp(next->value, ">") && next->next == NULL))
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -1);
+unexpected token `newline'\n"), -2);
 	if (next->token != T_LITERAL)
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -1);
+unexpected token `%s'\n", next->value), -2);
 	fd = open(next->value, O_RDONLY);
 	if (fd < 0)
 	{
 		(*cmd)->exit_code = 1;
 		ft_printf("minishell: %s: No such file or directory\n", next->value);
+		printf("%d\n", fd);
 	}
 	return (fd);
 }
@@ -71,10 +72,10 @@ int	out(t_tkn_lst *node, t_commande **cmd, int type)
 	next = node->next;
 	if (next == NULL || (type == 1 && next->token == T_PIPE))
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -1);
+unexpected token `newline'\n"), -2);
 	if (next->token != T_LITERAL)
 		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -1);
+unexpected token `%s'\n", next->value), -2);
 	if (type == 1)
 		(*cmd)->fd_out = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	else if (type == 2)

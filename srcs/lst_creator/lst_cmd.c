@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_cmd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 17:24:11 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:06:12 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,14 @@ int	t_redirect(t_tkn_lst **node)
 int	che_pas(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
+	int i;
 
+	i = -1;
+	while (i++, node->value[i])
+	{
+		if (node->value[i] == '/')
+			return (ft_printf("minishell: %s: Is a directory\n", node->value), -1);
+	}
 	path = get_path(node->value, env, cmd);
 	if (!path)
 		return (-2);
