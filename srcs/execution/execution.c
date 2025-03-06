@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 13:26:51 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:34:42 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	if_statement(t_commande *cmd, t_data *data)
 		g_error_value = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
 		g_error_value = ft_pwd();
-	if (!ft_strcmp(cmd->cmd[0], "exit"))
+	if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->next)
 	{
 		if (cmd->cmd[1])
 			ft_exit(ft_atoi(cmd->cmd[1]), data);
@@ -126,7 +126,7 @@ int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
 		close(cmd->fd_out);
 	}
 	if (execve(cmd->path, cmd->cmd, env) == -1)
-		exit(0);
+		exit(1);
 	exit (0);
 }
 
@@ -202,6 +202,28 @@ void	skip_par(char **line, int n)
 	free(tmp);
 	*line = new;
 }
+void skip_for_and_or(char **line)
+{
+	char *tmp;
+	char *new;
+	int i;
+
+	i = 0;
+	tmp = *line;
+	while (tmp[i])
+	{
+		if ((tmp[i] == '&' && tmp[i + 1] == '&')
+			|| (tmp[i] == '|' && tmp[i + 1] == '|'))
+		{
+			break;
+		}
+		i++;
+	}
+	// printf("%s\n", *line);
+	new = ft_strdup(&tmp[i]);
+	free(*line);
+	*line = new;
+}
 
 int	is_novoid_line(char *line)
 {
@@ -256,7 +278,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		if (l && ((l->value[0] == '&' && exit_code != 0) || (l->value[0] == '|' && exit_code == 0)) && data.line[1] == '(')
 			skip_par(&data.line, 1);
 		else if ((l && l->value[0] == '&' && exit_code != 0) || (l && l->value[0] == '|' && exit_code == 0))
-			break ;
+			skip_for_and_or(&data.line);
 		tkn_lst_clear(&data.lst);
 		if (!data.and_or)
 			break ;
