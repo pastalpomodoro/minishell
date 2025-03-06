@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/05 19:26:38 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 13:26:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,13 @@ void	if_statement(t_commande *cmd, t_data *data)
 {
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
 		g_error_value = ft_echo(cmd->cmd);
-	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1])
-		g_error_value = ft_export(cmd->cmd[1], &data->env);
+	else if (!ft_strcmp(cmd->cmd[0], "export"))
+	{
+		if (cmd->cmd[1])
+			g_error_value = ft_export(cmd->cmd[1], &data->env);
+		else
+			g_error_value = ft_export(NULL, &data->env);
+	}
 	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
 		g_error_value = ft_cd(cmd->cmd[1], data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
