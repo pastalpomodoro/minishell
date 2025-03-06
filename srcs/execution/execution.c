@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 15:40:28 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:46:11 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,6 @@ int	exec_manage(t_commande *cmd, t_data *data, char **env)
 			cmd = next;
 	}
 	return (g_error_value);
-	printf("%s", env[0]);
 }
 
 void	skip_par(char **line, int n)
@@ -256,7 +255,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		if (!cmd)
 			cmd = creator(data.lst, data.env);
 		if (cmd)
-			exit_code = cmd->exit_code;
+			g_error_value = cmd->exit_code;
 		if (cmd && cmd->token == T_OPAR)
 		{
 			tmp = cmd;
@@ -267,17 +266,17 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 				and_or_exec(cmd, data, env, p + 1);
 			wait(&status);
 			skip_par(&data.line, 0);
-			exit_code = status;
+			g_error_value = status;
 		}
 		else if (cmd)
-			exit_code = exec_manage(cmd, &data, env);
+			g_error_value = exec_manage(cmd, &data, env);
 		free_cmd(&cmd, &data);
 		l = data.lst;
 		while (l && l->next)
 			l = l->next;
-		if (l && ((l->value[0] == '&' && exit_code != 0) || (l->value[0] == '|' && exit_code == 0)) && data.line[1] == '(')
+		if (l && ((l->value[0] == '&' && g_error_value != 0) || (l->value[0] == '|' && g_error_value == 0)) && data.line[1] == '(')
 			skip_par(&data.line, 1);
-		else if ((l && l->value[0] == '&' && exit_code != 0) || (l && l->value[0] == '|' && exit_code == 0))
+		else if ((l && l->value[0] == '&' && g_error_value != 0) || (l && l->value[0] == '|' && g_error_value == 0))
 			skip_for_and_or(&data.line);
 		tkn_lst_clear(&data.lst);
 		if (!data.and_or)
@@ -291,7 +290,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 	{
 		if (data.env)
 			free_env(data.env);
-		exit(exit_code);
+		exit(g_error_value);
 	}
 	return (1);
 }
