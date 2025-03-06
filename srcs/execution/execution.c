@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 16:52:42 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:53:51 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,7 @@ void	skip_par(char **line, int n)
 	free(tmp);
 	*line = new;
 }
+
 void	skip_for_and_or(char **line)
 {
 	char	*tmp;
