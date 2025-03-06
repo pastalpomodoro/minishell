@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 18:44:48 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:16:55 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,33 +19,12 @@ static bool	is_eof(char *line)
 	return (TRUE);
 }
 
-// TODO: lst with error and $ to display err mesg
-static bool	is_single_dollar_sign(char *line)
-{
-	while (ft_isspace(*line))
-		line++;
-	if (!(*line))
-		return (FALSE);
-	if (*line == '$')
-		line++;
-	while (ft_isspace(*line))
-		line++;
-	if (*line)
-		return (FALSE);
-	return (TRUE);
-}
-
 static bool	no_need_token(t_data *data)
 {
 	if (is_eof(data->line))
 		return (TRUE);
 	if (*data->line == '\0')
 		return (TRUE);
-	if (is_single_dollar_sign(data->line))
-	{
-		data->lst = new_token(ft_strdup("$"), ERROR);
-		return (TRUE);
-	}
 	return (FALSE);
 }
 

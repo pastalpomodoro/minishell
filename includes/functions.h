@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 18:50:04 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:22:54 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ char		*replace_vars(t_env *env, char *str);
 char		*handle_regular_char(char *res, char **line);
 //			search_env.c
 char		*search_env(t_env *env, char *str);
+int			is_valid_input(char c, int first);
 
 /*****************************/
 /********   TOKENS    ********/
