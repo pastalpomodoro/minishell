@@ -249,13 +249,11 @@ int is_and_or_error(t_tkn_lst *node, char *line)
 }
 int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
-	int			exit_code;
 	int			status;
 	int			pid;
 	t_commande	*tmp;
 	t_tkn_lst	*l;
 
-	exit_code = 0;
 	while (1 && is_novoid_line(data.line))
 	{
 		init_signal_in_cmd();
