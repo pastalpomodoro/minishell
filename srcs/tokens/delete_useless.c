@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 18:45:05 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 14:45:36 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 19:39:44 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	check_quote(char *in_quote, char *line, int i)
 {
-	if (*in_quote && line[i - 1] == *in_quote)
+	if (*in_quote != 0 && line[i] == *in_quote)
 		*in_quote = 0;
 	else if ((line[i] == '\'' && line[i + 1] != '\'')
 		|| (line[i] == '\"' && line[i + 1] != '\"'))
@@ -54,10 +54,10 @@ static int	check_special_cases(char *line, int *i, char **res, char *in_quote)
 	if (line[*i])
 	{
 		if (*in_quote == 0 && line[*i] == ':' && (ft_isspace(line[*i + 1])
-				|| !line[*i + 1]))
+				|| !line[*i + 1]) && (*i - 1 < 0 || ft_isspace(line[*i - 1])))
 			(*i)++;
 		else if (*in_quote == 0 && line[*i] == '.' && (ft_isspace(line[*i + 1])
-				|| !line[*i + 1]))
+				|| !line[*i + 1]) && (*i - 1 < 0 || ft_isspace(line[*i - 1])))
 			(*i)++;
 	}
 	check_quote(in_quote, line, *i);
@@ -87,6 +87,7 @@ char	*delete_useless(char *line)
 			res = ft_strjoin_char(res, line[i]);
 			if (res == NULL)
 				return (free(line), NULL);
+			check_quote(&in_quote, line, i);
 			i++;
 		}
 	}
