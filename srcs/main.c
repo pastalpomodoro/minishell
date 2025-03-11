@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 14:48:47 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:11:40 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	show_token(t_tkn_lst *tmp)
 
 int	main(int argc, char **argv, char **env)
 {
-	char		*input;
 	t_data		data;
 
 	(void) argv;
@@ -48,7 +47,6 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
-		// input = ft_strdup("./.");
 		input = readline("Minishell> ");
 		add_history(input);
 		data.line = input;

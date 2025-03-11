@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 13:39:36 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:50:13 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:32:02 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static void	handle_signal_in_cmd(int sig)
 	}
 	if (sig == SIGQUIT)
 	{
-		ft_printf("Quit\n");
+		ft_printf("Quit (Core dumped)\n");
 		rl_replace_line("", 0);
 		rl_on_new_line();
 		g_error_value = 131;
