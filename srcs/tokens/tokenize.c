@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/14 17:34:50 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 15:52:25 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:29:59 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,8 @@ static int	check_line(t_data *data)
 	if (data->line == NULL)
 		return (1);
 	data->line = delete_useless(data->line);
+	if (data->line == NULL)
+		return (1);
 	return (0);
 }
 

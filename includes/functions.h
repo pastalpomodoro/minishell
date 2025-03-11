@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 13:33:09 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:54:25 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ void		tkn_add_back(t_tkn_lst **lst, t_tkn_lst *token);
 void		tkn_lst_clear(t_tkn_lst **lst);
 //			get_wildcard.c
 char		*get_wildcard(char *value);
+//			check_wildcards.c
+int			check_wildcards(char *value, t_data *data);
 
 /*****************************/
 /******** LST_CREATOR ********/

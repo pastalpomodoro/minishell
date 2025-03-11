@@ -16,6 +16,7 @@ SRCS_NAMES = main.c \
 			 tokens/delete_useless.c \
 			 tokens/add_token.c \
 			 tokens/tkn_lst.c \
+			 tokens/check_wildcards.c \
 			 tokens/get_wildcard.c \
 			 env/env_creator.c \
 			 env/replace_var.c \

@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 13:48:12 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 15:45:05 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,6 +229,8 @@ int	is_novoid_line(char *line)
 	int	i;
 
 	i = 0;
+	if (line == NULL)
+		return (0);
 	while (line[i])
 	{
 		if (line[i] != 32 && line[i] != 9 && line[i] != 10
