@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 16:13:08 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:30:20 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,33 +55,13 @@ int	t_redirect(t_tkn_lst **node)
 	}
 	return (1);
 }
-// int check_dir(t_tkn_lst *node)
-// {
-// 	int i;
 
-// 	i = 0;
-// 	if (!ft_strncmp(node->value, "./", 2))
-// 		i++;
-// 	while (node->value[i])
-// 	{
-// 		if ((ft_strncmp(&node->value[i], "./", 2) && ft_strlen(&node->value[i]) > 4 && node->value[i + 4] != '/')
-// 		|| (node->value[i] == '/' && ft_strlen(&node->value[i]) > 3 && node->value[i + 3] != '/'))
-// 			break;
-		
-// 	}
-// }
 int	exist_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
 	int		i;
 
 	i = -1;
-	while (i++, ft_strncmp(node->value, "./", 2) && node->value[i])
-	{
-		if (node->value[i] == '/')
-			return (ft_printf("minishell: %s: \
-Is a directory\n", node->value), -1);
-	}
 	path = get_path(node->value, env, cmd);
 	if (!path)
 		return (-2);

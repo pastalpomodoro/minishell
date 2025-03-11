@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 14:30:31 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:32:04 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,25 @@ char	*ft_strjoin_char(char *s1, char ch)
 
 //return NULL si probleme de malloc
 //return malloc(1) s'il ne trouve pas le path
+int check_dir(char *value)
+{
+	int i;
 
+	i = 0;
+	if (!ft_strncmp(value, "./", 2))
+		i++;
+	while (value[i])
+	{
+		if (value[i] == '/' && ft_strlen(&value[i]) > 3 && value[i + 3] == '/')
+			i += 2;
+		else if (value[i] == '/' && ft_strlen(&value[i]) > 3 && value[i + 3] != '/')
+			return (0);
+		i++;
+	}
+	printf("minishell: %s: Is a directory\n", value);
+	return (1);
+}
+//
 char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 {
 	char	**all_path;
@@ -73,6 +91,8 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	i = -1;
 	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
 	{
+		if (check_dir(c))
+			return ((*lst_cmd)->exit_code = 126, NULL);
 		if (access(c, F_OK) != 0)
 			return ((*lst_cmd)->exit_code = 127, printf("minishell: %s: No such file or directory\n", c), NULL);
 		if (access(c, X_OK) != 0)
