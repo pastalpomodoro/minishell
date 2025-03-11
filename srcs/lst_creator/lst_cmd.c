@@ -6,11 +6,13 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/08 16:20:50 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:15:32 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+extern int	g_error_value;
 
 int	size_tab(t_tkn_lst *node)
 {
@@ -90,7 +92,7 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 
 	tmp = che_pas(cmd, node, env);
 	if (tmp < 0)
-		return (tmp);
+		return (g_error_value = (*cmd)->exit_code, tmp);
 	utils = malloc(sizeof(char *) * (size_tab(node) + 1));
 	if (!utils)
 		return (-2);

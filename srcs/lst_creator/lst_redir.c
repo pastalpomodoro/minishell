@@ -6,11 +6,13 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 17:56:11 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:20:38 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+extern int	g_error_value;
 
 int	double_in(t_tkn_lst *node, t_commande **cmd)
 {
@@ -60,7 +62,6 @@ unexpected token `%s'\n", next->value), -2);
 	{
 		(*cmd)->exit_code = 1;
 		ft_printf("minishell: %s: No such file or directory\n", next->value);
-		printf("%d\n", fd);
 	}
 	return (fd);
 }
@@ -104,5 +105,6 @@ int	redirect(t_tkn_lst *node, t_commande **cmd)
 		close((*cmd)->infile);
 	if (i < 3)
 		(*cmd)->infile = fd;
+	g_error_value = (*cmd)->exit_code;
 	return (fd);
 }
