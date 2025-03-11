@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 11:20:38 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:55:41 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ unexpected token `%s'\n", next->value), -2);
 		line = readline("> ");
 		if (!line)
 			break ;
+		else if (line[0] == 0)
+			return ((*cmd)->exit_code = 2, free(line), close(pipe_fd[1]), ft_printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", next->value), pipe_fd[0]);
 		else if (ft_strcmp(line, next->value) == 0)
 			break ;
 		write(pipe_fd[1], line, ft_strlen(line));

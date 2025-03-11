@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 11:35:09 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:48:12 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,13 @@ void	if_statement(t_commande *cmd, t_data *data)
 		g_error_value = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
 		g_error_value = ft_pwd();
+	if (!ft_strcmp(cmd->cmd[0], "exit"))
+	{
+		if (cmd->cmd[1])
+			g_error_value = ft_atoi(cmd->cmd[1]);
+		else
+			g_error_value = 0;
+	}
 }
 
 int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2],
@@ -152,7 +159,7 @@ int	exec_manage(t_commande *cmd, t_data *data, char **env)
 {
 	t_commande	*next;
 
-	while (cmd)
+	while (cmd && !(g_error_value == 130 || g_error_value == 131))
 	{
 		g_error_value = cmd->exit_code;
 		next = cmd->next;
@@ -212,7 +219,6 @@ void	skip_for_and_or(char **line)
 		}
 		i++;
 	}
-	// printf("%s\n", *line);
 	new = ft_strdup(&tmp[i]);
 	free(*line);
 	*line = new;
@@ -232,14 +238,17 @@ int	is_novoid_line(char *line)
 	}
 	return (0);
 }
-int is_and_or_error(t_tkn_lst *node, char *line)
+
+int	is_and_or_error(t_tkn_lst *node, char *line)
 {
 	while (node && node->next)
 		node = node->next;
 	if (node && node->token == T_AND_OR && line[1] == '|')
-		return (ft_printf("Minishell: syntax error near unexpected token `|'"), 1);
+		return (ft_printf("Minishell: syntax error near \
+unexpected token `|'"), 1);
 	return (0);
 }
+
 int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 {
 	int			status;
@@ -252,6 +261,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 		init_signal_in_cmd();
 		if (!data.lst)
 			get_tokens(&data);
+		show_token(data.lst);
 		if (!cmd)
 			cmd = creator(data.lst, data.env);
 		if (cmd && cmd->cmd)
@@ -261,7 +271,6 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 				ft_exit(1, &data, &cmd);
 			else if (!ft_strcmp(cmd->cmd[0], "exit") && !cmd->next)
 				ft_exit(0, &data, &cmd);
-			
 		}
 		if (cmd && cmd->token == T_OPAR)
 		{

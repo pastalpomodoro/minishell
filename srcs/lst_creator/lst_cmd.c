@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 11:38:26 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 13:30:30 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,13 +59,14 @@ int	t_redirect(t_tkn_lst **node)
 int	che_pas(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
-	int i;
+	int		i;
 
 	i = -1;
 	while (ft_strncmp(node->value, "./", 2) && i++, node->value[i])
 	{
 		if (node->value[i] == '/')
-			return (ft_printf("minishell: %s: Is a directory\n", node->value), -1);
+			return (ft_printf("minishell: %s: \
+Is a directory\n", node->value), -1);
 	}
 	path = get_path(node->value, env, cmd);
 	if (!path)
