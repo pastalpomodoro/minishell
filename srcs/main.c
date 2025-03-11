@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 16:11:40 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:12:53 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,9 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
-		input = readline("Minishell> ");
-		add_history(input);
-		data.line = input;
-		if (input == NULL)
+		data.line = readline("Minishell> ");
+		add_history(data.line);
+		if (data.line == NULL)
 			ft_exit(g_error_value, &data, NULL);
 		and_or_exec(NULL, data, env, 0);
 	}
