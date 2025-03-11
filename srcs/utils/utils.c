@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/04 14:35:28 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:30:31 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
 	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
 	{
 		if (access(c, F_OK) != 0)
-			return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
-		if (access(c, F_OK) != 0)
-			return ((*lst_cmd)->exit_code = 126, ft_strdup(""));
+			return ((*lst_cmd)->exit_code = 127, printf("minishell: %s: No such file or directory\n", c), NULL);
+		if (access(c, X_OK) != 0)
+			return ((*lst_cmd)->exit_code = 126, printf("minishell: %s: Permission denied\n", c), NULL);
 		else
 			return ((*lst_cmd)->exit_code = 0, ft_strdup(c));
 	}

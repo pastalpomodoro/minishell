@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 18:03:33 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:51:03 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_parentesys(&cmd, node) == 0)
 			return (free_cmd(&init, NULL), NULL);
-		g_error_value = cmd->exit_code;
+		// g_error_value = cmd->exit_code;
 		if (node)
 			node = node->next;
 	}

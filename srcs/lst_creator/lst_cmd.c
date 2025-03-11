@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 13:30:30 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 16:08:28 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,28 @@ int	t_redirect(t_tkn_lst **node)
 	}
 	return (1);
 }
+int check_dir(t_tkn_lst *node)
+{
+	int i;
 
-int	che_pas(t_commande **cmd, t_tkn_lst *node, t_env *env)
+	i = 0;
+	if (!ft_strncmp(node->value, "./", 2))
+		i++;
+	while (node->value[i])
+	{
+		if ((ft_strncmp(&node->value[i], "./", 2) && ft_strlen(&node->value[i]) > 4 && node->value[i + 4] != '/')
+		|| (node->value[i] == '/' && ft_strlen(&node->value[i]) > 3 && node->value[i + 3] != '/'))
+			break;
+		
+	}
+}
+int	exist_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
 	int		i;
 
 	i = -1;
-	while (ft_strncmp(node->value, "./", 2) && i++, node->value[i])
+	while (i++, ft_strncmp(node->value, "./", 2) && node->value[i])
 	{
 		if (node->value[i] == '/')
 			return (ft_printf("minishell: %s: \
@@ -91,7 +105,7 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 	char	**utils;
 	int		i;
 
-	tmp = che_pas(cmd, node, env);
+	tmp = exist_cmd(cmd, node, env);
 	if (tmp < 0)
 		return (g_error_value = (*cmd)->exit_code, tmp);
 	utils = malloc(sizeof(char *) * (size_tab(node) + 1));

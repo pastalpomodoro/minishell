@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 13:55:41 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 14:53:29 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,12 @@ int	redirect(t_tkn_lst *node, t_commande **cmd)
 		fd = out(node, cmd, 1);
 	else if (i++, ft_strcmp(node->value, ">>") == 0)
 		fd = out(node, cmd, 2);
+	g_error_value = (*cmd)->exit_code;
 	if (fd < 0)
 		return (fd);
 	if (i < 3 && (*cmd)->infile > 2)
 		close((*cmd)->infile);
 	if (i < 3)
 		(*cmd)->infile = fd;
-	g_error_value = (*cmd)->exit_code;
 	return (fd);
 }
