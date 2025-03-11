@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 10:49:47 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:27:50 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,6 @@ void	if_statement(t_commande *cmd, t_data *data)
 		g_error_value = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
 		g_error_value = ft_pwd();
-	// if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->next)
-	// {
-	// 	if (cmd->cmd[1])
-	// 		ft_exit(ft_atoi(cmd->cmd[1]), data);
-	// 	else
-	// 		ft_exit(0, data);
-	// }
 }
 
 int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2],
@@ -109,7 +102,7 @@ int	my_execve(t_commande *cmd, t_commande *next, t_data *data)
 int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
 {
 	close(pipe_fd[0]);
-	if (cmd->fd_out < 3 && next && next->cmd)
+	if (cmd->fd_out < 3 && next && (next->cmd || next->exit_code > 0))
 		cmd->fd_out = pipe_fd[1];
 	else
 		close(pipe_fd[1]);
@@ -144,7 +137,7 @@ int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
 	else if (pid == 0)
 		exec(cmd, next, env, pipe_fd);
 	wait(&status);
-	if (next && next->cmd && next->infile <= 2)
+	if (next && (next->cmd || next->exit_code > 0) && next->infile <= 2)
 		next->infile = pipe_fd[0];
 	else
 		close(pipe_fd[0]);
@@ -263,6 +256,7 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 			cmd = creator(data.lst, data.env);
 		if (cmd && cmd->cmd)
 		{
+			show_cmds(cmd);
 			g_error_value = cmd->exit_code;
 			if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->cmd[1] && cmd->cmd[1][0] == '1' && !cmd->next)
 				ft_exit(1, &data, &cmd);

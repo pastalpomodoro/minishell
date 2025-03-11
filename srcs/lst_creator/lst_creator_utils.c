@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 17:56:19 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 11:23:57 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	is_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env, int *i)
 {
 	if (node && node->token == T_LITERAL && *i == 0 && (*cmd)->exit_code == 0)
 	{
-		if (cmd_creator(node, cmd, env) < 0)
+		if (cmd_creator(node, cmd, env) < -1)
 			return (0);
 		*i = 1;
 	}
