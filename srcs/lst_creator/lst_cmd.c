@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 18:06:12 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/08 16:20:50 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	che_pas(t_commande **cmd, t_tkn_lst *node, t_env *env)
 	int i;
 
 	i = -1;
-	while (i++, node->value[i])
+	while (ft_strncmp(node->value, "./", 2) && i++, node->value[i])
 	{
 		if (node->value[i] == '/')
 			return (ft_printf("minishell: %s: Is a directory\n", node->value), -1);

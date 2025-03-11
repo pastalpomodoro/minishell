@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/06 17:34:49 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:49:47 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,13 @@ void	if_statement(t_commande *cmd, t_data *data)
 		g_error_value = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
 		g_error_value = ft_pwd();
-	if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->next)
-	{
-		if (cmd->cmd[1])
-			ft_exit(ft_atoi(cmd->cmd[1]), data);
-		else
-			ft_exit(0, data);
-	}
+	// if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->next)
+	// {
+	// 	if (cmd->cmd[1])
+	// 		ft_exit(ft_atoi(cmd->cmd[1]), data);
+	// 	else
+	// 		ft_exit(0, data);
+	// }
 }
 
 int	pipe_settings(t_commande **cmd, t_commande **next, int pipe_fd[2],
@@ -261,8 +261,15 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 			get_tokens(&data);
 		if (!cmd)
 			cmd = creator(data.lst, data.env);
-		if (cmd)
+		if (cmd && cmd->cmd)
+		{
 			g_error_value = cmd->exit_code;
+			if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->cmd[1] && cmd->cmd[1][0] == '1' && !cmd->next)
+				ft_exit(1, &data, &cmd);
+			else if (!ft_strcmp(cmd->cmd[0], "exit") && !cmd->next)
+				ft_exit(0, &data, &cmd);
+			
+		}
 		if (cmd && cmd->token == T_OPAR)
 		{
 			tmp = cmd;

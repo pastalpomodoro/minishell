@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 15:38:35 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:40:09 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	main(int argc, char **argv, char **env)
 		add_history(input);
 		data.line = input;
 		if (input == NULL)
-			ft_exit(g_error_value, &data);
+			ft_exit(g_error_value, &data, NULL);
 		and_or_exec(NULL, data, env, 0);
 	}
 	free_env(data.env);
