@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 15:15:20 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:27:15 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,21 @@ identifiant non valable\n", cmd), 1);
 		return (env_add_last(env, init_env(cmd)));
 }
 
-static void	delete_node(t_env *to_delete, t_env *init)
+static void	delete_node(t_env *to_delete, t_env **init)
 {
 	t_env	*tmp;
 
-	while (ft_strcmp(init->next->content, to_delete->content))
-		init = init->next;
-	tmp = to_delete->next;
+	if ((*init)->next != NULL)
+	{
+		while (ft_strcmp((*init)->next->content, to_delete->content))
+			*init = (*init)->next;
+		tmp = to_delete->next;
+		(*init)->next = tmp;
+	}
+	else
+		*init = NULL;
 	free(to_delete->content);
 	free(to_delete);
-	init->next = tmp;
 }
 
 int	ft_unset(char *cmd, t_env **env)
@@ -91,7 +96,7 @@ int	ft_unset(char *cmd, t_env **env)
 		while (tmp)
 		{
 			if (!ft_strncmp(cmd, tmp->content, ft_strlen(cmd)))
-				return (delete_node(tmp, *env), 0);
+				return (delete_node(tmp, env), 0);
 			tmp = tmp->next;
 		}
 	}

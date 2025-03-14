@@ -6,12 +6,14 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 15:00:12 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:21:28 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-extern int g_error_value;
+
+extern int	g_error_value;
+
 int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 {
 	if (node && node->token == T_PIPE)
@@ -21,7 +23,8 @@ int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 				("minishell: syntax error near unexpected token `|'\n"), 0);
 		else if (next->token != T_LITERAL && next->token != T_REDIRECT)
 			return (g_error_value = 2, ft_printf
-				("minishell: syntax error near unexpected token `%s'\n", next->value), 0);
+				("minishell: syntax error near unexpected\
+token `%s'\n", next->value), 0);
 		(*cmd)->next = cmd_init();
 		if (!(*cmd)->next)
 			return (0);

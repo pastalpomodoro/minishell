@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 15:54:25 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:02:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@
 # include <dirent.h>
 # include <errno.h>
 
-int					show_token(t_tkn_lst *tmp);
 /*****************************/
 /********   CMDS    **********/
 /*****************************/
@@ -121,7 +120,7 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /*****************************/
 //			execution.c
 int			exec_manage(t_commande *cmd, t_data *data, char **env);
-int			and_or_exec(t_commande *cmd, t_data data, char **env, int p);
+int			and_or_exec(t_commande *cmd, t_data *data, char **env, int p);
 
 /*****************************/
 /*********    SIG    *********/

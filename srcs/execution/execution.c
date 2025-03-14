@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 19:35:15 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:13:58 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ int	my_execve(t_commande *cmd, t_commande *next, t_data *data)
 		close(save);
 	}
 	return (1);
-	printf("%s%d", data->env->content, g_error_value);
 }
 
 int	exec(t_commande *cmd, t_commande *next, char **env, int *pipe_fd)
@@ -241,28 +240,27 @@ int	is_novoid_line(char *line)
 	return (0);
 }
 
-int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
+int	and_or_exec(t_commande *cmd, t_data *data, char **env, int p)
 {
 	int			status;
 	int			pid;
 	t_commande	*tmp;
 	t_tkn_lst	*l;
 
-	while (1 && is_novoid_line(data.line))
+	while (1 && is_novoid_line(data->line))
 	{
 		init_signal_in_cmd();
-		if (!data.lst)
-			get_tokens(&data);
-		// show_token(data.lst);
+		if (!data->lst)
+			get_tokens(data);
 		if (!cmd)
-			cmd = creator(data.lst, data.env);
+			cmd = creator(data->lst, data->env);
 		if (cmd && cmd->cmd)
 		{
 			g_error_value = cmd->exit_code;
 			if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->cmd[1] && cmd->cmd[1][0] == '1' && !cmd->next)
-				ft_exit(1, &data, &cmd);
+				ft_exit(1, data, &cmd);
 			else if (!ft_strcmp(cmd->cmd[0], "exit") && !cmd->next)
-				ft_exit(0, &data, &cmd);
+				ft_exit(0, data, &cmd);
 		}
 		if (cmd && cmd->token == T_OPAR)
 		{
@@ -273,31 +271,31 @@ int	and_or_exec(t_commande *cmd, t_data data, char **env, int p)
 			if (pid == 0)
 				and_or_exec(cmd, data, env, p + 1);
 			wait(&status);
-			skip_par(&data.line, 0);
+			skip_par(&data->line, 0);
 			g_error_value = status;
 		}
 		else if (cmd)
-			g_error_value = exec_manage(cmd, &data, env);
-		free_cmd(&cmd, &data);
-		l = data.lst;
+			g_error_value = exec_manage(cmd, data, env);
+		free_cmd(&cmd, data);
+		l = data->lst;
 		while (l && l->next)
 			l = l->next;
-		if (l && ((l->value[0] == '&' && g_error_value != 0) || (l->value[0] == '|' && g_error_value == 0)) && data.line[1] == '(')
-			skip_par(&data.line, 1);
+		if (l && ((l->value[0] == '&' && g_error_value != 0) || (l->value[0] == '|' && g_error_value == 0)) && data->line[1] == '(')
+			skip_par(&data->line, 1);
 		else if ((l && l->value[0] == '&' && g_error_value != 0) || (l && l->value[0] == '|' && g_error_value == 0))
-			skip_for_and_or(&data.line);
-		tkn_lst_clear(&data.lst);
-		if (!data.and_or)
+			skip_for_and_or(&data->line);
+		tkn_lst_clear(&data->lst);
+		if (!data->and_or)
 			break ;
 	}
-	if (data.line)
-		free(data.line);
-	if (data.lst)
-		tkn_lst_clear(&data.lst);
+	if (data->line)
+		free(data->line);
+	if (data->lst)
+		tkn_lst_clear(&data->lst);
 	if (p > 0)
 	{
-		if (data.env)
-			free_env(data.env);
+		if (data->env)
+			free_env(data->env);
 		exit(g_error_value);
 	}
 	return (1);

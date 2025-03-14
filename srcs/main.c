@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:17:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 16:32:22 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/14 14:18:09 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,12 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
-		// data.line = ft_strdup("/../..");
+		/*data.line = ft_strdup("export a=prout");*/
 		data.line = readline("Minishell> ");
 		add_history(data.line);
 		if (data.line == NULL)
 			ft_exit(g_error_value, &data, NULL);
-		and_or_exec(NULL, data, env, 0);
+		and_or_exec(NULL, &data, env, 0);
 	}
 	free_env(data.env);
 	if (data.line)
