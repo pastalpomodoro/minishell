@@ -21,11 +21,15 @@ t_commande	*cmd_init(void)
 	cmd = malloc(sizeof(t_commande));
 	if (!cmd)
 		return (NULL);
+	cmd->pipe_fd = malloc(sizeof(int) * 2);
+	if (!cmd->pipe_fd)
+		return(free(cmd), NULL);
 	cmd->token = T_NULL;
 	cmd->cmd = NULL;
 	cmd->path = NULL;
 	cmd->next = NULL;
 	cmd->fd_out = 1;
+	cmd->pid = -1;
 	cmd->cmd_type = 0;
 	cmd->infile = 0;
 	cmd->exit_code = 0;
@@ -42,6 +46,8 @@ void	free_cmd_node(t_commande **cmd)
 		free((*cmd)->path);
 	if ((*cmd)->cmd)
 		free_double_tab((*cmd)->cmd);
+	if ((*cmd)->pipe_fd)
+		free((*cmd)->pipe_fd);
 	free((*cmd));
 }
 

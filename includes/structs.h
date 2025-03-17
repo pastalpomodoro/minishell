@@ -23,6 +23,8 @@ typedef struct s_env
 
 typedef struct s_commande
 {
+	int					pid;
+	int					*pipe_fd;
 	int					exit_code;
 	int					infile;
 	int					fd_out;

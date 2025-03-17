@@ -1,0 +1,47 @@
+		if (cmd->path)
+			ft_printf("PATH: %s\n", cmd->path);
+		if (cmd->cmd)
+			while (i++, cmd->cmd[i])
+				ft_printf("CMD: %s\n", cmd->cmd[i]);
+		ft_printf("CMD_TYPE: %d\nINFILE: %d\n", cmd->cmd_type, cmd->infile);
+		ft_printf("EXIT_CODE: %d\n", cmd->exit_code);
+		cmd = cmd->next;
+	if (!ft_strcmp(cmd->cmd[0], "echo"))
+		g_error_value = ft_echo(cmd->cmd);
+	else if (!ft_strcmp(cmd->cmd[0], "export"))
+		if (cmd->cmd[1])
+			g_error_value = ft_export(cmd->cmd[1], &data->env);
+	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
+		g_error_value = ft_cd(cmd->cmd[1], data->env);
+	else if (!ft_strcmp(cmd->cmd[0], "env"))
+	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
+		g_error_value = ft_unset(cmd->cmd[1], &data->env);
+	if (!ft_strcmp(cmd->cmd[0], "pwd"))
+	if (!ft_strcmp(cmd->cmd[0], "exit"))
+		if (cmd->cmd[1])
+			g_error_value = ft_atoi(cmd->cmd[1]);
+	if (cmd->fd_out > 2)
+	if (cmd->fd_out < 3 && next && (next->cmd || next->exit_code > 0))
+		cmd->fd_out = pipe_fd[1];
+	if (cmd->infile > 2)
+		if (dup2(cmd->infile, STDIN_FILENO) == -1)
+		close(cmd->infile);
+	if (cmd->fd_out > 2)
+		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
+		close(cmd->fd_out);
+	if (execve(cmd->path, cmd->cmd, env) == -1)
+	if (cmd && cmd->fd_out > 2)
+		close(cmd->fd_out);
+	if (cmd && cmd->infile > 2)
+		close(cmd->infile);
+		g_error_value = cmd->exit_code;
+		next = cmd->next;
+		if (cmd && cmd->cmd)
+			if (cmd->exit_code == 0 && cmd->cmd_type == 2)
+			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
+		if (cmd && cmd->cmd)
+			g_error_value = cmd->exit_code;
+			if (!ft_strcmp(cmd->cmd[0], "exit") && cmd->cmd[1] && cmd->cmd[1][0] == '1' && !cmd->next)
+			else if (!ft_strcmp(cmd->cmd[0], "exit") && !cmd->next)
+		if (cmd && cmd->token == T_OPAR)
+			cmd = cmd->next;
