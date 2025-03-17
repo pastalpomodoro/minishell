@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/11 14:51:03 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:24:10 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ t_commande	*cmd_init(void)
 	cmd = malloc(sizeof(t_commande));
 	if (!cmd)
 		return (NULL);
+	cmd->pipe_fd = malloc(sizeof(int) * 2);
+	if (!cmd->pipe_fd)
+		return(free(cmd), NULL);
 	cmd->token = T_NULL;
 	cmd->cmd = NULL;
 	cmd->path = NULL;
@@ -42,6 +45,8 @@ void	free_cmd_node(t_commande **cmd)
 		free((*cmd)->path);
 	if ((*cmd)->cmd)
 		free_double_tab((*cmd)->cmd);
+	if ((*cmd)->pipe_fd)
+		free((*cmd)->pipe_fd);
 	free((*cmd));
 }
 
