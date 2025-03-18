@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/18 16:27:12 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:25:15 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,12 @@ int	exist_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env)
 	char	*path;
 
 	path = get_path(node->value, env, cmd);
+	printf("PATH: %s\n", path);
 	if (!path)
 		return (-2);
 	if (!ft_strlen(path) && !is_our_cmd(node->value))
 		return (ft_printf("minishell: %s: command not found\n", node->value),
-			free(path), -1);
+			(*cmd)->exit_code = 127, free(path), -1);
 	else if (!ft_strlen(path) && is_our_cmd(node->value))
 	{
 		(*cmd)->exit_code = 0;
