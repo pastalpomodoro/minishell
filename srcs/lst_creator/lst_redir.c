@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 19:43:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:43:58 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,22 +22,20 @@ int	double_in(t_tkn_lst *node, t_commande **cmd)
 
 	next = node->next;
 	if (node->next == NULL)
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -2);
+		return ((*cmd)->exit_code = 2, ft_printf(NL_ERROR), -2);
 	if (next->token != T_LITERAL)
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -2);
+		return ((*cmd)->exit_code = 2, ft_printf(T_ERROR, next->value), -2);
 	if (pipe(pipe_fd) == -1)
 		return (-2);
 	while (1)
 	{
 		line = readline("> ");
 		if (!line)
-			return ((*cmd)->exit_code = 2, free(line), close(pipe_fd[1]), ft_printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')\n", next->value), pipe_fd[0]);
+			return (free(line), close(pipe_fd[1]),
+				ft_printf(HDOC_ERROR, next->value), pipe_fd[0]);
 		else if (ft_strcmp(line, next->value) == 0)
 			break ;
-		write(pipe_fd[1], line, ft_strlen(line));
-		write(pipe_fd[1], "\n", 1);
+		(write(pipe_fd[1], line, ft_strlen(line)), write(pipe_fd[1], "\n", 1));
 		free(line);
 	}
 	free(line);
@@ -51,17 +49,16 @@ int	simple_in(t_tkn_lst *node, t_commande **cmd)
 	t_tkn_lst	*next;
 
 	next = node->next;
-	if (node->next == NULL || (!ft_strcmp(next->value, ">") && next->next == NULL))
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -2);
+	if (node->next == NULL || (!ft_strcmp(next->value, ">")
+			&& next->next == NULL))
+		return ((*cmd)->exit_code = 2, ft_printf(NL_ERROR), -2);
 	if (next->token != T_LITERAL)
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -2);
+		return ((*cmd)->exit_code = 2, ft_printf(T_ERROR, next->value), -2);
 	fd = open(next->value, O_RDONLY);
 	if (fd < 0)
 	{
 		(*cmd)->exit_code = 1;
-		ft_printf("minishell: %s: No such file or directory\n", next->value);
+		ft_printf(FILE_ERROR, next->value);
 	}
 	return (fd);
 }
@@ -72,11 +69,9 @@ int	out(t_tkn_lst *node, t_commande **cmd, int type)
 
 	next = node->next;
 	if (next == NULL || (type == 1 && next->token == T_PIPE))
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `newline'\n"), -2);
+		return ((*cmd)->exit_code = 2, ft_printf(NL_ERROR), -2);
 	if (next->token != T_LITERAL)
-		return ((*cmd)->exit_code = 2, ft_printf("minishell: syntax error near \
-unexpected token `%s'\n", next->value), -2);
+		return ((*cmd)->exit_code = 2, ft_printf(T_ERROR, next->value), -2);
 	if (type == 1)
 		(*cmd)->fd_out = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	else if (type == 2)

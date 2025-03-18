@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 18:45:05 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/11 19:39:44 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:03:08 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	check_export_quote(char *line, int *i, char **res)
 	return (0);
 }
 
-static bool	is_two_quote(char *line, int i)
+static bool	t2quote(char *line, int i)
 {
 	if (line[i] && line[i + 1] && ((line[i] == '\"' && line[i + 1] == '\"')
 			|| (line[i] == '\'' && line[i + 1] == '\'')))
@@ -77,10 +77,9 @@ char	*delete_useless(char *line)
 	{
 		if (check_special_cases(line, &i, &res, &in_quote))
 			return (free(line), NULL);
-		if (line[i] && line[i] == '$' && is_two_quote(line, i + 1)
-			&& in_quote == 0)
+		if (line[i] && line[i] == '$' && t2quote(line, i + 1) && in_quote == 0)
 			i += 3;
-		else if (is_two_quote(line, i) && in_quote == 0)
+		else if (t2quote(line, i) && in_quote == 0)
 			i += 2;
 		else if (line[i])
 		{

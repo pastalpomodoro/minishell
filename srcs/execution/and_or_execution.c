@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/17 14:24:37 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:30:00 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int	and_or_exec(t_commande *cmd, t_data *data, char **env, int p)
 			skip_par(&data->line, 0);
 			g_error_value = status;
 		}
-		else if (cmd)
+		else if (cmd && cmd->cmd)
 			g_error_value = exec_manage(cmd, data, env);
 		free_cmd(&cmd, data);
 		l = data->lst;

@@ -9,6 +9,7 @@ SRCS_NAMES = main.c \
 			 utils/utils2.c \
 			 utils/ft_split2.c \
 			 utils/variadic_strjoin.c \
+			 utils/get_path.c \
 			 tokens/tokenize.c \
 			 tokens/split_token.c \
 			 tokens/check_spaces.c \

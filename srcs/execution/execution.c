@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/17 14:39:41 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:24:06 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	if_statement(t_commande *cmd, t_data *data)
 	}
 }
 
-void dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
+void	dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
 {
 	close(cmd->pipe_fd[0]);
 	if (cmd->fd_out > 2)
@@ -82,10 +82,10 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 	}
 }
 
-int fork_create(t_commande *cmd, t_data *data, char **env)
+int	fork_create(t_commande *cmd, t_data *data, char **env)
 {
-	t_commande *init;
-	t_commande *before;
+	t_commande	*init;
+	t_commande	*before;
 
 	init = cmd;
 	before = NULL;
@@ -114,7 +114,7 @@ int fork_create(t_commande *cmd, t_data *data, char **env)
 
 int	exec_manage(t_commande *cmd, t_data *data, char **env)
 {
-	int status;
+	int	status;
 
 	status = 0;
 	if (fork_create(cmd, data, env) == -1)

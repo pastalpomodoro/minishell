@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 17:40:19 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/06 16:48:13 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:03:35 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ char	*search_env(t_env *env, char *str)
 	i = 0;
 	if (str == NULL)
 		return (ft_strdup(""));
-	/*if (!ft_strcmp(str, "UID"))*/
-	/*	return (free(str), ft_strdup(getenv("USER")));*/
 	if (str[0] == '?' && str[1] == '\0')
 		return (free(str), ft_itoa(g_error_value));
 	while (env && env->content[i])

@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:02:39 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/14 14:21:28 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:39:34 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,10 @@ int	is_pipe(t_commande **cmd, t_tkn_lst *next, t_tkn_lst *node, int *i)
 	if (node && node->token == T_PIPE)
 	{
 		if (!next || !node->prev)
-			return (g_error_value = 2, ft_printf
-				("minishell: syntax error near unexpected token `|'\n"), 0);
+			return (g_error_value = 2, ft_printf(PIPE_ERROR), 0);
 		else if (next->token != T_LITERAL && next->token != T_REDIRECT)
 			return (g_error_value = 2, ft_printf
-				("minishell: syntax error near unexpected\
-token `%s'\n", next->value), 0);
+				(T_ERROR, next->value), 0);
 		(*cmd)->next = cmd_init();
 		if (!(*cmd)->next)
 			return (0);
@@ -71,8 +69,8 @@ int	is_parentesys(t_commande **cmd, t_tkn_lst *node)
 		(*cmd) = (*cmd)->next;
 		(*cmd)->token = T_CPAR;
 	}
-	// else if (node && node->token == ERROR)
-		
+	else if (node && node->token == ERROR)
+		return (g_error_value = 2, ft_printf(T_ERROR, node->value), 0);
 	return (1);
 }
 

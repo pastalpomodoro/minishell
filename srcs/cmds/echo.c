@@ -6,15 +6,15 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:38:05 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/05 16:48:05 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:04:10 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int is_n(char *cmd)
+int	is_n(char *cmd)
 {
-	int i;
+	int	i;
 
 	i = 2;
 	if (!cmd || ft_strncmp("-n", cmd, 2))
@@ -27,6 +27,7 @@ int is_n(char *cmd)
 	}
 	return (1);
 }
+
 int	ft_echo(char **cmd)
 {
 	int	type;

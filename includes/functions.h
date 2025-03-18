@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/14 14:02:06 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:53:30 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,14 @@ void		ft_exit(int code, t_data *data, t_commande **cmd);
 void		free_double_tab(char **tab);
 bool		ft_isspace(char c);
 char		*ft_strjoin_char(char *s1, char ch);
-char		*get_path(char *c, t_env *env, t_commande **cmd);
 char		*strjoin_space(char *s1, char *s2);
 //			lst_creator.c
 void		free_cmd_node(t_commande **cmd);
 void		free_cmd(t_commande **cmd, t_data *data);
 //			variadic_strjoin.c
 char		*variadic_strjoin(unsigned int argc, ...);
+//			get_path.c
+char		*get_path(char *c, t_env *env, t_commande **cmd);
 
 /*****************************/
 /********    ENV    **********/

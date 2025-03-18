@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:25:03 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/17 14:24:10 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:44:34 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_commande	*cmd_init(void)
 		return (NULL);
 	cmd->pipe_fd = malloc(sizeof(int) * 2);
 	if (!cmd->pipe_fd)
-		return(free(cmd), NULL);
+		return (free(cmd), NULL);
 	cmd->token = T_NULL;
 	cmd->cmd = NULL;
 	cmd->path = NULL;
@@ -85,7 +85,6 @@ t_commande	*creator(t_tkn_lst *node, t_env *env)
 			return (free_cmd(&init, NULL), NULL);
 		else if (is_parentesys(&cmd, node) == 0)
 			return (free_cmd(&init, NULL), NULL);
-		// g_error_value = cmd->exit_code;
 		if (node)
 			node = node->next;
 	}
