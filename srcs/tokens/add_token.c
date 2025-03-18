@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 15:11:18 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/18 16:37:33 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:42:31 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_token	get_type(char *line)
 	if (!ft_strncmp(line, ">", 1) || !ft_strncmp(line, "<", 1)
 		|| !ft_strncmp(line, ">>", 2) || !ft_strncmp(line, "<<", 2))
 		return (T_REDIRECT);
-	if (!ft_strncmp(line, "|&", 2) || !ft_strncmp(line, "&", 1))
+	if (!ft_strncmp(line, "|&", 2))
 		return (ERROR);
 	if (!ft_strncmp(line, "||", 2) || !ft_strncmp(line, "&&", 2))
 	{
@@ -32,6 +32,8 @@ static t_token	get_type(char *line)
 			return (ERROR);
 		return (T_AND_OR);
 	}
+	if (!ft_strncmp(line, "&", 1))
+		return (ERROR);
 	if (!ft_strncmp(line, "|", 1))
 		return (T_PIPE);
 	if (!ft_strncmp(line, "(", 1))
