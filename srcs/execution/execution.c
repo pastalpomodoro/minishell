@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/18 15:20:40 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:26:32 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ void	dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
 			exit (1);
 		close(cmd->fd_out);
 	}
-	else if (next)
+	else if (next && next->token == T_NULL)
 	{
 		if (dup2(cmd->pipe_fd[1], STDOUT_FILENO) == -1)
 			exit(1);
 	}
 	close(cmd->pipe_fd[1]);
-	if (before && before->cmd && cmd->infile <= 2)
+	if (before && before->cmd && cmd->infile <= 2 && before->exit_code == 0)
 	{
 		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
 			exit (1);
@@ -67,6 +67,7 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 	else if (cmd->cmd_type == 1 && cmd->cmd)
 	{
 		dup2isor(cmd, cmd->next, before);
+		printf("ciao");
 		if (execve(cmd->path, cmd->cmd, env) == -1)
 			exit(1);
 		exit(0);

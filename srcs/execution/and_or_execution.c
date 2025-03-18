@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/18 15:57:42 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:22:22 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int	and_or_exec(t_commande *cmd, t_data *data, char **env, int p)
 			get_tokens(data);
 		if (!cmd)
 			cmd = creator(data->lst, data->env);
+		// show_cmds(cmd);
 		if (cmd && cmd->cmd)
 		{
 			g_error_value = cmd->exit_code;
@@ -134,12 +135,13 @@ int	and_or_exec(t_commande *cmd, t_data *data, char **env, int p)
 			skip_par(&data->line, 0);
 			g_error_value = status;
 		}
-		else if (cmd && cmd->cmd)
+		else if (cmd)
 			g_error_value = exec_manage(cmd, data, env);
 		free_cmd(&cmd, data);
 		l = data->lst;
 		while (l && l->next)
 			l = l->next;
+		// printf("TOKEN: %s\n", data->line);
 		if (l && ((l->value[0] == '&' && g_error_value != 0) || (l->value[0] == '|' && g_error_value == 0)) && data->line[1] == '(')
 			skip_par(&data->line, 1);
 		else if ((l && l->value[0] == '&' && g_error_value != 0) || (l && l->value[0] == '|' && g_error_value == 0))
