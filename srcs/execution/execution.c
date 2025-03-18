@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/18 13:24:06 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 15:20:40 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,23 @@ extern int	g_error_value;
 void	if_statement(t_commande *cmd, t_data *data)
 {
 	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		g_error_value = ft_echo(cmd->cmd);
+		cmd->exit_code = ft_echo(cmd->cmd);
 	else if (!ft_strcmp(cmd->cmd[0], "export"))
-	{
-		if (cmd->cmd[1])
-			g_error_value = ft_export(cmd->cmd[1], &data->env);
-		else
-			g_error_value = ft_export(NULL, &data->env);
-	}
+		cmd->exit_code = ft_export(cmd->cmd[1], &data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
-		g_error_value = ft_cd(cmd->cmd[1], data->env);
+		cmd->exit_code = ft_cd(cmd->cmd[1], data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		g_error_value = ft_env(data->env);
+		cmd->exit_code = ft_env(data->env);
 	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
-		g_error_value = ft_unset(cmd->cmd[1], &data->env);
+		cmd->exit_code = ft_unset(cmd->cmd[1], &data->env);
 	if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		g_error_value = ft_pwd();
+		cmd->exit_code = ft_pwd();
 	if (!ft_strcmp(cmd->cmd[0], "exit"))
 	{
 		if (cmd->cmd[1])
-			g_error_value = ft_atoi(cmd->cmd[1]);
+			cmd->exit_code = ft_atoi(cmd->cmd[1]);
 		else
-			g_error_value = 0;
+			cmd->exit_code = 0;
 	}
 }
 
@@ -68,11 +63,7 @@ void	dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
 void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 {
 	if (cmd->cmd_type == 2)
-	{
-		dup2isor(cmd, cmd->next, before);
 		if_statement(cmd, data);
-		exit(0);
-	}
 	else if (cmd->cmd_type == 1 && cmd->cmd)
 	{
 		dup2isor(cmd, cmd->next, before);
@@ -95,10 +86,11 @@ int	fork_create(t_commande *cmd, t_data *data, char **env)
 		{	
 			if (pipe(cmd->pipe_fd) == -1)
 				return (free_cmd(&init, NULL), -1);
-			cmd->pid = fork();
+			if (cmd->cmd_type != 2)
+				cmd->pid = fork();
 			if (cmd->pid == -1)
 				return (free_cmd(&init, NULL), -1);
-			else if (cmd->pid == 0)
+			else if (cmd->pid == 0 || cmd->cmd_type == 2)
 				exec(cmd, before, data, env);
 			close(cmd->pipe_fd[1]);
 			if (before)
@@ -121,7 +113,7 @@ int	exec_manage(t_commande *cmd, t_data *data, char **env)
 		return (-1);
 	while (cmd)
 	{
-		if (cmd->exit_code == 0)
+		if (cmd->exit_code == 0 && cmd->cmd_type != 2)
 			waitpid(cmd->pid, &status, 0);
 		if (!cmd->next && cmd->exit_code)
 			return (cmd->exit_code);
