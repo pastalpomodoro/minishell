@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/14 14:27:15 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:53:44 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,24 @@ identifiant non valable\n", cmd), 1);
 
 static void	delete_node(t_env *to_delete, t_env **init)
 {
-	t_env	*tmp;
+	t_env	*current;
+	t_env	*prev;
 
-	if ((*init)->next != NULL)
-	{
-		while (ft_strcmp((*init)->next->content, to_delete->content))
-			*init = (*init)->next;
-		tmp = to_delete->next;
-		(*init)->next = tmp;
-	}
+	if (init == NULL)
+		return ;
+	if (*init == to_delete)
+		*init = (*init)->next;
 	else
-		*init = NULL;
+	{
+		current = *init;
+		while (current != NULL && current->next != to_delete)
+			current = current->next;
+		if (current != NULL && current->next == to_delete)
+		{
+			prev = current;
+			prev->next = to_delete->next;
+		}
+	}
 	free(to_delete->content);
 	free(to_delete);
 }

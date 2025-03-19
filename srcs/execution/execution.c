@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/18 17:21:03 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:52:37 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 	int	save;
 	int	save_in;
 
-	if (cmd->cmd_type == 2 || !ft_strcmp(cmd->cmd[0], "env"))
+	if (cmd->cmd_type == 2 || (cmd->cmd && !ft_strcmp(cmd->cmd[0], "env")))
 	{
 		save = dup(STDOUT_FILENO);
 		save_in = dup(STDIN_FILENO);
@@ -117,14 +117,16 @@ int	fork_create(t_commande *cmd, t_data *data, char **env)
 	while (cmd)
 	{
 		if (cmd->exit_code == 0)
-		{	
+		{
 			if (pipe(cmd->pipe_fd) == -1)
 				return (free_cmd(&init, NULL), -1);
-			if (cmd->cmd_type != 2 && ft_strcmp(cmd->cmd[0], "env"))
+			if (cmd->cmd_type != 2 && cmd->cmd && ft_strcmp(cmd->cmd[0], "env"))
 				cmd->pid = fork();
+			else
+				cmd->pid = 0;
 			if (cmd->pid == -1)
 				return (free_cmd(&init, NULL), -1);
-			else if (cmd->pid == 0 || cmd->cmd_type == 2)
+			else if (cmd->pid == 0)
 				exec(cmd, before, data, env);
 			close(cmd->pipe_fd[1]);
 			if (before)

@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/18 16:22:22 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:28:37 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,6 @@ int	and_or_exec(t_commande *cmd, t_data *data, char **env, int p)
 			get_tokens(data);
 		if (!cmd)
 			cmd = creator(data->lst, data->env);
-		// show_cmds(cmd);
 		if (cmd && cmd->cmd)
 		{
 			g_error_value = cmd->exit_code;
