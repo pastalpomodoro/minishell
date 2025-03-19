@@ -52,7 +52,13 @@ void	dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
 			exit(1);
 	}
 	close(cmd->pipe_fd[1]);
-	if (before && before->cmd && cmd->infile <= 2 && before->exit_code == 0)
+	if (cmd->infile > 2)
+	{
+		if (dup2(cmd->infile, STDIN_FILENO) == -1)
+			exit (1);
+		close(cmd->infile);
+	}
+	else if (before && before->cmd && cmd->infile <= 2 && before->exit_code == 0)
 	{
 		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
 			exit (1);
@@ -74,7 +80,13 @@ int	dup2_our_cmd(t_commande *cmd, t_commande *next, t_commande *before)
 			return (141);
 	}
 	close(cmd->pipe_fd[1]);
-	if (before && before->cmd && cmd->infile <= 2 && before->exit_code == 0)
+	if (cmd->infile > 2)
+	{
+		if (dup2(cmd->infile, STDIN_FILENO) == -1)
+			return (141);
+		close(cmd->infile);
+	}
+	else if (before && before->cmd && cmd->infile <= 2 && before->exit_code == 0)
 	{
 		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
 			return (141);
@@ -97,6 +109,8 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 			if_statement(cmd, data);
 		dup2(save, STDOUT_FILENO);
 		dup2(save_in, STDIN_FILENO);
+		close(save);
+		close(save_in);
 	}
 	else if (cmd->cmd_type == 1 && cmd->cmd)
 	{
@@ -145,11 +159,11 @@ int	exec_manage(t_commande *cmd, t_data *data, char **env)
 	int	status;
 
 	status = 0;
-	if (cmd->exit_code == 0)
-	{
-		if (fork_create(cmd, data, env) == -1)
-			return (-1);
-	}
+	// if (cmd->exit_code == 0)
+	// {
+	if (fork_create(cmd, data, env) == -1)
+		return (-1);
+	// }
 	while (cmd)
 	{
 		if (cmd->exit_code == 0 && cmd->cmd_type != 2)

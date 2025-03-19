@@ -47,6 +47,7 @@ int	main(int argc, char **argv, char **env)
 	while (1)
 	{
 		init_signal();
+		// data.line = ft_strdup("<Makefile echo 1");
 		data.line = readline("Minishell> ");
 		add_history(data.line);
 		if (data.line == NULL)
