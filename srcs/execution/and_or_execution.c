@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/20 11:42:29 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:12:59 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,13 @@ void	exitt(t_commande **cmd, t_data *data)
 	if ((*cmd) && (*cmd)->cmd)
 	{
 		g_error_value = (*cmd)->exit_code;
-		if (!ft_strcmp((*cmd)->cmd[0], "exit")
-			&& (*cmd)->cmd[1] && (*cmd)->cmd[1][0] == '1' && !(*cmd)->next)
-			ft_exit(1, data, cmd);
-		else if (!ft_strcmp((*cmd)->cmd[0], "exit") && !(*cmd)->next)
-			ft_exit(0, data, cmd);
+		if (!ft_strcmp((*cmd)->cmd[0], "exit") && !(*cmd)->next)
+		{
+			if ((*cmd)->cmd[1])
+				ft_exit(ft_atoi((*cmd)->cmd[1]), data, cmd);
+			else
+				ft_exit(0, data, cmd);
+		}
 	}
 }
 

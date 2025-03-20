@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/20 12:08:38 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:23:35 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ int	dup2_our_cmd(t_commande *cmd, t_commande *next, t_commande *before)
 		close(cmd->infile);
 	}
 	else if (before && before->cmd && cmd->infile <= 2
-		&& before->exit_code == 0)//quand on fais exit 0 | exit 1 ca fais des leak de pipe parceque before->exit_code est egale a 1;
+		&& before->exit_code == 0)
 	{
 		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
 			return (141);
@@ -81,7 +81,8 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 	{
 		save = dup(STDOUT_FILENO);
 		save_in = dup(STDIN_FILENO);
-		cmd->exit_code = dup2_our_cmd(cmd, cmd->next, before);
+		if (ft_strcmp(cmd->cmd[0], "exit"))
+			cmd->exit_code = dup2_our_cmd(cmd, cmd->next, before);
 		if (cmd->exit_code == 0)
 			if_statement(cmd, data);
 		dup2(save, STDOUT_FILENO);
@@ -98,21 +99,7 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 		exit(0);
 	}
 }
-int manage(t_commande *cmd, t_commande *before, t_data *data, char **env)
-{
-	if (pipe(cmd->pipe_fd) == -1)
-		return (-1);
-	if (cmd->cmd_type != 2 && cmd->cmd && ft_strcmp(cmd->cmd[0], "env"))
-		cmd->pid = fork();
-	else
-		cmd->pid = 0;
-	if (cmd->pid == -1)
-		return (-1);
-	else if (cmd->pid == 0)
-		exec(cmd, before, data, env);
-	close(cmd->pipe_fd[1]);
-	return (1);
-}
+
 int	fork_create(t_commande *cmd, t_data *data, char **env)
 {
 	t_commande	*init;
@@ -126,7 +113,7 @@ int	fork_create(t_commande *cmd, t_data *data, char **env)
 		{
 			if (manage(cmd, before, data, env) == -1)
 				return (free_cmd(&init, NULL), -1);
-			if (before)
+			if (before && ft_strcmp(before->cmd[0], "exit"))
 				close(before->pipe_fd[0]);
 			before = cmd;
 		}

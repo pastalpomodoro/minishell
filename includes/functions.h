@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/20 11:45:24 by tgastelu         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:23:33 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,14 @@ t_commande	*creator(t_tkn_lst *node, t_env *env);
 /*****************************/
 //			execution.c
 void		if_statement(t_commande *cmd, t_data *data);
+int			manage(t_commande *cmd, t_commande *before,
+				t_data *data, char **env);
 int			exec_manage(t_commande *cmd, t_data *data, char **env);
 void		skip_par(char **line, int n);
 void		skip_for_and_or(char **line);
 int			is_novoid_line(char *line);
 int			and_or_exec(t_commande *cmd, t_data *data, char **env, int p);
+void		exec(t_commande *cmd, t_commande *before, t_data *data, char **env);
 
 /*****************************/
 /*********    SIG    *********/
