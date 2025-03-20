@@ -27,6 +27,7 @@ SRCS_NAMES = main.c \
 			 lst_creator/lst_redir.c \
 			 lst_creator/lst_cmd.c \
 			 lst_creator/lst_creator_utils.c \
+			 execution/utils_execution.c \
 			 execution/execution.c \
 			 execution/and_or_execution.c \
 			 cmds/echo.c \
