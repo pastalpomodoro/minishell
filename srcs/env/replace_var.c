@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/14 13:46:45 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:49:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ static char	*get_var(t_env *env, char **line, bool inside_quote)
 	tmp = NULL;
 	(*line)++;
 	first = 0;
-	if (!is_valid_input(**line, first) && **line != '\'' && **line != '\"')
+	if (!is_valid_input(**line, first) && (**line == '\'' || **line == '\"')
+		&& *(line - 2) && (*(*line - 2) == '\'' || *(*line - 2) == '\"'))
 		return (ft_strdup("$"));
 	while (**line && is_valid_input(**line, first))
 	{
