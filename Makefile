@@ -6,14 +6,19 @@ CFLAGS = -Wall -Werror -Wextra -g3
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
 			 utils/utils.c \
+			 utils/utils2.c \
 			 utils/ft_split2.c \
 			 utils/variadic_strjoin.c \
+			 utils/get_path.c \
 			 tokens/tokenize.c \
 			 tokens/split_token.c \
 			 tokens/check_spaces.c \
 			 tokens/insert_spaces.c \
+			 tokens/delete_useless.c \
 			 tokens/add_token.c \
 			 tokens/tkn_lst.c \
+			 tokens/check_wildcards.c \
+			 tokens/get_wildcard.c \
 			 env/env_creator.c \
 			 env/replace_var.c \
 			 env/replace_var_utils.c \
@@ -21,13 +26,18 @@ SRCS_NAMES = main.c \
 			 lst_creator/lst_creator.c \
 			 lst_creator/lst_redir.c \
 			 lst_creator/lst_cmd.c \
+			 lst_creator/lst_creator_utils.c \
+			 execution/utils_execution.c \
 			 execution/execution.c \
+			 execution/dup2.c \
+			 execution/and_or_execution.c \
 			 cmds/echo.c \
 			 cmds/env.c \
 			 cmds/export.c \
 			 cmds/pwd.c \
 			 cmds/cd.c \
-			 cmds/exit.c
+			 cmds/exit.c \
+			 sig/signals.c
 
 SRCS = $(addprefix $(SRCS_DIR), $(SRCS_NAMES))
 
@@ -43,7 +53,7 @@ HEADERS = $(addprefix $(INCLUDES), $(HEADER_FILES))
 
 all: $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT_LIB) $(HEADERS)
+$(NAME): $(LIBFT_LIB) $(OBJS) $(HEADERS)
 	$(CC) $(CFLAGS) $(OBJS) -lreadline -L $(LIBFT_DIR) -lft -I $(INCLUDES) -o $(NAME)
 
 $(OBJ_DIR)%.o: %.c $(HEADERS)

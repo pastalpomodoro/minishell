@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:35:47 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 14:23:05 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 13:50:01 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,58 +58,4 @@ char	*ft_strjoin_char(char *s1, char ch)
 	if (s1)
 		free(s1);
 	return (str);
-}
-
-//return NULL si probleme de malloc
-//return malloc(1) s'il ne trouve pas le path
-
-char	*get_path(char *c, t_env *env, t_commande **lst_cmd)
-{
-	char	**all_path;
-	char	*cmd;
-	char	*path;
-	int		i;
-	int status;
-
-	status = 0;
-	i = -1;
-	if (!ft_strncmp(c, "/", 1) || !ft_strncmp(c, "./", 2))
-	{
-		status = access(c, F_OK);
-		if (status != 0)
-			return ((*lst_cmd)->exit_code = 127, ft_strdup(""));
-		status = access(c, X_OK);
-		if (status != 0)
-			return ((*lst_cmd)->exit_code = 126, ft_strdup(""));
-		if (status == 0)
-			return ((*lst_cmd)->exit_code = 0, ft_strdup(c));
-	}
-	if (!env)
-		return (ft_strdup(""));
-	while (env && (ft_strncmp("PATH", env->content, 4) != 0 || env->content[4] != '='))
-		env = env->next;
-	if (!env)
-		return (ft_strdup(""));
-	all_path = ft_split(&env->content[5], ':');
-	if (!all_path)
-		return (NULL);
-	cmd = ft_strjoin("/", c);
-	if (!cmd)
-		return (NULL);
-	while (i++, all_path[i])
-	{
-		path = ft_strjoin(all_path[i], cmd);
-		if (!path)
-			return (free_double_tab(all_path), free(cmd), NULL);
-		status = access(path, F_OK);
-		if (status != 0)
-			(*lst_cmd)->exit_code = 127;
-		status = access(path, X_OK);
-		if (status != 0)
-			(*lst_cmd)->exit_code = 126;
-		if (status == 0)
-			return ((*lst_cmd)->exit_code = 0, free_double_tab(all_path), free(cmd), path);
-		free(path);
-	}
-	return (free_double_tab(all_path), free(cmd), ft_strdup(""));
 }

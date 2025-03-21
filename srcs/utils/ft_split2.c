@@ -6,11 +6,11 @@
 /*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 16:44:15 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/01/14 15:27:56 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:34:57 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"../../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 static int	if_sep(char s, char *c)
 {

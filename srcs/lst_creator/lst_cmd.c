@@ -1,4 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   lst_cmd.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/04 14:32:04 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/03/19 11:28:59 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
+
+extern int	g_error_value;
 
 int	size_tab(t_tkn_lst *node)
 {
@@ -13,7 +27,7 @@ int	size_tab(t_tkn_lst *node)
 		{
 			node = node->next;
 			if (!node)
-				break;
+				break ;
 			node = node->next;
 		}
 	}
@@ -42,17 +56,16 @@ int	t_redirect(t_tkn_lst **node)
 	return (1);
 }
 
-int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
+int	exist_cmd(t_commande **cmd, t_tkn_lst *node, t_env *env)
 {
 	char	*path;
-	char	**utils;
-	int		i;
 
 	path = get_path(node->value, env, cmd);
 	if (!path)
 		return (-2);
 	if (!ft_strlen(path) && !is_our_cmd(node->value))
-		return (ft_printf("minishell: %s: command not found\n", node->value), free(path), -1);
+		return (ft_printf("minishell: %s: command not found\n", node->value),
+			(*cmd)->exit_code = 127, free(path), -1);
 	else if (!ft_strlen(path) && is_our_cmd(node->value))
 	{
 		(*cmd)->exit_code = 0;
@@ -61,6 +74,18 @@ int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
 	else if (ft_strlen(path))
 		(*cmd)->cmd_type = 1;
 	(*cmd)->path = path;
+	return (1);
+}
+
+int	cmd_creator(t_tkn_lst *node, t_commande **cmd, t_env *env)
+{
+	int		tmp;
+	char	**utils;
+	int		i;
+
+	tmp = exist_cmd(cmd, node, env);
+	if (tmp < 0)
+		return (g_error_value = (*cmd)->exit_code, tmp);
 	utils = malloc(sizeof(char *) * (size_tab(node) + 1));
 	if (!utils)
 		return (-2);

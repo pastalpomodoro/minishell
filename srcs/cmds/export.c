@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:36:15 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 14:41:46 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:53:44 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,11 @@ static int	search_replace_env(char *name, char *cmd, t_env *env)
 	return (2);
 }
 
-static int	check_cmd(char *cmd)
+int	check_cmd(char *cmd)
 {
 	if (!(ft_isalpha(*cmd) || *cmd == '_'))
 		return (1);
-	cmd++;
-	if (*cmd == '=')
+	if (*cmd == '_' && *(cmd + 1) == '=')
 		return (1);
 	while (ft_isalnum(*cmd) || *cmd == '_')
 		cmd++;
@@ -50,8 +49,10 @@ int	ft_export(char *cmd, t_env **env)
 	int		i;
 
 	i = 0;
+	if (cmd == NULL)
+		return (ft_env_export(*env));
 	if (check_cmd(cmd))
-		return (ft_printf("minishell: export: « %s » : \
+		return (ft_printf("minishell: export: `%s' : \
 identifiant non valable\n", cmd), 1);
 	if (*env == NULL)
 		return (env_add_last(env, init_env(cmd)));
@@ -68,16 +69,28 @@ identifiant non valable\n", cmd), 1);
 		return (env_add_last(env, init_env(cmd)));
 }
 
-static void	delete_node(t_env *to_delete, t_env *init)
+static void	delete_node(t_env *to_delete, t_env **init)
 {
-	t_env	*tmp;
+	t_env	*current;
+	t_env	*prev;
 
-	while (ft_strcmp(init->next->content, to_delete->content))
-		init = init->next;
-	tmp = to_delete->next;
+	if (init == NULL)
+		return ;
+	if (*init == to_delete)
+		*init = (*init)->next;
+	else
+	{
+		current = *init;
+		while (current != NULL && current->next != to_delete)
+			current = current->next;
+		if (current != NULL && current->next == to_delete)
+		{
+			prev = current;
+			prev->next = to_delete->next;
+		}
+	}
 	free(to_delete->content);
 	free(to_delete);
-	init->next = tmp;
 }
 
 int	ft_unset(char *cmd, t_env **env)
@@ -90,7 +103,7 @@ int	ft_unset(char *cmd, t_env **env)
 		while (tmp)
 		{
 			if (!ft_strncmp(cmd, tmp->content, ft_strlen(cmd)))
-				return (delete_node(tmp, *env), 0);
+				return (delete_node(tmp, env), 0);
 			tmp = tmp->next;
 		}
 	}

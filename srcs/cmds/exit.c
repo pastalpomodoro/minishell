@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 16:27:36 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/11 16:35:32 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/11 10:39:32 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_exit(char *arg, t_data *data)
+void	ft_exit(int code, t_data *data, t_commande **cmd)
 {
 	if (data->lst)
 		tkn_lst_clear(&(data->lst));
@@ -21,8 +21,8 @@ void	ft_exit(char *arg, t_data *data)
 	rl_clear_history();
 	if (data->env)
 		free_env(data->env);
+	if (cmd)
+		free_cmd(cmd, NULL);
 	ft_printf("exit\n");
-	if (arg)
-		exit(ft_atoi(arg));
-	exit(0);
+	exit(code);
 }

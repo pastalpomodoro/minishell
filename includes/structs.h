@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   structs.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:20:20 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/03 10:35:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:20:41 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
 # include "enums.h"
+# include <stdbool.h>
 
 typedef struct s_env
 {
@@ -22,15 +23,16 @@ typedef struct s_env
 
 typedef struct s_commande
 {
+	int					pid;
+	int					*pipe_fd;
 	int					exit_code;
 	int					infile;
 	int					fd_out;
-	int					outfile_type;//if 1==> , if 2==>>
 	int					cmd_type;
-	char				*outfile;
 	char				**cmd;
 	char				*path;
 	struct s_commande	*next;
+	t_token				token;
 }	t_commande;
 
 typedef struct s_node
@@ -54,6 +56,7 @@ typedef struct s_data
 	char		*line;
 	t_tkn_lst	*lst;
 	t_env		*env;
+	bool		and_or;
 }	t_data;
 
 #endif

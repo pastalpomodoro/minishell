@@ -3,14 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:38:05 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/04 13:38:19 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:04:10 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	is_n(char *cmd)
+{
+	int	i;
+
+	i = 2;
+	if (!cmd || ft_strncmp("-n", cmd, 2))
+		return (0);
+	while (cmd[i])
+	{
+		if (cmd[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
+}
 
 int	ft_echo(char **cmd)
 {
@@ -18,9 +34,17 @@ int	ft_echo(char **cmd)
 	int	i;
 
 	type = 1;
-	if (ft_strcmp(cmd[1], "-n") == 0)
+	i = 1;
+	if (cmd[i] && is_n(cmd[i]))
+	{
+		while (cmd[i] && is_n(cmd[i]))
+			i++;
 		type = 2;
-	i = type - 1;
+		if (i > 1)
+			i--;
+	}
+	else
+		i = 0;
 	while (i++, cmd[i])
 	{
 		ft_printf("%s", cmd[i]);

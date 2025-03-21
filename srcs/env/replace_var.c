@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/29 12:02:03 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/09 16:10:50 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/14 13:46:45 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,24 @@
 static char	*get_var(t_env *env, char **line, bool inside_quote)
 {
 	char	*tmp;
+	int		first;
 
+	(void) inside_quote;
 	tmp = NULL;
 	(*line)++;
-	if (inside_quote && (**line == '\'' || **line == '\"'))
+	first = 0;
+	if (!is_valid_input(**line, first) && **line != '\'' && **line != '\"')
 		return (ft_strdup("$"));
-	while (**line && !(ft_isspace(**line) || **line == '\''
-			|| **line == '\"'))
+	while (**line && is_valid_input(**line, first))
 	{
 		tmp = ft_strjoin_char(tmp, **line);
 		if (tmp == NULL)
 			return (NULL);
 		(*line)++;
+		first++;
 	}
-	return (search_env(env, tmp));
+	tmp = search_env(env, tmp);
+	return (tmp);
 }
 
 static int	join_var_res(t_env *env, char **line, char **res, bool inside_quote)
@@ -61,7 +65,7 @@ static void	replace_inside_dquote(t_env *env, char **line, char **res)
 	(*line)++;
 	while (**line && **line != '\"')
 	{
-		if (**line == '$')
+		if (**line == '$' && !(**(line + 1) == ' ' || **(line + 1) == '\0'))
 		{
 			if (join_var_res(env, line, res, TRUE))
 				return ;
@@ -102,7 +106,7 @@ char	*replace_vars(t_env *env, char *line)
 	res = NULL;
 	while (*line)
 	{
-		if (*line == '$')
+		if (*line == '$' && !(*(line + 1) == ' ' || *(line + 1) == '\0'))
 		{
 			if (join_var_res(env, &line, &res, FALSE))
 				return (free(res), NULL);

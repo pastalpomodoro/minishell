@@ -6,7 +6,7 @@
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 16:18:56 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/06 11:10:27 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/18 16:37:17 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ static bool	no_spaces_around(char *line, char *line_init, int *i)
 		tmp = line;
 	else
 		tmp = line - 1;
-	if (*line && (*line == '|' || *line == '>' || *line == '<'
-			|| (*line == '&' && *line + 1 == '&') || *line == '('
-			|| *line == ')'))
+	if (*line && ((*line == '|' && *(line + 1) != '&') || *line == '>'
+			|| *line == '<' || (*line == '&' && *line + 1 == '&')
+			|| *line == '(' || *line == ')'))
 	{
 		line++;
 		if (*line && (*line == '>' || *line == '<' || *line == '|'))

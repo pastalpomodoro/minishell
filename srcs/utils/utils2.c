@@ -1,20 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rbaticle <rbaticle@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/10 19:18:11 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/02/26 11:31:34 by rbaticle         ###   ########.fr       */
+/*   Created: 2025/02/26 11:22:35 by rbaticle          #+#    #+#             */
+/*   Updated: 2025/02/26 11:22:48 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../../includes/minishell.h"
 
-# include "functions.h"
-# include "macros.h"
-# include "../libft/libft.h"
+char	*strjoin_space(char *s1, char *s2)
+{
+	char	*res;
 
-#endif
+	if (s1 == NULL)
+		res = ft_strdup(s2);
+	else
+	{
+		res = variadic_strjoin(3, s1, " ", s2);
+		free(s1);
+	}
+	return (res);
+}

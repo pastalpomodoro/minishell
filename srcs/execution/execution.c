@@ -1,113 +1,102 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execution.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
+/*   Updated: 2025/03/21 14:34:07 by rbaticle         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-int my_execve(t_commande *cmd, t_env **lst_env)
-{
-	int save;
+extern int	g_error_value;
 
-	if (cmd->outfile_type > 0)
+void	if_pwd_exec(t_commande *cmd, char **env)
+{
+	if (!ft_strcmp(cmd->cmd[0], "pwd")
+		|| !ft_strcmp(cmd->cmd[0], "/usr/bin/pwd")
+		|| !ft_strcmp(cmd->cmd[0], "/bin/pwd"))
+	{
+		if (execve(cmd->path, (char *[]){"pwd", NULL}, env) == -1)
+			exit(1);
+	}
+	else
+	{
+		if (execve(cmd->path, cmd->cmd, env) == -1)
+			exit(1);
+	}
+}
+
+void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
+{
+	int	save;
+	int	save_in;
+
+	if (cmd->cmd_type == 2 || (cmd->cmd && !ft_strcmp(cmd->cmd[0], "env")))
 	{
 		save = dup(STDOUT_FILENO);
-		if (save == -1)
-			return (0);
-		if (cmd->outfile_type == 1)
-			cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_TRUNC, 0777);
-		if (cmd->outfile_type == 2)
-			cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_APPEND, 0777);
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			return (0);
-		close(cmd->fd_out);
+		save_in = dup(STDIN_FILENO);
+		if (ft_strcmp(cmd->cmd[0], "exit"))
+			cmd->exit_code = dup2_our_cmd(cmd, cmd->next, before);
+		if (cmd->exit_code == 0)
+			if_statement(cmd, data);
+		dup2(save, STDOUT_FILENO);
+		dup2(save_in, STDIN_FILENO);
+		close(save);
+		close(save_in);
 	}
-	if (!ft_strcmp(cmd->cmd[0], "echo"))
-		ft_echo(cmd->cmd);
-	else if (!ft_strcmp(cmd->cmd[0], "export") && cmd->cmd[1]) 
-		ft_export(cmd->cmd[1], lst_env);
-	else if (!ft_strcmp(cmd->cmd[0], "cd") && cmd->cmd[1])
-		ft_cd(cmd->cmd[1], *lst_env);
-	else if (!ft_strcmp(cmd->cmd[0], "env"))
-		ft_env(*lst_env);
-	else if (!ft_strcmp(cmd->cmd[0], "unset") && cmd->cmd[1])
-		ft_unset(cmd->cmd[1], lst_env);
-	if (!ft_strcmp(cmd->cmd[0], "pwd"))
-		ft_pwd();
-	// if (!ft_strcmp(cmd->cmd[0], "exit"))
-	// 	ft_exit(init);
-	if (cmd->outfile_type > 0)
+	else if (cmd->cmd_type == 1 && cmd->cmd)
 	{
-		if (dup2(save, STDOUT_FILENO) == -1)
-			return (0);
+		close(cmd->pipe_fd[0]);
+		dup2isor(cmd, cmd->next, before);
+		if_pwd_exec(cmd, env);
+		exit(0);
 	}
-	return (1);
 }
 
-int	exec(t_commande *cmd, char **env, int *pipe_fd)
+int	fork_create(t_commande *cmd, t_data *data, char **env)
 {
-	close(pipe_fd[0]);
-	if (cmd->outfile_type == 0 && cmd->next)
-		cmd->fd_out = pipe_fd[1];
-	else
-		close(pipe_fd[1]);
-	if (cmd->infile > 2)
-	{
-		if (dup2(cmd->infile, STDIN_FILENO) == -1)
-			exit(1);
-		close(cmd->infile);
-	}
-	if (cmd->fd_out > 2)
-	{
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			exit(1);
-		close(cmd->fd_out);
-	}
-	if (execve(cmd->path, cmd->cmd, env) == -1)
-		exit(1);
-	return (1);
-}
+	t_commande	*init;
+	t_commande	*before;
 
-int	exec_pipe(t_commande *cmd, t_commande *next, char **env)
-{
-	int	status;
-	int	pid;
-	int pipe_fd[2];
-
-	if (pipe(pipe_fd) == -1)
-		return (0);
-	if (cmd->outfile_type == 1)
-		cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_TRUNC, 0777);
-	if (cmd->outfile_type == 2)
-		cmd->fd_out = open(cmd->outfile, O_RDWR | O_CREAT | O_APPEND, 0777);
-	pid = fork();
-	if (pid < 0)
-		return (ft_printf("Erreur avec fork\n"), -2);
-	else if (pid == 0)
-		exec(cmd, env, pipe_fd);
-	wait(&status);
-	if (next && next->infile <= 2)
-		next->infile = pipe_fd[0];
-	else
-		close(pipe_fd[0]);
-	if (cmd->fd_out > 2)
-		close(cmd->fd_out);
-	return (close(pipe_fd[1]), status);
-}
-
-int	exec_manage(t_commande *cmd, t_env **lst_env, char **env)
-{
-	t_commande	*temp;
-	int i;
-
-	i = 0;
+	init = cmd;
+	before = NULL;
 	while (cmd)
 	{
-		temp = cmd->next;
-		if (cmd->cmd)
+		if (cmd->exit_code == 0)
 		{
-			if (cmd->exit_code == 0 && (cmd->cmd_type == 2 || ft_strcmp(cmd->cmd[0], "export") == 0 || ft_strcmp(cmd->cmd[0], "env") == 0 || ft_strcmp(cmd->cmd[0], "unset") == 0))//ca veut dire que le path n a pas ete toruve et que on va utiliser les commandes que on a code nous
-				my_execve(cmd, lst_env);
-			else if (cmd->exit_code == 0 && cmd->cmd_type == 1)
-				exec_pipe(cmd, temp, env);
+			if (manage(cmd, before, data, env) == -1)
+				return (free_cmd(&init, NULL), -1);
+			if (before && ft_strcmp(before->cmd[0], "exit"))
+				close(before->pipe_fd[0]);
+			before = cmd;
 		}
-		cmd = temp;
-		i++;
+		cmd = cmd->next;
 	}
+	if (before && before->cmd && before->exit_code == 0)
+		close(before->pipe_fd[0]);
 	return (1);
+}
+
+int	exec_manage(t_commande *cmd, t_data *data, char **env)
+{
+	int	status;
+
+	status = 0;
+	if (fork_create(cmd, data, env) == -1)
+		return (-1);
+	while (cmd)
+	{
+		if (cmd->exit_code == 0 && cmd->cmd_type != 2)
+			waitpid(cmd->pid, &status, 0);
+		if (!cmd->next && cmd->exit_code)
+			return (cmd->exit_code);
+		cmd = cmd->next;
+	}
+	if (status)
+		return (130);
+	return (0);
 }
