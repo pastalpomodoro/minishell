@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/20 12:23:35 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/21 14:34:07 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,62 +14,20 @@
 
 extern int	g_error_value;
 
-void	dup2isor(t_commande *cmd, t_commande *next, t_commande *before)
+void	if_pwd_exec(t_commande *cmd, char **env)
 {
-	if (cmd->fd_out > 2)
+	if (!ft_strcmp(cmd->cmd[0], "pwd")
+		|| !ft_strcmp(cmd->cmd[0], "/usr/bin/pwd")
+		|| !ft_strcmp(cmd->cmd[0], "/bin/pwd"))
 	{
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			exit (1);
-		close(cmd->fd_out);
-	}
-	else if (next && next->token == T_NULL)
-	{
-		if (dup2(cmd->pipe_fd[1], STDOUT_FILENO) == -1)
+		if (execve(cmd->path, (char *[]){"pwd", NULL}, env) == -1)
 			exit(1);
 	}
-	close(cmd->pipe_fd[1]);
-	if (cmd->infile > 2)
+	else
 	{
-		if (dup2(cmd->infile, STDIN_FILENO) == -1)
-			exit (1);
-		close(cmd->infile);
+		if (execve(cmd->path, cmd->cmd, env) == -1)
+			exit(1);
 	}
-	else if (before && before->cmd
-		&& cmd->infile <= 2 && before->exit_code == 0)
-	{
-		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
-			exit (1);
-		close(before->pipe_fd[0]);
-	}
-}
-
-int	dup2_our_cmd(t_commande *cmd, t_commande *next, t_commande *before)
-{
-	if (cmd->fd_out > 2)
-	{
-		if (dup2(cmd->fd_out, STDOUT_FILENO) == -1)
-			return (141);
-		close(cmd->fd_out);
-	}
-	else if (next && next->token == T_NULL)
-	{
-		if (dup2(cmd->pipe_fd[1], STDOUT_FILENO) == -1)
-			return (141);
-	}
-	if (cmd->infile > 2)
-	{
-		if (dup2(cmd->infile, STDIN_FILENO) == -1)
-			return (141);
-		close(cmd->infile);
-	}
-	else if (before && before->cmd && cmd->infile <= 2
-		&& before->exit_code == 0)
-	{
-		if (dup2(before->pipe_fd[0], STDIN_FILENO) == -1)
-			return (141);
-		close(before->pipe_fd[0]);
-	}
-	return (close(cmd->pipe_fd[1]), 0);
 }
 
 void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
@@ -94,8 +52,7 @@ void	exec(t_commande *cmd, t_commande *before, t_data *data, char **env)
 	{
 		close(cmd->pipe_fd[0]);
 		dup2isor(cmd, cmd->next, before);
-		if (execve(cmd->path, cmd->cmd, env) == -1)
-			exit(1);
+		if_pwd_exec(cmd, env);
 		exit(0);
 	}
 }
@@ -119,7 +76,7 @@ int	fork_create(t_commande *cmd, t_data *data, char **env)
 		}
 		cmd = cmd->next;
 	}
-	if (before && before->exit_code == 0)
+	if (before && before->cmd && before->exit_code == 0)
 		close(before->pipe_fd[0]);
 	return (1);
 }

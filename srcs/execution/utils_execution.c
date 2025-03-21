@@ -6,7 +6,7 @@
 /*   By: tgastelu <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:44:27 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/20 12:23:52 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/21 13:52:44 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	is_novoid_line(char *line)
 
 int	manage(t_commande *cmd, t_commande *before, t_data *data, char **env)
 {
-	if (ft_strcmp(cmd->cmd[0], "exit") && pipe(cmd->pipe_fd) == -1)
+	if (cmd->cmd && ft_strcmp(cmd->cmd[0], "exit") && pipe(cmd->pipe_fd) == -1)
 		return (-1);
 	if (cmd->cmd_type != 2 && cmd->cmd && ft_strcmp(cmd->cmd[0], "env"))
 		cmd->pid = fork();
@@ -114,7 +114,7 @@ int	manage(t_commande *cmd, t_commande *before, t_data *data, char **env)
 		return (-1);
 	else if (cmd->pid == 0)
 		exec(cmd, before, data, env);
-	if (ft_strcmp(cmd->cmd[0], "exit"))
+	if (cmd->cmd && ft_strcmp(cmd->cmd[0], "exit"))
 		close(cmd->pipe_fd[1]);
 	return (1);
 }

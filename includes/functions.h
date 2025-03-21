@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/20 12:23:33 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/20 12:43:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ void		skip_for_and_or(char **line);
 int			is_novoid_line(char *line);
 int			and_or_exec(t_commande *cmd, t_data *data, char **env, int p);
 void		exec(t_commande *cmd, t_commande *before, t_data *data, char **env);
+void		dup2isor(t_commande *cmd, t_commande *next, t_commande *before);
+int			dup2_our_cmd(t_commande *cmd, t_commande *next, t_commande *before);
 
 /*****************************/
 /*********    SIG    *********/
