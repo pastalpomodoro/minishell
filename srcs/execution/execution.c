@@ -6,11 +6,12 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/21 14:34:07 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/26 11:39:19 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+#include <stdlib.h>
 
 extern int	g_error_value;
 
@@ -96,7 +97,14 @@ int	exec_manage(t_commande *cmd, t_data *data, char **env)
 			return (cmd->exit_code);
 		cmd = cmd->next;
 	}
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGINT)
+			return (130);
+		if (WTERMSIG(status) == SIGQUIT)
+			return (131);
+	}
 	if (status)
-		return (130);
+		return (1);
 	return (0);
 }
