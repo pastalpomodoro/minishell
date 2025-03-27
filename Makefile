@@ -1,7 +1,7 @@
 NAME = minishell
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g3
+CFLAGS = -Wall -Werror -Wextra
 
 SRCS_DIR = ./srcs/
 SRCS_NAMES = main.c \
