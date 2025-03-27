@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/04 13:41:01 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/18 13:43:58 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/25 18:25:07 by tgastelu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@ int	out(t_tkn_lst *node, t_commande **cmd, int type)
 		return ((*cmd)->exit_code = 2, ft_printf(NL_ERROR), -2);
 	if (next->token != T_LITERAL)
 		return ((*cmd)->exit_code = 2, ft_printf(T_ERROR, next->value), -2);
+	if ((*cmd)->fd_out > 2)
+		close((*cmd)->fd_out);
 	if (type == 1)
 		(*cmd)->fd_out = open(next->value, O_RDWR | O_CREAT | O_TRUNC, 0777);
 	else if (type == 2)

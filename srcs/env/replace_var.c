@@ -21,7 +21,8 @@ static char	*get_var(t_env *env, char **line, bool inside_quote)
 	tmp = NULL;
 	(*line)++;
 	first = 0;
-	if (!is_valid_input(**line, first) && (**line != '\'' || **line != '\"'))
+	if (!is_valid_input(**line, first) && (**line == '\'' || **line == '\"')
+		&& *(line - 2) && (*(*line - 2) == '\'' || *(*line - 2) == '\"'))
 		return (ft_strdup("$"));
 	while (**line && is_valid_input(**line, first))
 	{
