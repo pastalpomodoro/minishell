@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:51:45 by tgastelu          #+#    #+#             */
-/*   Updated: 2025/03/20 12:12:59 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:55:50 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_error_value;
 
-void	exitt(t_commande **cmd, t_data *data)
+int	exitt(t_commande **cmd, t_data *data)
 {
 	if ((*cmd) && (*cmd)->cmd)
 	{
@@ -22,11 +22,15 @@ void	exitt(t_commande **cmd, t_data *data)
 		if (!ft_strcmp((*cmd)->cmd[0], "exit") && !(*cmd)->next)
 		{
 			if ((*cmd)->cmd[1])
-				ft_exit(ft_atoi((*cmd)->cmd[1]), data, cmd);
+			{
+				if (check_exit_error(&(*cmd)->cmd[1], data, cmd))
+					return (1);
+			}
 			else
 				ft_exit(0, data, cmd);
 		}
 	}
+	return (0);
 }
 
 void	execution(t_commande **cmd, t_data *data, char **env, int p)
@@ -35,7 +39,8 @@ void	execution(t_commande **cmd, t_data *data, char **env, int p)
 	int			status;
 	int			pid;
 
-	exitt(cmd, data);
+	if (exitt(cmd, data))
+		return ;
 	if ((*cmd) && (*cmd)->token == T_OPAR)
 	{
 		tmp = *cmd;
