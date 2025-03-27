@@ -6,7 +6,7 @@
 /*   By: tgastelu <tgastelu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/10 19:21:35 by rbaticle          #+#    #+#             */
-/*   Updated: 2025/03/20 12:43:50 by rbaticle         ###   ########.fr       */
+/*   Updated: 2025/03/27 12:53:58 by rbaticle         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int			ft_unset(char *cmd, t_env **env);
 int			ft_pwd(void);
 int			ft_cd(char *val, t_env *env);
 void		ft_exit(int code, t_data *data, t_commande **cmd);
+int			check_exit_error(char **code, t_data *data, t_commande **cmd);
 
 /*****************************/
 /********   UTILS   **********/
